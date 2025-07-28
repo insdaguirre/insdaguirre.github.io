@@ -45,6 +45,7 @@ body {
     justify-content: space-between;
     align-items: center;
     padding: 1rem 0;
+    position: relative;
 }
 
 .logo {
@@ -342,6 +343,8 @@ body {
     color: var(--text);
     cursor: pointer;
     padding: 0.5rem;
+    position: relative;
+    z-index: 1001;
 }
 
 /* Responsive */

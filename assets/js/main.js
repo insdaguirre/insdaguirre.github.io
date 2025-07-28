@@ -108,17 +108,23 @@ document.addEventListener('DOMContentLoaded', () => {
     console.log('Mobile menu elements:', { navLinks, mobileMenuBtn });
     
     if (mobileMenuBtn && navLinks) {
+        // Simple test - change button color on click
         mobileMenuBtn.addEventListener('click', (e) => {
             e.preventDefault();
+            e.stopPropagation();
             console.log('Mobile menu clicked!');
+            
+            // Toggle menu
             navLinks.classList.toggle('active');
             
-            // Change icon when menu is open/closed
+            // Change icon
             const icon = mobileMenuBtn.querySelector('i');
             if (navLinks.classList.contains('active')) {
                 icon.className = 'fas fa-times';
+                mobileMenuBtn.style.color = 'red'; // Test color change
             } else {
                 icon.className = 'fas fa-bars';
+                mobileMenuBtn.style.color = 'var(--text)'; // Reset color
             }
         });
         
@@ -128,6 +134,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 navLinks.classList.remove('active');
                 const icon = mobileMenuBtn.querySelector('i');
                 icon.className = 'fas fa-bars';
+                mobileMenuBtn.style.color = 'var(--text)';
             }
         });
         
@@ -137,7 +144,10 @@ document.addEventListener('DOMContentLoaded', () => {
                 navLinks.classList.remove('active');
                 const icon = mobileMenuBtn.querySelector('i');
                 icon.className = 'fas fa-bars';
+                mobileMenuBtn.style.color = 'var(--text)';
             }
         });
+    } else {
+        console.log('Mobile menu elements not found:', { navLinks, mobileMenuBtn });
     }
 }); 
