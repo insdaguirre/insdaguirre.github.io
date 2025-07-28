@@ -227,11 +227,16 @@ body {
     box-shadow: var(--shadow);
     transition: all 0.3s ease;
     border: 1px solid var(--border);
+    text-decoration: none;
+    color: inherit;
+    display: block;
 }
 
 .project-card:hover {
     transform: translateY(-5px);
     box-shadow: var(--shadow-lg);
+    text-decoration: none;
+    color: inherit;
 }
 
 .project-header {
