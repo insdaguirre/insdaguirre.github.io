@@ -106,7 +106,6 @@ document.addEventListener('DOMContentLoaded', () => {
     const mobileMenuBtn = document.createElement('button');
     mobileMenuBtn.innerHTML = '<i class="fas fa-bars"></i>';
     mobileMenuBtn.className = 'mobile-menu-btn';
-    mobileMenuBtn.style.display = 'none';
     
     const nav = document.querySelector('.nav');
     if (nav && navLinks) {
@@ -114,20 +113,31 @@ document.addEventListener('DOMContentLoaded', () => {
         
         mobileMenuBtn.addEventListener('click', () => {
             navLinks.classList.toggle('active');
+            // Change icon when menu is open/closed
+            const icon = mobileMenuBtn.querySelector('i');
+            if (navLinks.classList.contains('active')) {
+                icon.className = 'fas fa-times';
+            } else {
+                icon.className = 'fas fa-bars';
+            }
         });
         
-        // Show mobile menu button on small screens
-        function checkScreenSize() {
-            if (window.innerWidth <= 768) {
-                mobileMenuBtn.style.display = 'block';
-                navLinks.style.display = 'none';
-            } else {
-                mobileMenuBtn.style.display = 'none';
-                navLinks.style.display = 'flex';
+        // Close menu when clicking outside
+        document.addEventListener('click', (e) => {
+            if (!nav.contains(e.target) && navLinks.classList.contains('active')) {
+                navLinks.classList.remove('active');
+                const icon = mobileMenuBtn.querySelector('i');
+                icon.className = 'fas fa-bars';
             }
-        }
+        });
         
-        checkScreenSize();
-        window.addEventListener('resize', checkScreenSize);
+        // Close menu when clicking on a link
+        navLinks.addEventListener('click', (e) => {
+            if (e.target.tagName === 'A') {
+                navLinks.classList.remove('active');
+                const icon = mobileMenuBtn.querySelector('i');
+                icon.className = 'fas fa-bars';
+            }
+        });
     }
 }); 
