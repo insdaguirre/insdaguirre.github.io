@@ -1,0 +1,76 @@
+# Site settings
+title: Diego Aguirre
+email: contact@diegoaguirre.com
+description: >- # this means to ignore newlines until "baseurl:"
+  Senior at Cornell University studying Data Science and Physics. 
+  Passionate about ML, Financial Engineering, and building innovative solutions.
+baseurl: "" # the subpath of your site, e.g. /blog
+url: "https://insdaguirre.github.io" # the base hostname & protocol for your site, e.g. http://example.com
+twitter_username: insdaguirre
+github_username:  insdaguirre
+
+# Build settings
+markdown: kramdown
+highlighter: rouge
+permalink: pretty
+
+# Collections
+collections:
+  posts:
+    output: true
+    permalink: /:collection/:name/
+
+# Plugins
+plugins:
+  - jekyll-feed
+  - jekyll-seo-tag
+  - jekyll-sitemap
+
+# Exclude from processing
+exclude:
+  - Gemfile
+  - Gemfile.lock
+  - node_modules
+  - vendor/bundle/
+  - vendor/cache/
+  - vendor/gems/
+  - vendor/ruby/
+
+# Defaults
+defaults:
+  -
+    scope:
+      path: ""
+      type: "posts"
+    values:
+      layout: "post"
+  -
+    scope:
+      path: ""
+      type: "pages"
+    values:
+      layout: "default"
+
+# Social media
+social:
+  - name: GitHub
+    url: https://github.com/insdaguirre
+    icon: fab fa-github
+  - name: LinkedIn
+    url: https://linkedin.com/in/diego-aguirre
+    icon: fab fa-linkedin
+  - name: Email
+    url: mailto:contact@diegoaguirre.com
+    icon: fas fa-envelope
+
+# Theme settings
+theme_settings:
+  # Meta
+  meta:
+    title: "Diego Aguirre - Data Scientist & Entrepreneur"
+    description: "Senior at Cornell University studying Data Science and Physics. Passionate about ML, Financial Engineering, and building innovative solutions."
+    keywords: "data science, machine learning, financial engineering, cornell university, python, entrepreneur"
+    author: "Diego Aguirre"
+    url: "https://insdaguirre.github.io"
+    image: "https://github.com/insdaguirre.png"
+    type: "website" 
