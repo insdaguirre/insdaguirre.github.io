@@ -103,16 +103,16 @@ window.addEventListener('load', () => {
 // Add mobile menu functionality
 document.addEventListener('DOMContentLoaded', () => {
     const navLinks = document.querySelector('.nav-links');
-    const mobileMenuBtn = document.createElement('button');
-    mobileMenuBtn.innerHTML = '<i class="fas fa-bars"></i>';
-    mobileMenuBtn.className = 'mobile-menu-btn';
+    const mobileMenuBtn = document.getElementById('mobile-menu-btn');
     
-    const nav = document.querySelector('.nav');
-    if (nav && navLinks) {
-        nav.appendChild(mobileMenuBtn);
-        
-        mobileMenuBtn.addEventListener('click', () => {
+    console.log('Mobile menu elements:', { navLinks, mobileMenuBtn });
+    
+    if (mobileMenuBtn && navLinks) {
+        mobileMenuBtn.addEventListener('click', (e) => {
+            e.preventDefault();
+            console.log('Mobile menu clicked!');
             navLinks.classList.toggle('active');
+            
             // Change icon when menu is open/closed
             const icon = mobileMenuBtn.querySelector('i');
             if (navLinks.classList.contains('active')) {
@@ -124,7 +124,7 @@ document.addEventListener('DOMContentLoaded', () => {
         
         // Close menu when clicking outside
         document.addEventListener('click', (e) => {
-            if (!nav.contains(e.target) && navLinks.classList.contains('active')) {
+            if (!mobileMenuBtn.contains(e.target) && !navLinks.contains(e.target) && navLinks.classList.contains('active')) {
                 navLinks.classList.remove('active');
                 const icon = mobileMenuBtn.querySelector('i');
                 icon.className = 'fas fa-bars';
