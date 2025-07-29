@@ -109,24 +109,41 @@ function getTechTags(repo) {
 
 // Function to fetch and display recent repositories
 async function loadRecentRepositories() {
+    console.log('loadRecentRepositories called');
     const projectsGrid = document.querySelector('.projects-grid');
-    if (!projectsGrid) return;
+    console.log('projectsGrid found:', projectsGrid);
+    
+    if (!projectsGrid) {
+        console.error('Projects grid not found');
+        return;
+    }
     
     try {
         // Show loading state
         projectsGrid.innerHTML = '<div class="loading">Loading recent projects...</div>';
+        console.log('Loading state set');
         
         // Fetch recent repositories from GitHub API
+        console.log('Fetching repositories from GitHub API...');
         const response = await fetch('https://api.github.com/users/insdaguirre/repos?sort=updated&per_page=12');
+        console.log('Response status:', response.status);
+        
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        
         const repos = await response.json();
+        console.log('Repositories fetched:', repos.length);
         
         if (!Array.isArray(repos)) {
-            throw new Error('Failed to fetch repositories');
+            throw new Error('Failed to fetch repositories - not an array');
         }
         
         // Clear loading state and populate projects
         projectsGrid.innerHTML = '';
+        console.log('Cleared loading state');
         
+        let projectCount = 0;
         repos.forEach(repo => {
             if (!repo.fork) { // Only show non-forked repositories
                 const projectCard = document.createElement('a');
@@ -151,8 +168,11 @@ async function loadRecentRepositories() {
                 `;
                 
                 projectsGrid.appendChild(projectCard);
+                projectCount++;
             }
         });
+        
+        console.log('Added', projectCount, 'project cards');
         
         // Re-observe new project cards for animations
         document.querySelectorAll('.project-card').forEach(el => {
@@ -162,11 +182,14 @@ async function loadRecentRepositories() {
         // Re-add hover effects to new project cards
         addProjectCardHoverEffects();
         
+        console.log('Repository loading completed successfully');
+        
     } catch (error) {
         console.error('Error loading repositories:', error);
         projectsGrid.innerHTML = `
             <div class="error-message">
-                <p>Unable to load recent projects. Please check my <a href="https://github.com/insdaguirre" target="_blank">GitHub profile</a> directly.</p>
+                <p>Unable to load recent projects. Error: ${error.message}</p>
+                <p>Please check my <a href="https://github.com/insdaguirre" target="_blank">GitHub profile</a> directly.</p>
             </div>
         `;
     }
@@ -281,6 +304,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
 // Load recent repositories when DOM is ready
 document.addEventListener('DOMContentLoaded', () => {
+    console.log('DOMContentLoaded event fired');
+    
     // Observe existing elements for animations
     document.querySelectorAll('.project-card, .about-content, .contact-content').forEach(el => {
         observer.observe(el);
@@ -288,4 +313,24 @@ document.addEventListener('DOMContentLoaded', () => {
     
     // Load recent repositories
     loadRecentRepositories();
-}); 
+});
+
+// Fallback: Also try to load repositories when window loads
+window.addEventListener('load', () => {
+    console.log('Window load event fired');
+    const projectsGrid = document.querySelector('.projects-grid');
+    if (projectsGrid && projectsGrid.innerHTML.includes('Loading recent projects')) {
+        console.log('Projects still loading, retrying...');
+        loadRecentRepositories();
+    }
+});
+
+// Additional fallback: Try after a short delay
+setTimeout(() => {
+    console.log('Timeout fallback triggered');
+    const projectsGrid = document.querySelector('.projects-grid');
+    if (projectsGrid && projectsGrid.innerHTML.includes('Loading recent projects')) {
+        console.log('Projects still loading after timeout, retrying...');
+        loadRecentRepositories();
+    }
+}, 2000); 
