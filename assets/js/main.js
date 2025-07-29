@@ -38,12 +38,154 @@ const observer = new IntersectionObserver((entries) => {
     });
 }, observerOptions);
 
-// Observe all project cards and sections
-document.addEventListener('DOMContentLoaded', () => {
-    document.querySelectorAll('.project-card, .about-content, .contact-content').forEach(el => {
-        observer.observe(el);
+// Function to get appropriate icon for repository based on language or name
+function getProjectIcon(repo) {
+    const name = repo.name.toLowerCase();
+    const language = repo.language ? repo.language.toLowerCase() : '';
+    
+    // Language-based icons
+    if (language.includes('python')) return 'fab fa-python';
+    if (language.includes('javascript')) return 'fab fa-js';
+    if (language.includes('typescript')) return 'fab fa-js';
+    if (language.includes('java')) return 'fab fa-java';
+    if (language.includes('html')) return 'fab fa-html5';
+    if (language.includes('css')) return 'fab fa-css3-alt';
+    if (language.includes('react')) return 'fab fa-react';
+    if (language.includes('node')) return 'fab fa-node-js';
+    
+    // Name-based icons
+    if (name.includes('ml') || name.includes('machine') || name.includes('ai')) return 'fas fa-brain';
+    if (name.includes('stock') || name.includes('finance') || name.includes('trading')) return 'fas fa-chart-line';
+    if (name.includes('web') || name.includes('app') || name.includes('site')) return 'fas fa-globe';
+    if (name.includes('bot') || name.includes('automation')) return 'fas fa-robot';
+    if (name.includes('data') || name.includes('analysis')) return 'fas fa-chart-bar';
+    if (name.includes('mobile') || name.includes('app')) return 'fas fa-mobile-alt';
+    if (name.includes('api') || name.includes('backend')) return 'fas fa-server';
+    if (name.includes('game') || name.includes('gaming')) return 'fas fa-gamepad';
+    if (name.includes('music') || name.includes('dj')) return 'fas fa-music';
+    if (name.includes('social') || name.includes('media')) return 'fas fa-share-alt';
+    if (name.includes('education') || name.includes('learn')) return 'fas fa-graduation-cap';
+    if (name.includes('portfolio') || name.includes('profile')) return 'fas fa-user';
+    
+    // Default icon
+    return 'fas fa-code';
+}
+
+// Function to get technology tags based on repository data
+function getTechTags(repo) {
+    const tags = [];
+    const language = repo.language;
+    const name = repo.name.toLowerCase();
+    
+    if (language) {
+        tags.push(language);
+    }
+    
+    // Add relevant tags based on repository characteristics
+    if (repo.topics && repo.topics.length > 0) {
+        tags.push(...repo.topics.slice(0, 3));
+    }
+    
+    // Add tags based on name/content
+    if (name.includes('ml') || name.includes('machine') || name.includes('ai')) {
+        tags.push('Machine Learning');
+    }
+    if (name.includes('data') || name.includes('analysis')) {
+        tags.push('Data Science');
+    }
+    if (name.includes('web') || name.includes('app')) {
+        tags.push('Web Development');
+    }
+    if (name.includes('finance') || name.includes('stock')) {
+        tags.push('Financial Analysis');
+    }
+    if (name.includes('automation') || name.includes('bot')) {
+        tags.push('Automation');
+    }
+    
+    // Remove duplicates and limit to 4 tags
+    return [...new Set(tags)].slice(0, 4);
+}
+
+// Function to fetch and display recent repositories
+async function loadRecentRepositories() {
+    const projectsGrid = document.querySelector('.projects-grid');
+    if (!projectsGrid) return;
+    
+    try {
+        // Show loading state
+        projectsGrid.innerHTML = '<div class="loading">Loading recent projects...</div>';
+        
+        // Fetch recent repositories from GitHub API
+        const response = await fetch('https://api.github.com/users/insdaguirre/repos?sort=updated&per_page=12');
+        const repos = await response.json();
+        
+        if (!Array.isArray(repos)) {
+            throw new Error('Failed to fetch repositories');
+        }
+        
+        // Clear loading state and populate projects
+        projectsGrid.innerHTML = '';
+        
+        repos.forEach(repo => {
+            if (!repo.fork) { // Only show non-forked repositories
+                const projectCard = document.createElement('a');
+                projectCard.href = repo.html_url;
+                projectCard.className = 'project-card';
+                projectCard.target = '_blank';
+                
+                const icon = getProjectIcon(repo);
+                const techTags = getTechTags(repo);
+                
+                projectCard.innerHTML = `
+                    <div class="project-header">
+                        <div class="project-icon">
+                            <i class="${icon}"></i>
+                        </div>
+                        <h3 class="project-title">${repo.name.replace(/_/g, ' ').replace(/-/g, ' ')}</h3>
+                    </div>
+                    <p class="project-description">${repo.description || 'A personal project showcasing my skills and interests.'}</p>
+                    <div class="project-tech">
+                        ${techTags.map(tag => `<span class="tech-tag">${tag}</span>`).join('')}
+                    </div>
+                `;
+                
+                projectsGrid.appendChild(projectCard);
+            }
+        });
+        
+        // Re-observe new project cards for animations
+        document.querySelectorAll('.project-card').forEach(el => {
+            observer.observe(el);
+        });
+        
+        // Re-add hover effects to new project cards
+        addProjectCardHoverEffects();
+        
+    } catch (error) {
+        console.error('Error loading repositories:', error);
+        projectsGrid.innerHTML = `
+            <div class="error-message">
+                <p>Unable to load recent projects. Please check my <a href="https://github.com/insdaguirre" target="_blank">GitHub profile</a> directly.</p>
+            </div>
+        `;
+    }
+}
+
+// Function to add hover effects to project cards
+function addProjectCardHoverEffects() {
+    const projectCards = document.querySelectorAll('.project-card');
+    
+    projectCards.forEach(card => {
+        card.addEventListener('mouseenter', () => {
+            card.style.transform = 'translateY(-10px) scale(1.02)';
+        });
+        
+        card.addEventListener('mouseleave', () => {
+            card.style.transform = 'translateY(0) scale(1)';
+        });
     });
-});
+}
 
 // Add typing effect to hero title
 function typeWriter(element, text, speed = 100) {
@@ -78,21 +220,6 @@ window.addEventListener('scroll', () => {
         const rate = scrolled * -0.5;
         hero.style.transform = `translateY(${rate}px)`;
     }
-});
-
-// Add hover effects to project cards
-document.addEventListener('DOMContentLoaded', () => {
-    const projectCards = document.querySelectorAll('.project-card');
-    
-    projectCards.forEach(card => {
-        card.addEventListener('mouseenter', () => {
-            card.style.transform = 'translateY(-10px) scale(1.02)';
-        });
-        
-        card.addEventListener('mouseleave', () => {
-            card.style.transform = 'translateY(0) scale(1)';
-        });
-    });
 });
 
 // Add loading animation
