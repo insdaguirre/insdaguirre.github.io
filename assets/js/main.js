@@ -277,4 +277,15 @@ document.addEventListener('DOMContentLoaded', () => {
     } else {
         console.log('Mobile menu elements not found:', { navLinks, mobileMenuBtn });
     }
+});
+
+// Load recent repositories when DOM is ready
+document.addEventListener('DOMContentLoaded', () => {
+    // Observe existing elements for animations
+    document.querySelectorAll('.project-card, .about-content, .contact-content').forEach(el => {
+        observer.observe(el);
+    });
+    
+    // Load recent repositories
+    loadRecentRepositories();
 }); 
