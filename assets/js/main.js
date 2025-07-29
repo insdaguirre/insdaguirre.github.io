@@ -107,8 +107,12 @@ function getTechTags(repo) {
     return [...new Set(tags)].slice(0, 4);
 }
 
+// Global flag to track if function was called
+window.repoFunctionCalled = false;
+
 // Function to fetch and display recent repositories
 async function loadRecentRepositories() {
+    window.repoFunctionCalled = true;
     console.log('loadRecentRepositories called');
     const projectsGrid = document.querySelector('.projects-grid');
     console.log('projectsGrid found:', projectsGrid);
@@ -157,7 +161,7 @@ async function loadRecentRepositories() {
                 projectCard.innerHTML = `
                     <div class="project-header">
                         <div class="project-icon">
-                            <i class="${icon}"></i>
+                            <span>📁</span>
                         </div>
                         <h3 class="project-title">${repo.name.replace(/_/g, ' ').replace(/-/g, ' ')}</h3>
                     </div>
