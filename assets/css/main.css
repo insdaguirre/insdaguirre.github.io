@@ -275,10 +275,23 @@ section {
     margin-bottom: 1rem;
 }
 
+/* Make inline callouts inside descriptions look like links */
+.project-description .live-link {
+    color: var(--primary);
+    text-decoration: underline;
+    cursor: pointer;
+}
+
 .project-tech {
     display: flex;
     flex-wrap: wrap;
     gap: 0.5rem;
+}
+
+.project-links {
+    display: flex;
+    gap: 0.75rem;
+    margin-top: 1rem;
 }
 
 .tech-tag {
