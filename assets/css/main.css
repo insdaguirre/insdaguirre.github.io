@@ -154,6 +154,11 @@ body {
     padding: 5rem 0;
 }
 
+/* Prevent fixed header from overlapping anchor targets */
+section {
+    scroll-margin-top: 90px;
+}
+
 .section-title {
     font-size: 2.5rem;
     font-weight: 700;
