@@ -295,6 +295,17 @@ section {
     justify-content: center;
 }
 
+/* Ensure project card action buttons are centered and visible on white cards */
+.project-card .project-links {
+    justify-content: center;
+}
+
+.project-card .btn-secondary {
+    background: var(--secondary);
+    color: var(--text);
+    border: 1px solid var(--border);
+}
+
 .tech-tag {
     background: var(--secondary);
     color: var(--text);
