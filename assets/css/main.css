@@ -208,6 +208,8 @@ section {
 
 .about-image {
     text-align: center;
+    position: relative;
+    display: inline-block;
 }
 
 .profile-img {
@@ -217,6 +219,38 @@ section {
     object-fit: cover;
     border: 4px solid white;
     box-shadow: var(--shadow-lg);
+    transition: filter 0.3s ease, transform 0.3s ease, opacity 0.3s ease;
+}
+
+.profile-link {
+    position: relative;
+    display: inline-block;
+}
+
+.profile-overlay {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(0, 0, 0, 0.35);
+    border-radius: 50%;
+    color: white;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    pointer-events: none;
+}
+
+.profile-overlay i {
+    font-size: 2rem;
+}
+
+.profile-link:hover .profile-img {
+    filter: blur(2px) brightness(0.85);
+}
+
+.profile-link:hover .profile-overlay {
+    opacity: 1;
 }
 
 /* Projects Section */
