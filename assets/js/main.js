@@ -106,7 +106,16 @@ document.addEventListener('DOMContentLoaded', () => {
             if (target.closest('a')) return;
             const repo = card.getAttribute('data-repo');
             if (repo) {
-                window.open(repo, '_blank');
+                window.location.href = repo;
+            }
+        });
+
+        // Keyboard accessibility
+        card.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter' || e.key === ' ') {
+                e.preventDefault();
+                const repo = card.getAttribute('data-repo');
+                if (repo) window.location.href = repo;
             }
         });
     });
