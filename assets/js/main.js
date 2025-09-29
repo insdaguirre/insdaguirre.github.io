@@ -95,6 +95,23 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 });
 
+// Make div-based project cards clickable to their repo while preserving inner links
+document.addEventListener('DOMContentLoaded', () => {
+    const cardsWithRepo = document.querySelectorAll('.project-card[data-repo]');
+    cardsWithRepo.forEach(card => {
+        card.style.cursor = 'pointer';
+        card.addEventListener('click', (e) => {
+            // If clicking an inner link or button, let it handle navigation
+            const target = e.target;
+            if (target.closest('a')) return;
+            const repo = card.getAttribute('data-repo');
+            if (repo) {
+                window.open(repo, '_blank');
+            }
+        });
+    });
+});
+
 // Add loading animation
 window.addEventListener('load', () => {
     document.body.classList.add('loaded');
