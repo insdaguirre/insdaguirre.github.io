@@ -1,8 +1,8 @@
 # Site settings
-title: Diego Aguirre - Data Scientist & Entrepreneur
+title: Diego Aguirre - Developer, Data-Scientist, and Entrepreneur
 email: contact@diegoaguirre.com
 description: >- # this means to ignore newlines until "baseurl:"
-  Diego Aguirre - Data Scientist and Entrepreneur at Cornell University. 
+  Diego Aguirre - Developer, Data-Scientist, and Entrepreneur. 
   Expert in Machine Learning, Financial Engineering, Python, and Data Science. 
   View my projects, skills, and professional portfolio.
 baseurl: "" # the subpath of your site, e.g. /blog
@@ -72,8 +72,8 @@ social:
 theme_settings:
   # Meta
   meta:
-    title: "Diego Aguirre - Data Scientist & Entrepreneur"
-    description: "Senior at Cornell University studying Data Science and Physics. Passionate about ML, Financial Engineering, and building innovative solutions."
+    title: "Diego Aguirre - Developer, Data-Scientist, and Entrepreneur"
+    description: "Developer, Data-Scientist, and Entrepreneur"
     keywords: "data science, machine learning, financial engineering, cornell university, python, entrepreneur"
     author: "Diego Aguirre"
     url: "https://insdaguirre.github.io"
