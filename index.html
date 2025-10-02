@@ -87,7 +87,7 @@ description: Developer, Data-Scientist, and Entrepreneur
                     </div>
                     <h3 class="project-title">Stock Hub</h3>
                 </div>
-                <p class="project-description">Stock Hub is a FastAPI-powered backend that serves multi‑model stock forecasts (ARIMA, Random Forest, Prophet, XGBoost, LSTM, and more) with historical data and metrics. It’s deployed on Railway with a web service and a Redis‑backed worker, stores model artifacts in S3‑compatible L2 object storage, and uses GitHub Actions to precompute predictions for a specified ticker list to keep responses fast.</p>
+                <p class="project-description">Stock Hub is a FastAPI-powered backend with a React frontend that delivers multi-model stock forecasts (ARIMA, LSTM, Random Forest, Prophet, XGBoost, and more). It runs on Railway with web & RQ worker processes,  Redis for caching and job management, stores model artifacts in AWS S3, and integrates Alpha Vantage (primary) and Finnhub (secondary) APIs for data. ARIMA is retrained weekly, and other models are being added.. ⚠️ Built on free API tiers, so responses may error or rate-limit and are not production-ready.</p>
                 <div class="project-tech">
                     <span class="tech-tag">fastapi</span>
                     <span class="tech-tag">redis</span>
