@@ -455,7 +455,7 @@ window.addEventListener('load', () => {
 });
 
 // Add glitch effect to section titles on scroll
-const observerOptions = {
+const titleObserverOptions = {
     threshold: 0.5,
     rootMargin: '0px'
 };
@@ -469,7 +469,7 @@ const titleObserver = new IntersectionObserver((entries) => {
             }, 10);
         }
     });
-}, observerOptions);
+}, titleObserverOptions);
 
 document.addEventListener('DOMContentLoaded', () => {
     document.querySelectorAll('.section-title').forEach(title => {
