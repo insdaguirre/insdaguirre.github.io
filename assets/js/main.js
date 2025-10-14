@@ -295,9 +295,14 @@ class DynamicTicker {
 
 // Load and display GitHub stats
 async function loadGitHubStats() {
+    console.log('=== loadGitHubStats CALLED ===');
+    
     try {
+        console.log('Fetching github-stats.json...');
         const response = await fetch('/assets/data/github-stats.json');
         const stats = await response.json();
+        
+        console.log('✅ Fetch successful, stats:', stats);
         
         // Update the stats in the HTML with fallback for old data structure
         const statsElements = {
@@ -306,35 +311,47 @@ async function loadGitHubStats() {
             languages: 5  // Keep static
         };
         
+        console.log('Stats to display:', statsElements);
+        
         // Trigger number counters
         const counterElements = document.querySelectorAll('[data-counter]');
-        console.log(`Found ${counterElements.length} counter elements`);
+        console.log(`Found ${counterElements.length} counter elements in DOM`);
+        
+        if (counterElements.length === 0) {
+            console.error('❌ NO ELEMENTS FOUND WITH [data-counter] attribute!');
+            console.log('DOM ready state:', document.readyState);
+            return;
+        }
         
         // Debug: Log each element we found
         counterElements.forEach((element, index) => {
             console.log(`Element ${index}:`, {
                 tagName: element.tagName,
+                innerHTML: element.innerHTML,
                 textContent: element.textContent,
                 dataStat: element.getAttribute('data-stat'),
                 dataCounter: element.getAttribute('data-counter')
             });
         });
         
+        console.log('=== UPDATING ELEMENTS ===');
         counterElements.forEach(element => {
             const key = element.getAttribute('data-stat');
-            console.log(`Processing element with data-stat: ${key}, current value: ${statsElements[key]}`);
+            const value = statsElements[key];
             
-            if (statsElements[key] !== undefined) {
+            console.log(`Processing ${key}: ${value}`);
+            
+            if (value !== undefined) {
                 // Set the data attribute first
-                element.setAttribute('data-counter', statsElements[key]);
+                element.setAttribute('data-counter', value);
                 
                 // Immediate update - set text content directly
-                element.textContent = statsElements[key].toLocaleString();
+                element.textContent = value.toLocaleString();
                 
                 // Force a reflow to ensure the text is visible
                 element.offsetHeight;
                 
-                console.log(`Updated ${key}: ${statsElements[key]} (text: ${element.textContent})`);
+                console.log(`✅ Updated ${key}: ${value} (displayed as: ${element.textContent})`);
                 
                 // Optional: Add a subtle animation effect without overriding the text
                 element.style.transition = 'all 0.3s ease';
@@ -343,26 +360,30 @@ async function loadGitHubStats() {
                     element.style.transform = 'scale(1)';
                 }, 300);
             } else {
-                console.log(`No value found for ${key}`);
+                console.warn(`⚠️ No value found for ${key}`);
             }
         });
         
-        console.log('GitHub stats loaded:', stats);
-        console.log('Displayed stats:', statsElements);
-        console.log('Raw stats data:', JSON.stringify(stats, null, 2));
+        console.log('=== STATS UPDATE COMPLETE ===');
     } catch (error) {
-        console.error('Failed to load GitHub stats:', error);
+        console.error('❌ Failed to load GitHub stats:', error);
+        console.error('Error details:', error.message, error.stack);
+        
         // Fallback to default values
         const defaultStats = {
-            commits: 100,
-            repos: 30,
+            commits: 2957,
+            repos: 37,
             languages: 5
         };
+        
+        console.log('Applying fallback stats:', defaultStats);
+        
         document.querySelectorAll('[data-counter]').forEach(element => {
             const key = element.getAttribute('data-stat');
             if (defaultStats[key] !== undefined) {
+                element.textContent = defaultStats[key].toLocaleString();
                 element.setAttribute('data-counter', defaultStats[key]);
-                new NumberCounter(element, defaultStats[key]);
+                console.log(`Fallback set ${key} to ${defaultStats[key]}`);
             }
         });
     }
@@ -430,8 +451,12 @@ document.addEventListener('DOMContentLoaded', () => {
         new GlitchEffect(title, { interval: 6000, duration: 200, intensity: 0.8 });
     });
     
-    // Load GitHub stats immediately
-    loadGitHubStats();
+    // Load GitHub stats immediately after a short delay to ensure DOM is ready
+    console.log('Initializing GitHub stats loader...');
+    setTimeout(() => {
+        console.log('Loading GitHub stats now...');
+        loadGitHubStats();
+    }, 100);
     
     // Fallback: Set default values if stats don't load within 3 seconds
     setTimeout(() => {
