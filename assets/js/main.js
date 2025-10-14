@@ -213,12 +213,20 @@ class DynamicTicker {
     
     async loadStockData() {
         try {
+            console.log('🔄 Loading stock data...');
             const response = await fetch('/assets/data/stocks.json');
+            console.log('📡 Response status:', response.status);
+            
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+            
             const data = await response.json();
             this.stocks = data.stocks;
-            console.log(`Loaded ${this.stocks.length} stocks from ${data.last_updated}`);
+            console.log(`✅ Loaded ${this.stocks.length} stocks from ${data.last_updated}`);
+            console.log('📊 Sample stock data:', this.stocks.slice(0, 3));
         } catch (error) {
-            console.error('Failed to load stock data:', error);
+            console.error('❌ Failed to load stock data:', error);
             // Fallback to default data
             this.stocks = [
                 { symbol: 'AAPL', price: 182.52, change: 1.25 },
@@ -230,11 +238,17 @@ class DynamicTicker {
                 { symbol: 'TSLA', price: 248.42, change: -0.08 },
                 { symbol: 'JPM', price: 185.50, change: 2.15 }
             ];
+            console.log('🔄 Using fallback data');
         }
     }
     
     updateTicker() {
-        if (this.stocks.length === 0) return;
+        if (this.stocks.length === 0) {
+            console.log('⚠️ No stocks data available');
+            return;
+        }
+        
+        console.log('🔄 Updating ticker with', this.stocks.length, 'stocks');
         
         const tickerHTML = this.stocks.map(stock => {
             const changeClass = stock.change >= 0 ? 'price-up' : 'price-down';
@@ -243,7 +257,12 @@ class DynamicTicker {
             return `<span class="ticker-item">${stock.symbol}: $${stock.price.toFixed(2)} <span class="${changeClass}">${changeSymbol} ${changeText}</span></span>`;
         }).join('');
         
-        this.ticker.innerHTML = tickerHTML;
+        if (this.ticker) {
+            this.ticker.innerHTML = tickerHTML;
+            console.log('✅ Ticker updated successfully');
+        } else {
+            console.error('❌ Ticker element not found!');
+        }
     }
 }
 
