@@ -21,16 +21,16 @@ document.addEventListener('mousemove', (e) => {
     window.mousePosition.y = e.clientY;
 });
 
-// Add scroll effect to header with Tron styling
+// Add scroll effect to header with terminal styling
 window.addEventListener('scroll', () => {
     const header = document.querySelector('.header');
     if (header) {
         if (window.scrollY > 100) {
-            header.style.background = 'rgba(10, 10, 10, 0.95)';
-            header.style.boxShadow = '0 0 30px rgba(0, 240, 255, 0.2)';
+            header.style.background = 'rgba(0, 0, 0, 0.98)';
+            header.style.boxShadow = '0 0 30px rgba(0, 255, 65, 0.3)';
         } else {
-            header.style.background = 'rgba(10, 10, 10, 0.8)';
-            header.style.boxShadow = '0 0 20px rgba(0, 240, 255, 0.1)';
+            header.style.background = 'rgba(0, 0, 0, 0.95)';
+            header.style.boxShadow = '0 0 20px rgba(0, 255, 65, 0.2)';
         }
     }
 });
@@ -56,11 +56,11 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 });
 
-// Add typing effect to hero title with cursor
+// Add typing effect to hero title with terminal cursor
 function typeWriter(element, text, speed = 80) {
     let i = 0;
     element.innerHTML = '';
-    const cursor = '<span class="typing-cursor" style="color: var(--primary); animation: blink 1s infinite;">|</span>';
+    const cursor = '<span class="typing-cursor" style="color: var(--terminal-green); animation: blink 1s infinite;">█</span>';
     
     function type() {
         if (i < text.length) {
@@ -208,7 +208,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 });
 
-// Add mobile menu functionality with Tron styling
+// Add mobile menu functionality with terminal styling
 document.addEventListener('DOMContentLoaded', () => {
     const navLinks = document.querySelector('.nav-links');
     const mobileMenuBtn = document.getElementById('mobile-menu-btn');
@@ -225,14 +225,14 @@ document.addEventListener('DOMContentLoaded', () => {
             const icon = mobileMenuBtn.querySelector('i');
             if (navLinks.classList.contains('active')) {
                 icon.className = 'fas fa-times';
-                mobileMenuBtn.style.boxShadow = '0 0 20px rgba(255, 0, 110, 0.8)';
-                mobileMenuBtn.style.borderColor = 'var(--accent)';
-                mobileMenuBtn.style.color = 'var(--accent)';
+                mobileMenuBtn.style.boxShadow = '0 0 20px rgba(255, 102, 0, 0.8)';
+                mobileMenuBtn.style.borderColor = 'var(--bloomberg-orange)';
+                mobileMenuBtn.style.color = 'var(--bloomberg-orange)';
             } else {
                 icon.className = 'fas fa-bars';
-                mobileMenuBtn.style.boxShadow = 'var(--glow-cyan)';
-                mobileMenuBtn.style.borderColor = 'var(--primary)';
-                mobileMenuBtn.style.color = 'var(--primary)';
+                mobileMenuBtn.style.boxShadow = 'var(--glow-terminal)';
+                mobileMenuBtn.style.borderColor = 'var(--terminal-green)';
+                mobileMenuBtn.style.color = 'var(--terminal-green)';
             }
         });
         
@@ -242,9 +242,9 @@ document.addEventListener('DOMContentLoaded', () => {
                 navLinks.classList.remove('active');
                 const icon = mobileMenuBtn.querySelector('i');
                 icon.className = 'fas fa-bars';
-                mobileMenuBtn.style.boxShadow = 'var(--glow-cyan)';
-                mobileMenuBtn.style.borderColor = 'var(--primary)';
-                mobileMenuBtn.style.color = 'var(--primary)';
+                mobileMenuBtn.style.boxShadow = 'var(--glow-terminal)';
+                mobileMenuBtn.style.borderColor = 'var(--terminal-green)';
+                mobileMenuBtn.style.color = 'var(--terminal-green)';
             }
         });
         
@@ -254,9 +254,9 @@ document.addEventListener('DOMContentLoaded', () => {
                 navLinks.classList.remove('active');
                 const icon = mobileMenuBtn.querySelector('i');
                 icon.className = 'fas fa-bars';
-                mobileMenuBtn.style.boxShadow = 'var(--glow-cyan)';
-                mobileMenuBtn.style.borderColor = 'var(--primary)';
-                mobileMenuBtn.style.color = 'var(--primary)';
+                mobileMenuBtn.style.boxShadow = 'var(--glow-terminal)';
+                mobileMenuBtn.style.borderColor = 'var(--terminal-green)';
+                mobileMenuBtn.style.color = 'var(--terminal-green)';
             }
         });
     }

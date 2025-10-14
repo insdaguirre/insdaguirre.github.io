@@ -4,15 +4,29 @@ title: Diego Aguirre - Developer, Data-Scientist, and Entrepreneur
 description: Developer, Data-Scientist, and Entrepreneur
 ---
 
-    <!-- Header -->
+    <!-- Terminal System Header -->
     <header class="header">
+        <!-- Live Data Ticker -->
+        <div class="data-ticker">
+            <div class="ticker-content" id="ticker-content">
+                <span class="ticker-item">AAPL: $182.52 ↑</span>
+                <span class="ticker-item">TSLA: $248.42 ↓</span>
+                <span class="ticker-item">BTC: $43,250.00 ↑</span>
+                <span class="ticker-item">ETH: $2,650.00 ↑</span>
+                <span class="ticker-item">NVDA: $875.28 ↑</span>
+                <span class="ticker-item">MSFT: $378.85 ↓</span>
+                <span class="ticker-item">GOOGL: $142.30 ↑</span>
+                <span class="ticker-item">AMZN: $155.20 ↓</span>
+            </div>
+        </div>
+        
         <nav class="nav container">
-            <div class="logo">DA</div>
+            <div class="logo">DA_TERMINAL</div>
             <ul class="nav-links">
-                <li><a href="#about">About</a></li>
-                <li><a href="#projects">Projects</a></li>
-                <li><a href="#contact">Contact</a></li>
-                <li><a href="https://www.instagram.com/deegz.mp3/" target="_blank">Alter Ego</a></li>
+                <li><a href="#about">ABOUT</a></li>
+                <li><a href="#projects">PROJECTS</a></li>
+                <li><a href="#contact">CONTACT</a></li>
+                <li><a href="https://www.instagram.com/deegz.mp3/" target="_blank">ALTER_EGO</a></li>
             </ul>
             <button class="mobile-menu-btn" id="mobile-menu-btn">
                 <i class="fas fa-bars"></i>
@@ -20,21 +34,33 @@ description: Developer, Data-Scientist, and Entrepreneur
         </nav>
     </header>
 
-<!-- Hero Section -->
+<!-- Terminal Hero Section -->
 <section class="hero">
     <div class="container">
         <div class="hero-content fade-in-up">
+            <div class="terminal-prompt">
+                <span class="prompt-symbol">$</span>
+                <span class="prompt-text">whoami</span>
+            </div>
             <h1>Diego Aguirre</h1>
-            <p>Developer, Data-Scientist, and Entrepreneur</p>
-            <p>Leveraging Data Science & ML to build innovative solutions that connect people and technology</p>
+            <div class="terminal-prompt">
+                <span class="prompt-symbol">$</span>
+                <span class="prompt-text">cat profile.txt</span>
+            </div>
+            <p class="terminal-output">Developer, Data-Scientist, and Entrepreneur</p>
+            <p class="terminal-output">Leveraging Data Science & ML to build innovative solutions that connect people and technology</p>
+            <div class="terminal-prompt">
+                <span class="prompt-symbol">$</span>
+                <span class="prompt-text">ls -la projects/</span>
+            </div>
             <div class="cta-buttons">
                 <a href="#projects" class="btn btn-primary">
-                    <i class="fas fa-rocket"></i>
-                    View Projects
+                    <i class="fas fa-terminal"></i>
+                    VIEW_PROJECTS
                 </a>
                 <a href="https://github.com/insdaguirre" class="btn btn-secondary" target="_blank">
                     <i class="fab fa-github"></i>
-                    GitHub
+                    GITHUB_REPO
                 </a>
             </div>
         </div>
@@ -44,23 +70,31 @@ description: Developer, Data-Scientist, and Entrepreneur
 <!-- About Section -->
 <section id="about" class="section about">
     <div class="container">
-        <h2 class="section-title">About Me</h2>
+        <h2 class="section-title">$ cat about.txt</h2>
         <div class="about-content">
             <div class="about-text">
+                    <div class="terminal-prompt">
+                        <span class="prompt-symbol">$</span>
+                        <span class="prompt-text">cat profile.txt | head -5</span>
+                    </div>
                     <h3>Developer, Data Scientist, & Entrepreneur</h3>
-                    <p>I’m Diego Aguirre, a senior at Cornell University studying Data Science with a Physics minor. I focus on machine learning and software engineering, bringing a user-centric mindset to translate real problems into reliable, scalable systems.</p>
-                    <p>My experience spans Python development, ML modeling, data analysis, and full-stack implementation. I’ve built projects ranging from sentiment analysis and stock-prediction pipelines to automation tools and smartphone apps.</p>
-                    <p>Outside class and work, I explore emerging technologies, prototype new products, and make music.</p>
+                    <div class="terminal-output">I'm Diego Aguirre, a senior at Cornell University studying Data Science with a Physics minor. I focus on machine learning and software engineering, bringing a user-centric mindset to translate real problems into reliable, scalable systems.</div>
+                    <div class="terminal-output">My experience spans Python development, ML modeling, data analysis, and full-stack implementation. I've built projects ranging from sentiment analysis and stock-prediction pipelines to automation tools and smartphone apps.</div>
+                    <div class="terminal-output">Outside class and work, I explore emerging technologies, prototype new products, and make music.</div>
+                <div class="terminal-prompt">
+                    <span class="prompt-symbol">$</span>
+                    <span class="prompt-text">ls skills/</span>
+                </div>
                 <div class="skills">
-                    <span class="skill-tag">Python</span>
-                    <span class="skill-tag">Machine Learning</span>
-                    <span class="skill-tag">Data Science</span>
-                    <span class="skill-tag">Human Centered Design</span>
-                    <span class="skill-tag">Web Development</span>
-                    <span class="skill-tag">Communication</span>
-                    <span class="skill-tag">AI-Research</span>
-                    <span class="skill-tag">Product Management</span>
-                    <span class="skill-tag">Full-Stack Engineering</span>
+                    <span class="skill-tag">python</span>
+                    <span class="skill-tag">machine_learning</span>
+                    <span class="skill-tag">data_science</span>
+                    <span class="skill-tag">human_centered_design</span>
+                    <span class="skill-tag">web_development</span>
+                    <span class="skill-tag">communication</span>
+                    <span class="skill-tag">ai_research</span>
+                    <span class="skill-tag">product_management</span>
+                    <span class="skill-tag">full_stack_engineering</span>
             </div>
             </div>
             <div class="about-image">
@@ -78,7 +112,7 @@ description: Developer, Data-Scientist, and Entrepreneur
 <!-- Projects Section -->
 <section id="projects" class="section">
     <div class="container">
-        <h2 class="section-title">Featured Projects</h2>
+        <h2 class="section-title">$ ls -la projects/</h2>
         <div class="projects-grid">
             <div class="project-card" data-repo="https://github.com/insdaguirre/Stock_Hub" role="link" tabindex="0">
                 <div class="project-header">
@@ -247,8 +281,12 @@ description: Developer, Data-Scientist, and Entrepreneur
 <section id="contact" class="section contact">
     <div class="container">
         <div class="contact-content">
-            <h2 class="section-title">Let's Connect</h2>
-            <p class="contact-text">I'm always interested in new opportunities, collaborations, and interesting projects. Whether you want to discuss ML, entrepreneurship, or just say hello, I'd love to hear from you!</p>
+            <h2 class="section-title">$ contact --help</h2>
+            <div class="terminal-prompt">
+                <span class="prompt-symbol">$</span>
+                <span class="prompt-text">cat contact_info.txt</span>
+            </div>
+            <div class="terminal-output">I'm always interested in new opportunities, collaborations, and interesting projects. Whether you want to discuss ML, entrepreneurship, or just say hello, I'd love to hear from you!</div>
                             <div class="social-links">
                     <a href="https://github.com/insdaguirre" class="social-link" target="_blank">
                         <i class="fab fa-github"></i>
