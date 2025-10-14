@@ -281,8 +281,8 @@ class DynamicTicker {
             return `<span class="ticker-item">${stock.symbol}: $${stock.price.toFixed(2)} <span class="${changeClass}">${changeSymbol} ${changeText}</span></span>`;
         }).join('');
         
-        // Duplicate content 3 times to ensure seamless scrolling with no blank periods
-        const seamlessHTML = tickerHTML + tickerHTML + tickerHTML;
+        // Duplicate content exactly 2x for perfect seamless loop with -50% animation
+        const seamlessHTML = tickerHTML + tickerHTML;
         
         if (this.ticker) {
             this.ticker.innerHTML = seamlessHTML;
@@ -301,9 +301,9 @@ async function loadGitHubStats() {
         
         // Update the stats in the HTML
         const statsElements = {
-            projects: stats.public_repos,
-            contributions: stats.estimated_contributions_last_year,
-            languages: 5  // Keep this static or calculate from repos
+            commits: stats.total_commits,
+            repos: stats.public_repos,
+            languages: 5  // Keep static
         };
         
         // Trigger number counters
@@ -519,17 +519,17 @@ document.addEventListener('DOMContentLoaded', () => {
             
             // Change icon
             const icon = mobileMenuBtn.querySelector('i');
-                if (navLinks.classList.contains('active')) {
-                    icon.className = 'fas fa-times';
+            if (navLinks.classList.contains('active')) {
+                icon.className = 'fas fa-times';
                     mobileMenuBtn.style.boxShadow = '0 3px 6px rgba(0, 0, 0, 0.16), 0 3px 6px rgba(0, 0, 0, 0.23)';
                     mobileMenuBtn.style.borderColor = 'var(--apple-blue)';
                     mobileMenuBtn.style.color = 'var(--apple-blue)';
-                } else {
-                    icon.className = 'fas fa-bars';
+            } else {
+                icon.className = 'fas fa-bars';
                     mobileMenuBtn.style.boxShadow = '0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24)';
                     mobileMenuBtn.style.borderColor = 'var(--border)';
                     mobileMenuBtn.style.color = 'var(--text-secondary)';
-                }
+            }
         });
         
         // Close menu when clicking outside

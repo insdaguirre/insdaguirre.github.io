@@ -176,7 +176,7 @@ body {
 
 .ticker-content {
     display: inline-block;
-    animation: scroll-ticker 400s linear infinite;
+    animation: scroll-ticker 600s linear infinite;
     font-family: var(--font-terminal);
     font-size: 0.9rem;
     font-weight: 600;
@@ -209,8 +209,8 @@ body {
 }
 
 @keyframes scroll-ticker {
-    0% { transform: translateX(100%); }
-    100% { transform: translateX(-100%); }
+    0% { transform: translateX(0%); }
+    100% { transform: translateX(-50%); }
 }
 
 .nav {
@@ -327,17 +327,17 @@ body {
 
 .terminal-output {
     font-family: var(--font-display);
-    font-size: 1.1rem;
+    font-size: 1.25rem;
     margin-bottom: 1rem;
     color: var(--text);
     margin-left: 0;
     position: relative;
-    line-height: 1.6;
-    background: rgba(0, 0, 0, 0.6);
-    padding: 1rem;
+    line-height: 1.8;
+    background: rgba(0, 0, 0, 0.75);
+    padding: 1.25rem;
     border-radius: 8px;
     border-left: 3px solid var(--terminal-green);
-    text-shadow: 0 0 3px var(--terminal-green);
+    text-shadow: 0 0 5px rgba(0, 255, 65, 0.3);
 }
 
 .hero h1 {
@@ -1010,7 +1010,9 @@ section {
     }
     
     .terminal-output {
-        font-size: 1rem;
+        font-size: 1.15rem;
+        line-height: 1.7;
+        padding: 1rem;
     }
 
     .about-content {
