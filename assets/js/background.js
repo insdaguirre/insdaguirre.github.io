@@ -15,15 +15,22 @@ class MatrixBackground {
         this.mouse = { x: -1000, y: -1000 };
         this.targetMouse = { x: -1000, y: -1000 };
         
-        // Particle pool for floating code fragments
-        this.particlePool = new Array(50);
+        // Particle pool for floating code fragments (reduced from 50 to 30)
+        this.particlePool = new Array(30);
         this.activeParticles = [];
         this.particleIndex = 0;
         
         // Performance tracking
         this.lastTime = 0;
         this.frameCount = 0;
-        this.fps = 60;
+        this.fps = 30; // Reduced from 60 to 30 for better performance
+        
+        // Visibility and performance optimization
+        this.isVisible = true;
+        this.isPaused = false;
+        this.animationId = null;
+        this.intersectionObserver = null;
+        this.deviceCapabilities = this.detectDeviceCapabilities();
         
         this.init();
     }
@@ -32,7 +39,60 @@ class MatrixBackground {
         this.resize();
         this.bindEvents();
         this.initParticlePool();
+        this.setupVisibilityObserver();
         this.animate();
+    }
+    
+    detectDeviceCapabilities() {
+        const capabilities = {
+            isMobile: /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent),
+            isLowEnd: navigator.hardwareConcurrency <= 2,
+            supportsOffscreenCanvas: typeof OffscreenCanvas !== 'undefined',
+            hasHighDPI: window.devicePixelRatio > 1.5
+        };
+        
+        // Adjust particle count based on device capabilities
+        if (capabilities.isMobile) {
+            this.particlePool = new Array(15); // 75% reduction on mobile
+            this.fps = 20; // Lower FPS on mobile
+        } else if (capabilities.isLowEnd) {
+            this.particlePool = new Array(20); // 50% reduction on low-end devices
+            this.fps = 25;
+        }
+        
+        return capabilities;
+    }
+    
+    setupVisibilityObserver() {
+        if ('IntersectionObserver' in window) {
+            this.intersectionObserver = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    this.isVisible = entry.isIntersecting;
+                    if (!this.isVisible && !this.isPaused) {
+                        this.pause();
+                    } else if (this.isVisible && this.isPaused) {
+                        this.resume();
+                    }
+                });
+            }, { threshold: 0.1 });
+            
+            this.intersectionObserver.observe(this.canvas);
+        }
+    }
+    
+    pause() {
+        this.isPaused = true;
+        if (this.animationId) {
+            cancelAnimationFrame(this.animationId);
+            this.animationId = null;
+        }
+    }
+    
+    resume() {
+        this.isPaused = false;
+        if (!this.animationId) {
+            this.animate();
+        }
     }
     
     resize() {
@@ -210,20 +270,31 @@ class MatrixBackground {
     }
     
     animate(currentTime) {
-        // Performance optimization - limit to 40fps for better performance
-        const targetFPS = 40;
+        // Skip if paused or not visible
+        if (this.isPaused || !this.isVisible) {
+            this.animationId = requestAnimationFrame((time) => this.animate(time));
+            return;
+        }
+        
+        // Performance optimization - adaptive FPS based on device capabilities
+        const targetFPS = this.fps;
         const frameDelay = 1000 / targetFPS;
         
         if (currentTime - this.lastTime >= frameDelay) {
             this.updateColumns();
-            this.updateParticles();
+            
+            // Only update particles every other frame on lower-end devices
+            if (this.frameCount % 2 === 0 || !this.deviceCapabilities.isLowEnd) {
+                this.updateParticles();
+            }
+            
             this.draw();
             
             this.lastTime = currentTime;
             this.frameCount++;
             
-            // Log FPS every 60 frames
-            if (this.frameCount % 60 === 0) {
+            // Log FPS every 120 frames (less frequent logging)
+            if (this.frameCount % 120 === 0) {
                 const actualFPS = Math.round(1000 / (currentTime - this.lastTime));
                 console.log(`Matrix FPS: ${actualFPS} (target: ${targetFPS})`);
             }
@@ -233,26 +304,42 @@ class MatrixBackground {
     }
     
     bindEvents() {
-        window.addEventListener('resize', () => {
+        // Store references for proper cleanup
+        this.handleResize = () => {
             this.resize();
             this.initParticlePool();
-        });
+        };
         
-        window.addEventListener('mousemove', (e) => {
+        this.handleMouseMove = (e) => {
             this.targetMouse.x = e.clientX;
             this.targetMouse.y = e.clientY;
-        });
+        };
         
-        window.addEventListener('mouseleave', () => {
+        this.handleMouseLeave = () => {
             this.targetMouse.x = -1000;
             this.targetMouse.y = -1000;
-        });
+        };
+        
+        window.addEventListener('resize', this.handleResize);
+        window.addEventListener('mousemove', this.handleMouseMove);
+        window.addEventListener('mouseleave', this.handleMouseLeave);
     }
     
     destroy() {
         if (this.animationId) {
             cancelAnimationFrame(this.animationId);
+            this.animationId = null;
         }
+        
+        if (this.intersectionObserver) {
+            this.intersectionObserver.disconnect();
+            this.intersectionObserver = null;
+        }
+        
+        // Clear all event listeners
+        window.removeEventListener('resize', this.resize);
+        window.removeEventListener('mousemove', this.handleMouseMove);
+        window.removeEventListener('mouseleave', this.handleMouseLeave);
     }
 }
 

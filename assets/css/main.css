@@ -55,11 +55,11 @@
     --terminal-text-dim: var(--text-secondary);
     --terminal-border: var(--border);
     
-    /* Apple Subtle Effects */
-    --shadow-subtle: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24);
-    --shadow-medium: 0 3px 6px rgba(0, 0, 0, 0.16), 0 3px 6px rgba(0, 0, 0, 0.23);
-    --shadow-large: 0 10px 20px rgba(0, 0, 0, 0.19), 0 6px 6px rgba(0, 0, 0, 0.23);
-    --shadow-xl: 0 14px 28px rgba(0, 0, 0, 0.25), 0 10px 10px rgba(0, 0, 0, 0.22);
+    /* Apple Subtle Effects - Simplified for better performance */
+    --shadow-subtle: 0 2px 4px rgba(0, 0, 0, 0.1);
+    --shadow-medium: 0 4px 8px rgba(0, 0, 0, 0.15);
+    --shadow-large: 0 8px 16px rgba(0, 0, 0, 0.2);
+    --shadow-xl: 0 12px 24px rgba(0, 0, 0, 0.25);
     
     /* Apple Glow Effects (subtle) */
     --glow-blue: 0 0 20px rgba(0, 122, 255, 0.3);
@@ -104,6 +104,8 @@ body {
     height: 100%;
     z-index: 0;
     pointer-events: none;
+    will-change: transform; /* GPU acceleration hint */
+    contain: layout style paint; /* CSS containment for better performance */
 }
 
 /* Dark overlay for better readability */
@@ -139,6 +141,8 @@ body {
     box-shadow: var(--shadow-subtle);
     font-family: -apple-system, BlinkMacSystemFont, 'Inter', sans-serif;
     font-size: 0.9rem;
+    will-change: background-color, box-shadow; /* GPU acceleration for scroll effects */
+    contain: layout style; /* CSS containment */
 }
 
 /* Bloomberg Terminal Ticker */
@@ -174,14 +178,6 @@ body {
     background: linear-gradient(to left, var(--bloomberg-black), transparent);
 }
 
-.ticker-content {
-    display: inline-block;
-    animation: scroll-ticker 600s linear infinite;
-    font-family: var(--font-terminal);
-    font-size: 0.9rem;
-    font-weight: 600;
-    color: var(--text);
-}
 
 .ticker-item {
     display: inline-block;
@@ -211,6 +207,17 @@ body {
 @keyframes scroll-ticker {
     0% { transform: translateX(0%); }
     100% { transform: translateX(-50%); }
+}
+
+/* Optimized ticker animation - reduced duration for better performance */
+.ticker-content {
+    display: inline-block;
+    animation: scroll-ticker 120s linear infinite; /* Reduced from 600s to 120s */
+    font-family: var(--font-terminal);
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: var(--text);
+    will-change: transform; /* GPU acceleration hint */
 }
 
 .nav {
@@ -276,6 +283,8 @@ body {
     overflow: hidden;
     background: linear-gradient(135deg, rgba(0, 0, 0, 0.8) 0%, rgba(28, 28, 30, 0.6) 100%);
     perspective: 1000px;
+    will-change: transform; /* GPU acceleration for parallax */
+    contain: layout style; /* CSS containment */
 }
 
 .hero-content {
@@ -637,6 +646,8 @@ section {
     overflow: hidden;
     font-family: var(--font-display);
     transform-style: preserve-3d;
+    will-change: transform; /* GPU acceleration for 3D tilt */
+    contain: layout style paint; /* CSS containment */
 }
 
 .project-card:hover {

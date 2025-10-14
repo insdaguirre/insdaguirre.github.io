@@ -15,25 +15,37 @@ document.querySelectorAll('a[href^="#"]').forEach(anchor => {
     });
 });
 
-// Track mouse position globally
+// Throttled mouse tracking for better performance
+let mouseThrottleTimeout = null;
 document.addEventListener('mousemove', (e) => {
-    window.mousePosition.x = e.clientX;
-    window.mousePosition.y = e.clientY;
-});
+    if (mouseThrottleTimeout) return;
+    
+    mouseThrottleTimeout = setTimeout(() => {
+        window.mousePosition.x = e.clientX;
+        window.mousePosition.y = e.clientY;
+        mouseThrottleTimeout = null;
+    }, 16); // ~60fps throttling
+}, { passive: true });
 
-// Add scroll effect to header with Apple styling
+// Throttled header scroll effect for better performance
+let headerScrollTimeout = null;
 window.addEventListener('scroll', () => {
-    const header = document.querySelector('.header');
-    if (header) {
-        if (window.scrollY > 100) {
-            header.style.background = 'rgba(28, 28, 30, 0.95)';
-            header.style.boxShadow = '0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24)';
-        } else {
-            header.style.background = 'rgba(28, 28, 30, 0.8)';
-            header.style.boxShadow = '0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24)';
+    if (headerScrollTimeout) return;
+    
+    headerScrollTimeout = setTimeout(() => {
+        const header = document.querySelector('.header');
+        if (header) {
+            if (window.scrollY > 100) {
+                header.style.background = 'rgba(28, 28, 30, 0.95)';
+                header.style.boxShadow = '0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24)';
+            } else {
+                header.style.background = 'rgba(28, 28, 30, 0.8)';
+                header.style.boxShadow = '0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24)';
+            }
         }
-    }
-});
+        headerScrollTimeout = null;
+    }, 16); // ~60fps throttling
+}, { passive: true });
 
 // Add fade-in animation to elements when they come into view
 const observerOptions = {
@@ -196,11 +208,12 @@ class NumberCounter {
     }
 }
 
-// Dynamic Stock Ticker
+// Optimized Dynamic Stock Ticker - CSS-only animation
 class DynamicTicker {
     constructor() {
         this.ticker = document.getElementById('ticker-content');
         this.stocks = [];
+        this.cachedHTML = null;
         this.init();
     }
     
@@ -212,8 +225,8 @@ class DynamicTicker {
         await this.loadStockData();
         this.updateTicker();
         
-        // Update every 5 seconds for visual effect (data refreshes daily)
-        setInterval(() => this.updateTicker(), 5000);
+        // Reduced update frequency - only update every 30 seconds
+        setInterval(() => this.updateTicker(), 30000);
     }
     
     showLoadingState() {
@@ -272,6 +285,14 @@ class DynamicTicker {
             return;
         }
         
+        // Use cached HTML if available and data hasn't changed
+        if (this.cachedHTML) {
+            if (this.ticker) {
+                this.ticker.innerHTML = this.cachedHTML;
+            }
+            return;
+        }
+        
         console.log('🔄 Updating ticker with', this.stocks.length, 'stocks');
         
         const tickerHTML = this.stocks.map(stock => {
@@ -283,6 +304,9 @@ class DynamicTicker {
         
         // Duplicate content exactly 2x for perfect seamless loop with -50% animation
         const seamlessHTML = tickerHTML + tickerHTML;
+        
+        // Cache the HTML to avoid regeneration
+        this.cachedHTML = seamlessHTML;
         
         if (this.ticker) {
             this.ticker.innerHTML = seamlessHTML;
@@ -421,42 +445,97 @@ style.textContent = `
 `;
 document.head.appendChild(style);
 
-// Initialize Matrix Bloomberg Apple Fusion systems
+// Device capability detection for adaptive quality
+const deviceCapabilities = {
+    isMobile: /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent),
+    isLowEnd: navigator.hardwareConcurrency <= 2,
+    supportsIntersectionObserver: 'IntersectionObserver' in window,
+    supportsRequestIdleCallback: 'requestIdleCallback' in window,
+    hasHighDPI: window.devicePixelRatio > 1.5,
+    prefersReducedMotion: window.matchMedia('(prefers-reduced-motion: reduce)').matches
+};
+
+// Performance-optimized initialization with deferred loading
 document.addEventListener('DOMContentLoaded', () => {
-    // Initialize typing effect
-    const heroTitle = document.querySelector('.hero h1');
-    if (heroTitle) {
-        const originalText = heroTitle.textContent;
-        typeWriter(heroTitle, originalText, 80);
-        
-        // Add glitch effect to hero title
+    // Critical: Initialize immediately
+    initializeCriticalFeatures();
+    
+    // Non-critical: Defer until browser is idle
+    if (deviceCapabilities.supportsRequestIdleCallback) {
+        requestIdleCallback(() => {
+            initializeNonCriticalFeatures();
+        }, { timeout: 2000 }); // Fallback after 2 seconds
+    } else {
+        // Fallback for browsers without requestIdleCallback
         setTimeout(() => {
-            new GlitchEffect(heroTitle, { interval: 4000, duration: 300, intensity: 1.5 });
-        }, 2000);
+            initializeNonCriticalFeatures();
+        }, 1000);
     }
+});
+
+function initializeCriticalFeatures() {
+    // Essential features that must load immediately
+    console.log('Initializing critical features...');
     
-    // Initialize parallax scroll
-    new ParallaxScroll();
-    
-    // Initialize dynamic ticker
+    // Initialize dynamic ticker (essential for visual appeal)
     new DynamicTicker();
     
-    // Add 3D tilt to project cards
-    document.querySelectorAll('.project-card').forEach(card => {
-        new Tilt3D(card);
-    });
+    // Load GitHub stats immediately
+    loadGitHubStats();
     
-    // Add glitch effects to section titles
-    document.querySelectorAll('.section-title').forEach(title => {
-        new GlitchEffect(title, { interval: 6000, duration: 200, intensity: 0.8 });
-    });
+    // Basic scroll effects (throttled)
+    initializeScrollEffects();
+}
+
+function initializeNonCriticalFeatures() {
+    // Non-essential features that can wait for idle time
+    console.log('Initializing non-critical features...');
     
-    // Load GitHub stats immediately after a short delay to ensure DOM is ready
-    console.log('Initializing GitHub stats loader...');
-    setTimeout(() => {
-        console.log('Loading GitHub stats now...');
-        loadGitHubStats();
-    }, 100);
+    // Skip animations if user prefers reduced motion
+    if (deviceCapabilities.prefersReducedMotion) {
+        console.log('Skipping animations due to reduced motion preference');
+        return;
+    }
+    
+    // Initialize typing effect (skip on mobile for better performance)
+    if (!deviceCapabilities.isMobile) {
+        const heroTitle = document.querySelector('.hero h1');
+        if (heroTitle) {
+            const originalText = heroTitle.textContent;
+            typeWriter(heroTitle, originalText, 80);
+            
+            // Add glitch effect to hero title (delayed, skip on low-end devices)
+            if (!deviceCapabilities.isLowEnd) {
+                setTimeout(() => {
+                    new GlitchEffect(heroTitle, { interval: 4000, duration: 300, intensity: 1.5 });
+                }, 2000);
+            }
+        }
+    }
+    
+    // Initialize parallax scroll (non-critical, skip on mobile)
+    if (!deviceCapabilities.isMobile) {
+        new ParallaxScroll();
+    }
+    
+    // Add 3D tilt to project cards (non-critical, skip on mobile/low-end)
+    if (!deviceCapabilities.isMobile && !deviceCapabilities.isLowEnd) {
+        document.querySelectorAll('.project-card').forEach(card => {
+            new Tilt3D(card);
+        });
+    }
+    
+    // Add glitch effects to section titles (non-critical, skip on low-end)
+    if (!deviceCapabilities.isLowEnd) {
+        document.querySelectorAll('.section-title').forEach(title => {
+            new GlitchEffect(title, { interval: 6000, duration: 200, intensity: 0.8 });
+        });
+    }
+    
+    // Enhanced hover effects (non-critical, skip on mobile)
+    if (!deviceCapabilities.isMobile) {
+        initializeEnhancedHoverEffects();
+    }
     
     // Fallback: Set default values if stats don't load within 3 seconds
     setTimeout(() => {
@@ -486,31 +565,48 @@ document.addEventListener('DOMContentLoaded', () => {
             });
         }
     }, 3000);
-});
+}
 
-// Add parallax effect to hero section with smoother motion
-window.addEventListener('scroll', () => {
-    const scrolled = window.pageYOffset;
-    const hero = document.querySelector('.hero');
-    if (hero) {
-        const rate = scrolled * -0.3;
-        hero.style.transform = `translateY(${rate}px)`;
+// Throttled scroll effects for better performance
+function initializeScrollEffects() {
+    let ticking = false;
+    
+    function updateScrollEffects() {
+        const scrolled = window.pageYOffset;
+        const hero = document.querySelector('.hero');
+        if (hero) {
+            const rate = scrolled * -0.3;
+            hero.style.transform = `translateY(${rate}px)`;
+        }
+        
+        // Parallax effect on project cards
+        const cards = document.querySelectorAll('.project-card');
+        cards.forEach((card, index) => {
+            const rect = card.getBoundingClientRect();
+            const scrollPercent = (window.innerHeight - rect.top) / window.innerHeight;
+            if (scrollPercent > 0 && scrollPercent < 1) {
+                const offset = (scrollPercent - 0.5) * 20;
+                card.style.transform = `translateY(${offset}px)`;
+            }
+        });
+        
+        ticking = false;
     }
     
-    // Parallax effect on project cards
-    const cards = document.querySelectorAll('.project-card');
-    cards.forEach((card, index) => {
-        const rect = card.getBoundingClientRect();
-        const scrollPercent = (window.innerHeight - rect.top) / window.innerHeight;
-        if (scrollPercent > 0 && scrollPercent < 1) {
-            const offset = (scrollPercent - 0.5) * 20;
-            card.style.transform = `translateY(${offset}px)`;
+    function requestTick() {
+        if (!ticking) {
+            requestAnimationFrame(updateScrollEffects);
+            ticking = true;
         }
-    });
-});
+    }
+    
+    // Use passive listeners for better performance
+    window.addEventListener('scroll', requestTick, { passive: true });
+}
 
-// Add enhanced hover effects to project cards with 3D tilt
-document.addEventListener('DOMContentLoaded', () => {
+// Enhanced hover effects (deferred loading)
+function initializeEnhancedHoverEffects() {
+    // Add enhanced hover effects to project cards with 3D tilt
     const projectCards = document.querySelectorAll('.project-card');
     
     projectCards.forEach(card => {
@@ -532,7 +628,8 @@ document.addEventListener('DOMContentLoaded', () => {
             card.style.transform = 'translateY(0) scale(1) perspective(1000px) rotateX(0) rotateY(0)';
         });
     });
-});
+}
+
 
 // Make div-based project cards clickable to their repo while preserving inner links
 document.addEventListener('DOMContentLoaded', () => {
