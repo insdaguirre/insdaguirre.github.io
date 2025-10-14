@@ -1,3 +1,6 @@
+// Global mouse tracking for effects
+window.mousePosition = { x: 0, y: 0 };
+
 // Smooth scrolling for navigation links
 document.querySelectorAll('a[href^="#"]').forEach(anchor => {
     anchor.addEventListener('click', function (e) {
@@ -12,14 +15,22 @@ document.querySelectorAll('a[href^="#"]').forEach(anchor => {
     });
 });
 
-// Add scroll effect to header
+// Track mouse position globally
+document.addEventListener('mousemove', (e) => {
+    window.mousePosition.x = e.clientX;
+    window.mousePosition.y = e.clientY;
+});
+
+// Add scroll effect to header with Tron styling
 window.addEventListener('scroll', () => {
     const header = document.querySelector('.header');
     if (header) {
         if (window.scrollY > 100) {
-            header.style.background = 'rgba(255, 255, 255, 0.98)';
+            header.style.background = 'rgba(10, 10, 10, 0.95)';
+            header.style.boxShadow = '0 0 30px rgba(0, 240, 255, 0.2)';
         } else {
-            header.style.background = 'rgba(255, 255, 255, 0.95)';
+            header.style.background = 'rgba(10, 10, 10, 0.8)';
+            header.style.boxShadow = '0 0 20px rgba(0, 240, 255, 0.1)';
         }
     }
 });
@@ -45,21 +56,37 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 });
 
-// Add typing effect to hero title
-function typeWriter(element, text, speed = 100) {
+// Add typing effect to hero title with cursor
+function typeWriter(element, text, speed = 80) {
     let i = 0;
     element.innerHTML = '';
+    const cursor = '<span class="typing-cursor" style="color: var(--primary); animation: blink 1s infinite;">|</span>';
     
     function type() {
         if (i < text.length) {
-            element.innerHTML += text.charAt(i);
+            element.innerHTML = text.substring(0, i + 1) + cursor;
             i++;
             setTimeout(type, speed);
+        } else {
+            // Remove cursor after typing is complete
+            setTimeout(() => {
+                element.innerHTML = text;
+            }, 1000);
         }
     }
     
     type();
 }
+
+// Add CSS for cursor blink
+const style = document.createElement('style');
+style.textContent = `
+    @keyframes blink {
+        0%, 49% { opacity: 1; }
+        50%, 100% { opacity: 0; }
+    }
+`;
+document.head.appendChild(style);
 
 // Initialize typing effect when page loads
 document.addEventListener('DOMContentLoaded', () => {
@@ -70,27 +97,48 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 });
 
-// Add parallax effect to hero section
+// Add parallax effect to hero section with smoother motion
 window.addEventListener('scroll', () => {
     const scrolled = window.pageYOffset;
     const hero = document.querySelector('.hero');
     if (hero) {
-        const rate = scrolled * -0.5;
+        const rate = scrolled * -0.3;
         hero.style.transform = `translateY(${rate}px)`;
     }
+    
+    // Parallax effect on project cards
+    const cards = document.querySelectorAll('.project-card');
+    cards.forEach((card, index) => {
+        const rect = card.getBoundingClientRect();
+        const scrollPercent = (window.innerHeight - rect.top) / window.innerHeight;
+        if (scrollPercent > 0 && scrollPercent < 1) {
+            const offset = (scrollPercent - 0.5) * 20;
+            card.style.transform = `translateY(${offset}px)`;
+        }
+    });
 });
 
-// Add hover effects to project cards
+// Add enhanced hover effects to project cards with 3D tilt
 document.addEventListener('DOMContentLoaded', () => {
     const projectCards = document.querySelectorAll('.project-card');
     
     projectCards.forEach(card => {
-        card.addEventListener('mouseenter', () => {
-            card.style.transform = 'translateY(-10px) scale(1.02)';
+        card.addEventListener('mousemove', (e) => {
+            const rect = card.getBoundingClientRect();
+            const x = e.clientX - rect.left;
+            const y = e.clientY - rect.top;
+            
+            const centerX = rect.width / 2;
+            const centerY = rect.height / 2;
+            
+            const rotateX = (y - centerY) / 20;
+            const rotateY = (centerX - x) / 20;
+            
+            card.style.transform = `translateY(-10px) scale(1.02) perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg)`;
         });
         
         card.addEventListener('mouseleave', () => {
-            card.style.transform = 'translateY(0) scale(1)';
+            card.style.transform = 'translateY(0) scale(1) perspective(1000px) rotateX(0) rotateY(0)';
         });
     });
 });
@@ -121,24 +169,54 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 });
 
-// Add loading animation
+// Add loading animation with scan line effect
 window.addEventListener('load', () => {
     document.body.classList.add('loaded');
+    
+    // Create scan line effect on load
+    const scanLine = document.createElement('div');
+    scanLine.className = 'scan-line';
+    document.body.appendChild(scanLine);
+    
+    // Remove after animation
+    setTimeout(() => {
+        scanLine.style.opacity = '0';
+        setTimeout(() => scanLine.remove(), 1000);
+    }, 3000);
 });
 
-// Add mobile menu functionality
+// Add glitch effect to section titles on scroll
+const observerOptions = {
+    threshold: 0.5,
+    rootMargin: '0px'
+};
+
+const titleObserver = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+        if (entry.isIntersecting) {
+            entry.target.style.animation = 'none';
+            setTimeout(() => {
+                entry.target.style.animation = 'glitchText 0.3s ease';
+            }, 10);
+        }
+    });
+}, observerOptions);
+
+document.addEventListener('DOMContentLoaded', () => {
+    document.querySelectorAll('.section-title').forEach(title => {
+        titleObserver.observe(title);
+    });
+});
+
+// Add mobile menu functionality with Tron styling
 document.addEventListener('DOMContentLoaded', () => {
     const navLinks = document.querySelector('.nav-links');
     const mobileMenuBtn = document.getElementById('mobile-menu-btn');
     
-    console.log('Mobile menu elements:', { navLinks, mobileMenuBtn });
-    
     if (mobileMenuBtn && navLinks) {
-        // Simple test - change button color on click
         mobileMenuBtn.addEventListener('click', (e) => {
             e.preventDefault();
             e.stopPropagation();
-            console.log('Mobile menu clicked!');
             
             // Toggle menu
             navLinks.classList.toggle('active');
@@ -147,10 +225,14 @@ document.addEventListener('DOMContentLoaded', () => {
             const icon = mobileMenuBtn.querySelector('i');
             if (navLinks.classList.contains('active')) {
                 icon.className = 'fas fa-times';
-                mobileMenuBtn.style.color = 'red'; // Test color change
+                mobileMenuBtn.style.boxShadow = '0 0 20px rgba(255, 0, 110, 0.8)';
+                mobileMenuBtn.style.borderColor = 'var(--accent)';
+                mobileMenuBtn.style.color = 'var(--accent)';
             } else {
                 icon.className = 'fas fa-bars';
-                mobileMenuBtn.style.color = 'var(--text)'; // Reset color
+                mobileMenuBtn.style.boxShadow = 'var(--glow-cyan)';
+                mobileMenuBtn.style.borderColor = 'var(--primary)';
+                mobileMenuBtn.style.color = 'var(--primary)';
             }
         });
         
@@ -160,7 +242,9 @@ document.addEventListener('DOMContentLoaded', () => {
                 navLinks.classList.remove('active');
                 const icon = mobileMenuBtn.querySelector('i');
                 icon.className = 'fas fa-bars';
-                mobileMenuBtn.style.color = 'var(--text)';
+                mobileMenuBtn.style.boxShadow = 'var(--glow-cyan)';
+                mobileMenuBtn.style.borderColor = 'var(--primary)';
+                mobileMenuBtn.style.color = 'var(--primary)';
             }
         });
         
@@ -170,10 +254,10 @@ document.addEventListener('DOMContentLoaded', () => {
                 navLinks.classList.remove('active');
                 const icon = mobileMenuBtn.querySelector('i');
                 icon.className = 'fas fa-bars';
-                mobileMenuBtn.style.color = 'var(--text)';
+                mobileMenuBtn.style.boxShadow = 'var(--glow-cyan)';
+                mobileMenuBtn.style.borderColor = 'var(--primary)';
+                mobileMenuBtn.style.color = 'var(--primary)';
             }
         });
-    } else {
-        console.log('Mobile menu elements not found:', { navLinks, mobileMenuBtn });
     }
 }); 
