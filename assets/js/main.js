@@ -56,6 +56,189 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 });
 
+// Matrix Bloomberg Apple Fusion Animation Systems
+
+// Glitch Effect System
+class GlitchEffect {
+    constructor(element, options = {}) {
+        this.element = element;
+        this.interval = options.interval || 3000;
+        this.duration = options.duration || 200;
+        this.intensity = options.intensity || 1;
+        this.isActive = false;
+        
+        this.init();
+    }
+    
+    init() {
+        this.element.style.transition = 'all 0.1s ease';
+        this.startGlitch();
+    }
+    
+    startGlitch() {
+        if (this.isActive) return;
+        this.isActive = true;
+        
+        const glitch = () => {
+            if (!this.isActive) return;
+            
+            // Apply glitch effect
+            this.element.style.transform = `translate(${(Math.random() - 0.5) * 4 * this.intensity}px, ${(Math.random() - 0.5) * 4 * this.intensity}px)`;
+            this.element.style.textShadow = `${2 * this.intensity}px 0 var(--bloomberg-orange), ${-2 * this.intensity}px 0 var(--terminal-green)`;
+            this.element.style.filter = `hue-rotate(${Math.random() * 360}deg)`;
+            
+            setTimeout(() => {
+                if (!this.isActive) return;
+                this.element.style.transform = 'translate(0)';
+                this.element.style.textShadow = 'none';
+                this.element.style.filter = 'none';
+            }, this.duration);
+            
+            setTimeout(glitch, this.interval + Math.random() * 2000);
+        };
+        
+        glitch();
+    }
+    
+    stop() {
+        this.isActive = false;
+        this.element.style.transform = 'translate(0)';
+        this.element.style.textShadow = 'none';
+        this.element.style.filter = 'none';
+    }
+}
+
+// Parallax Scroll System
+class ParallaxScroll {
+    constructor() {
+        this.layers = [];
+        this.init();
+    }
+    
+    init() {
+        // Create parallax layers
+        this.layers = [
+            { element: document.querySelector('#tron-canvas'), speed: 0.2 },
+            { element: document.querySelector('.hero'), speed: 0.5 },
+            { element: document.querySelector('.section'), speed: 1.0 }
+        ];
+        
+        window.addEventListener('scroll', () => this.update());
+    }
+    
+    update() {
+        const scrolled = window.pageYOffset;
+        
+        this.layers.forEach(layer => {
+            if (layer.element) {
+                const yPos = -(scrolled * layer.speed);
+                layer.element.style.transform = `translateY(${yPos}px)`;
+            }
+        });
+    }
+}
+
+// 3D Tilt Effect for Cards
+class Tilt3D {
+    constructor(element) {
+        this.element = element;
+        this.init();
+    }
+    
+    init() {
+        this.element.addEventListener('mousemove', (e) => {
+            const rect = this.element.getBoundingClientRect();
+            const x = e.clientX - rect.left;
+            const y = e.clientY - rect.top;
+            
+            const centerX = rect.width / 2;
+            const centerY = rect.height / 2;
+            
+            const rotateX = (y - centerY) / 10;
+            const rotateY = (centerX - x) / 10;
+            
+            this.element.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) translateZ(10px)`;
+        });
+        
+        this.element.addEventListener('mouseleave', () => {
+            this.element.style.transform = 'perspective(1000px) rotateX(0) rotateY(0) translateZ(0)';
+        });
+    }
+}
+
+// Number Counter Animation
+class NumberCounter {
+    constructor(element, target, duration = 2000) {
+        this.element = element;
+        this.target = target;
+        this.duration = duration;
+        this.start = 0;
+        this.startTime = null;
+        
+        this.animate();
+    }
+    
+    animate(currentTime) {
+        if (!this.startTime) this.startTime = currentTime;
+        
+        const progress = Math.min((currentTime - this.startTime) / this.duration, 1);
+        const current = Math.floor(this.start + (this.target - this.start) * this.easeOutCubic(progress));
+        
+        this.element.textContent = current.toLocaleString();
+        
+        if (progress < 1) {
+            requestAnimationFrame((time) => this.animate(time));
+        }
+    }
+    
+    easeOutCubic(t) {
+        return 1 - Math.pow(1 - t, 3);
+    }
+}
+
+// Dynamic Stock Ticker
+class DynamicTicker {
+    constructor() {
+        this.ticker = document.getElementById('ticker-content');
+        this.stocks = [
+            { symbol: 'AAPL', price: 182.52, change: 0.15 },
+            { symbol: 'TSLA', price: 248.42, change: -0.08 },
+            { symbol: 'BTC', price: 43250.00, change: 1250.00 },
+            { symbol: 'ETH', price: 2650.00, change: 45.00 },
+            { symbol: 'NVDA', price: 875.28, change: 12.50 },
+            { symbol: 'MSFT', price: 378.85, change: -2.15 },
+            { symbol: 'GOOGL', price: 142.30, change: 0.85 },
+            { symbol: 'AMZN', price: 155.20, change: -1.20 }
+        ];
+        
+        this.init();
+    }
+    
+    init() {
+        this.updateTicker();
+        setInterval(() => this.updatePrices(), 5000);
+    }
+    
+    updatePrices() {
+        this.stocks.forEach(stock => {
+            const change = (Math.random() - 0.5) * 10;
+            stock.price += change;
+            stock.change = change;
+        });
+        this.updateTicker();
+    }
+    
+    updateTicker() {
+        const tickerHTML = this.stocks.map(stock => {
+            const changeClass = stock.change >= 0 ? 'price-up' : 'price-down';
+            const changeSymbol = stock.change >= 0 ? '↑' : '↓';
+            return `<span class="ticker-item">${stock.symbol}: $${stock.price.toFixed(2)} <span class="${changeClass}">${changeSymbol}</span></span>`;
+        }).join('');
+        
+        this.ticker.innerHTML = tickerHTML;
+    }
+}
+
 // Add typing effect to hero title with Apple-style cursor
 function typeWriter(element, text, speed = 80) {
     let i = 0;
@@ -88,13 +271,41 @@ style.textContent = `
 `;
 document.head.appendChild(style);
 
-// Initialize typing effect when page loads
+// Initialize Matrix Bloomberg Apple Fusion systems
 document.addEventListener('DOMContentLoaded', () => {
+    // Initialize typing effect
     const heroTitle = document.querySelector('.hero h1');
     if (heroTitle) {
         const originalText = heroTitle.textContent;
         typeWriter(heroTitle, originalText, 80);
+        
+        // Add glitch effect to hero title
+        setTimeout(() => {
+            new GlitchEffect(heroTitle, { interval: 4000, duration: 300, intensity: 1.5 });
+        }, 2000);
     }
+    
+    // Initialize parallax scroll
+    new ParallaxScroll();
+    
+    // Initialize dynamic ticker
+    new DynamicTicker();
+    
+    // Add 3D tilt to project cards
+    document.querySelectorAll('.project-card').forEach(card => {
+        new Tilt3D(card);
+    });
+    
+    // Add glitch effects to section titles
+    document.querySelectorAll('.section-title').forEach(title => {
+        new GlitchEffect(title, { interval: 6000, duration: 200, intensity: 0.8 });
+    });
+    
+    // Add number counters to any elements with data-counter attribute
+    document.querySelectorAll('[data-counter]').forEach(element => {
+        const target = parseInt(element.getAttribute('data-counter'));
+        new NumberCounter(element, target);
+    });
 });
 
 // Add parallax effect to hero section with smoother motion

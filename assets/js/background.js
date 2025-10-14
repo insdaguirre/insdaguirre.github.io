@@ -1,182 +1,248 @@
-// Apple Stocks-inspired Mouse-Reactive Particle System
-class MouseReactiveBackground {
+// Matrix Bloomberg Apple Fusion - Memory Efficient Background
+class MatrixBackground {
     constructor() {
         this.canvas = document.getElementById('tron-canvas');
-        this.ctx = this.canvas.getContext('2d');
-        this.particles = [];
-        this.mouse = { x: 0, y: 0 };
-        this.mouseVelocity = { x: 0, y: 0 };
-        this.lastMouse = { x: 0, y: 0 };
-        this.animationId = null;
+        this.ctx = this.canvas.getContext('2d', { alpha: false }); // Performance boost
+        
+        // Memory-efficient data structures
+        this.columnCount = 0;
+        this.columnPositions = null; // Float32Array
+        this.columnSpeeds = null; // Float32Array  
+        this.columnOffsets = null; // Float32Array (cursor displacement)
+        this.characters = '01アイウエオカキクケコサシスセソタチツテトABCDEFGHIJKLMNOPQRSTUVWXYZ{}[]()<>';
+        
+        // Mouse tracking
+        this.mouse = { x: -1000, y: -1000 };
+        this.targetMouse = { x: -1000, y: -1000 };
+        
+        // Particle pool for floating code fragments
+        this.particlePool = new Array(50);
+        this.activeParticles = [];
+        this.particleIndex = 0;
+        
+        // Performance tracking
+        this.lastTime = 0;
+        this.frameCount = 0;
+        this.fps = 60;
         
         this.init();
     }
     
     init() {
-        this.resizeCanvas();
-        this.createParticles();
+        this.resize();
         this.bindEvents();
+        this.initParticlePool();
         this.animate();
     }
     
-    resizeCanvas() {
-        this.canvas.width = window.innerWidth;
-        this.canvas.height = window.innerHeight;
-    }
-    
-    createParticles() {
-        const particleCount = Math.floor((this.canvas.width * this.canvas.height) / 15000);
-        this.particles = [];
+    resize() {
+        const dpr = window.devicePixelRatio || 1;
+        this.canvas.width = window.innerWidth * dpr;
+        this.canvas.height = window.innerHeight * dpr;
+        this.ctx.scale(dpr, dpr);
         
-        for (let i = 0; i < particleCount; i++) {
-            this.particles.push({
-                x: Math.random() * this.canvas.width,
-                y: Math.random() * this.canvas.height,
-                vx: (Math.random() - 0.5) * 0.5,
-                vy: (Math.random() - 0.5) * 0.5,
-                size: Math.random() * 2 + 1,
-                opacity: Math.random() * 0.6 + 0.2,
-                color: this.getRandomColor(),
-                life: 1,
-                maxLife: Math.random() * 300 + 200
-            });
+        // Calculate columns (every 25px for optimal performance)
+        this.columnCount = Math.ceil(window.innerWidth / 25);
+        
+        // Allocate typed arrays for memory efficiency
+        this.columnPositions = new Float32Array(this.columnCount);
+        this.columnSpeeds = new Float32Array(this.columnCount);
+        this.columnOffsets = new Float32Array(this.columnCount);
+        
+        // Initialize random positions and speeds
+        for (let i = 0; i < this.columnCount; i++) {
+            this.columnPositions[i] = Math.random() * window.innerHeight;
+            this.columnSpeeds[i] = 1 + Math.random() * 3;
+            this.columnOffsets[i] = 0;
         }
     }
     
-    getRandomColor() {
-        const colors = [
-            'rgba(0, 122, 255, 0.6)',    // Apple Blue
-            'rgba(52, 199, 89, 0.6)',    // Apple Green
-            'rgba(255, 149, 0, 0.6)',    // Apple Orange
-            'rgba(255, 59, 48, 0.6)',    // Apple Red
-            'rgba(175, 82, 222, 0.6)',   // Apple Purple
-            'rgba(255, 45, 146, 0.6)',   // Apple Pink
-            'rgba(255, 204, 0, 0.6)'     // Apple Yellow
-        ];
-        return colors[Math.floor(Math.random() * colors.length)];
+    initParticlePool() {
+        // Initialize particle pool for floating code fragments
+        for (let i = 0; i < 50; i++) {
+            this.particlePool[i] = {
+                x: 0,
+                y: 0,
+                vx: 0,
+                vy: 0,
+                size: 0,
+                opacity: 0,
+                char: '',
+                life: 0,
+                maxLife: 0,
+                active: false
+            };
+        }
     }
     
-    bindEvents() {
-        window.addEventListener('resize', () => {
-            this.resizeCanvas();
-            this.createParticles();
-        });
+    spawnParticle() {
+        const particle = this.particlePool[this.particleIndex];
+        if (particle.active) return;
         
-        window.addEventListener('mousemove', (e) => {
-            this.lastMouse.x = this.mouse.x;
-            this.lastMouse.y = this.mouse.y;
-            this.mouse.x = e.clientX;
-            this.mouse.y = e.clientY;
-            
-            // Calculate mouse velocity
-            this.mouseVelocity.x = this.mouse.x - this.lastMouse.x;
-            this.mouseVelocity.y = this.mouse.y - this.lastMouse.y;
-        });
+        particle.x = Math.random() * window.innerWidth;
+        particle.y = window.innerHeight + 20;
+        particle.vx = (Math.random() - 0.5) * 0.5;
+        particle.vy = -Math.random() * 2 - 0.5;
+        particle.size = 12 + Math.random() * 8;
+        particle.opacity = 0.3 + Math.random() * 0.4;
+        particle.char = this.characters[Math.floor(Math.random() * this.characters.length)];
+        particle.life = 0;
+        particle.maxLife = 200 + Math.random() * 300;
+        particle.active = true;
         
-        window.addEventListener('mouseleave', () => {
-            this.mouse.x = -1000;
-            this.mouse.y = -1000;
-            this.mouseVelocity.x = 0;
-            this.mouseVelocity.y = 0;
-        });
+        this.activeParticles.push(particle);
+        this.particleIndex = (this.particleIndex + 1) % 50;
     }
     
     updateParticles() {
-        this.particles.forEach((particle, index) => {
-            // Calculate distance to mouse
+        // Update existing particles
+        for (let i = this.activeParticles.length - 1; i >= 0; i--) {
+            const particle = this.activeParticles[i];
+            
+            particle.x += particle.vx;
+            particle.y += particle.vy;
+            particle.life++;
+            
+            // Cursor attraction
             const dx = this.mouse.x - particle.x;
             const dy = this.mouse.y - particle.y;
             const distance = Math.sqrt(dx * dx + dy * dy);
             
-            // Mouse interaction
-            if (distance < 150) {
-                const force = (150 - distance) / 150;
-                const angle = Math.atan2(dy, dx);
-                
-                // Apply mouse velocity influence
-                particle.vx += Math.cos(angle) * force * 0.02;
-                particle.vy += Math.sin(angle) * force * 0.02;
-                
-                // Apply horizontal/vertical mouse movement
-                particle.vx += this.mouseVelocity.x * 0.001;
-                particle.vy += this.mouseVelocity.y * 0.001;
-                
-                // Increase opacity near mouse
-                particle.opacity = Math.min(1, particle.opacity + force * 0.1);
+            if (distance < 100) {
+                const force = (100 - distance) / 100;
+                particle.vx += (dx / distance) * force * 0.02;
+                particle.vy += (dy / distance) * force * 0.02;
+            }
+            
+            // Remove dead particles
+            if (particle.life >= particle.maxLife || particle.y < -20) {
+                particle.active = false;
+                this.activeParticles.splice(i, 1);
+            }
+        }
+        
+        // Spawn new particles occasionally
+        if (Math.random() < 0.1) {
+            this.spawnParticle();
+        }
+    }
+    
+    updateColumns() {
+        // Smooth mouse interpolation
+        this.mouse.x += (this.targetMouse.x - this.mouse.x) * 0.1;
+        this.mouse.y += (this.targetMouse.y - this.mouse.y) * 0.1;
+        
+        const CURSOR_RADIUS = 150;
+        const MAX_DISPLACEMENT = 40;
+        
+        for (let i = 0; i < this.columnCount; i++) {
+            const x = i * 25;
+            
+            // Update position
+            this.columnPositions[i] += this.columnSpeeds[i];
+            if (this.columnPositions[i] > window.innerHeight) {
+                this.columnPositions[i] = -20;
+            }
+            
+            // Cursor avoidance (parting effect)
+            const dx = x - this.mouse.x;
+            const dy = this.columnPositions[i] - this.mouse.y;
+            const distance = Math.sqrt(dx * dx + dy * dy);
+            
+            if (distance < CURSOR_RADIUS) {
+                const force = 1 - (distance / CURSOR_RADIUS);
+                const targetOffset = (dx > 0 ? 1 : -1) * force * MAX_DISPLACEMENT;
+                this.columnOffsets[i] += (targetOffset - this.columnOffsets[i]) * 0.15;
             } else {
-                // Fade back to normal opacity
-                particle.opacity = Math.max(0.2, particle.opacity - 0.005);
+                this.columnOffsets[i] *= 0.9; // Return to center
+            }
+        }
+    }
+    
+    draw() {
+        // Clear with fade trail effect for Matrix look
+        this.ctx.fillStyle = 'rgba(0, 0, 0, 0.05)';
+        this.ctx.fillRect(0, 0, window.innerWidth, window.innerHeight);
+        
+        this.ctx.font = '16px JetBrains Mono';
+        
+        // Draw Matrix columns
+        for (let i = 0; i < this.columnCount; i++) {
+            const x = i * 25 + this.columnOffsets[i];
+            const y = this.columnPositions[i];
+            
+            // Draw trail (dimmer characters)
+            for (let j = 0; j < 10; j++) {
+                const trailY = y - j * 20;
+                if (trailY < 0) break;
+                
+                const opacity = 1 - (j / 10);
+                this.ctx.fillStyle = `rgba(0, 255, 65, ${opacity * 0.5})`;
+                
+                const char = this.characters[Math.floor(Math.random() * this.characters.length)];
+                this.ctx.fillText(char, x, trailY);
             }
             
-            // Apply velocity
-            particle.x += particle.vx;
-            particle.y += particle.vy;
-            
-            // Apply friction
-            particle.vx *= 0.98;
-            particle.vy *= 0.98;
-            
-            // Boundary wrapping
-            if (particle.x < 0) particle.x = this.canvas.width;
-            if (particle.x > this.canvas.width) particle.x = 0;
-            if (particle.y < 0) particle.y = this.canvas.height;
-            if (particle.y > this.canvas.height) particle.y = 0;
-            
-            // Life cycle
-            particle.life -= 0.5;
-            if (particle.life <= 0) {
-                particle.x = Math.random() * this.canvas.width;
-                particle.y = Math.random() * this.canvas.height;
-                particle.life = particle.maxLife;
-                particle.vx = (Math.random() - 0.5) * 0.5;
-                particle.vy = (Math.random() - 0.5) * 0.5;
-                particle.color = this.getRandomColor();
-            }
-        });
+            // Draw bright head character with glow
+            this.ctx.shadowBlur = 10;
+            this.ctx.shadowColor = '#00FF41';
+            this.ctx.fillStyle = '#FFFFFF';
+            const headChar = this.characters[Math.floor(Math.random() * this.characters.length)];
+            this.ctx.fillText(headChar, x, y);
+            this.ctx.shadowBlur = 0;
+        }
+        
+        // Draw floating particles
+        this.drawParticles();
     }
     
     drawParticles() {
-        this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+        this.ctx.font = '14px JetBrains Mono';
         
-        this.particles.forEach(particle => {
-            this.ctx.save();
-            this.ctx.globalAlpha = particle.opacity * (particle.life / particle.maxLife);
-            this.ctx.fillStyle = particle.color;
-            this.ctx.shadowBlur = 10;
-            this.ctx.shadowColor = particle.color;
-            
-            // Draw particle as circle
-            this.ctx.beginPath();
-            this.ctx.arc(particle.x, particle.y, particle.size, 0, Math.PI * 2);
-            this.ctx.fill();
-            
-            // Draw connection lines to nearby particles
-            this.particles.forEach(otherParticle => {
-                if (particle === otherParticle) return;
-                
-                const dx = particle.x - otherParticle.x;
-                const dy = particle.y - otherParticle.y;
-                const distance = Math.sqrt(dx * dx + dy * dy);
-                
-                if (distance < 100) {
-                    this.ctx.globalAlpha = (1 - distance / 100) * 0.1 * particle.opacity;
-                    this.ctx.strokeStyle = particle.color;
-                    this.ctx.lineWidth = 0.5;
-                    this.ctx.beginPath();
-                    this.ctx.moveTo(particle.x, particle.y);
-                    this.ctx.lineTo(otherParticle.x, otherParticle.y);
-                    this.ctx.stroke();
-                }
-            });
-            
-            this.ctx.restore();
+        this.activeParticles.forEach(particle => {
+            const alpha = particle.opacity * (1 - particle.life / particle.maxLife);
+            this.ctx.fillStyle = `rgba(0, 255, 65, ${alpha})`;
+            this.ctx.shadowBlur = 5;
+            this.ctx.shadowColor = '#00FF41';
+            this.ctx.fillText(particle.char, particle.x, particle.y);
+            this.ctx.shadowBlur = 0;
         });
     }
     
-    animate() {
-        this.updateParticles();
-        this.drawParticles();
-        this.animationId = requestAnimationFrame(() => this.animate());
+    animate(currentTime) {
+        // Performance optimization - limit to 60fps
+        if (currentTime - this.lastTime >= 1000 / 60) {
+            this.updateColumns();
+            this.updateParticles();
+            this.draw();
+            
+            this.lastTime = currentTime;
+            this.frameCount++;
+            
+            // Log FPS every 60 frames
+            if (this.frameCount % 60 === 0) {
+                console.log(`Matrix FPS: ${Math.round(1000 / (currentTime - this.lastTime))}`);
+            }
+        }
+        
+        this.animationId = requestAnimationFrame((time) => this.animate(time));
+    }
+    
+    bindEvents() {
+        window.addEventListener('resize', () => {
+            this.resize();
+            this.initParticlePool();
+        });
+        
+        window.addEventListener('mousemove', (e) => {
+            this.targetMouse.x = e.clientX;
+            this.targetMouse.y = e.clientY;
+        });
+        
+        window.addEventListener('mouseleave', () => {
+            this.targetMouse.x = -1000;
+            this.targetMouse.y = -1000;
+        });
     }
     
     destroy() {
@@ -188,12 +254,12 @@ class MouseReactiveBackground {
 
 // Initialize when DOM is loaded
 document.addEventListener('DOMContentLoaded', () => {
-    new MouseReactiveBackground();
+    window.matrixBackground = new MatrixBackground();
 });
 
 // Cleanup on page unload
 window.addEventListener('beforeunload', () => {
-    if (window.mouseReactiveBackground) {
-        window.mouseReactiveBackground.destroy();
+    if (window.matrixBackground) {
+        window.matrixBackground.destroy();
     }
 });
