@@ -310,18 +310,38 @@ async function loadGitHubStats() {
         const counterElements = document.querySelectorAll('[data-counter]');
         console.log(`Found ${counterElements.length} counter elements`);
         
+        // Debug: Log each element we found
+        counterElements.forEach((element, index) => {
+            console.log(`Element ${index}:`, {
+                tagName: element.tagName,
+                textContent: element.textContent,
+                dataStat: element.getAttribute('data-stat'),
+                dataCounter: element.getAttribute('data-counter')
+            });
+        });
+        
         counterElements.forEach(element => {
             const key = element.getAttribute('data-stat');
             console.log(`Processing element with data-stat: ${key}, current value: ${statsElements[key]}`);
             
             if (statsElements[key] !== undefined) {
-                // Immediate update first
-                element.textContent = statsElements[key].toLocaleString();
+                // Set the data attribute first
                 element.setAttribute('data-counter', statsElements[key]);
                 
-                // Then animate
-                new NumberCounter(element, statsElements[key]);
-                console.log(`Updated ${key}: ${statsElements[key]}`);
+                // Immediate update - set text content directly
+                element.textContent = statsElements[key].toLocaleString();
+                
+                // Force a reflow to ensure the text is visible
+                element.offsetHeight;
+                
+                console.log(`Updated ${key}: ${statsElements[key]} (text: ${element.textContent})`);
+                
+                // Optional: Add a subtle animation effect without overriding the text
+                element.style.transition = 'all 0.3s ease';
+                element.style.transform = 'scale(1.05)';
+                setTimeout(() => {
+                    element.style.transform = 'scale(1)';
+                }, 300);
             } else {
                 console.log(`No value found for ${key}`);
             }
@@ -329,6 +349,7 @@ async function loadGitHubStats() {
         
         console.log('GitHub stats loaded:', stats);
         console.log('Displayed stats:', statsElements);
+        console.log('Raw stats data:', JSON.stringify(stats, null, 2));
     } catch (error) {
         console.error('Failed to load GitHub stats:', error);
         // Fallback to default values
