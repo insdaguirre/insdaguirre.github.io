@@ -257,9 +257,12 @@ class DynamicTicker {
             return `<span class="ticker-item">${stock.symbol}: $${stock.price.toFixed(2)} <span class="${changeClass}">${changeSymbol} ${changeText}</span></span>`;
         }).join('');
         
+        // Duplicate content 3 times to ensure seamless scrolling with no blank periods
+        const seamlessHTML = tickerHTML + tickerHTML + tickerHTML;
+        
         if (this.ticker) {
-            this.ticker.innerHTML = tickerHTML;
-            console.log('✅ Ticker updated successfully');
+            this.ticker.innerHTML = seamlessHTML;
+            console.log('✅ Ticker updated successfully with seamless scrolling');
         } else {
             console.error('❌ Ticker element not found!');
         }

@@ -149,11 +149,34 @@ body {
     overflow: hidden;
     white-space: nowrap;
     box-shadow: 0 0 20px rgba(255, 102, 0, 0.3);
+    position: relative;
+}
+
+/* Add gradient fade effects at edges for smoother visual transition */
+.data-ticker::before,
+.data-ticker::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    width: 50px;
+    z-index: 2;
+    pointer-events: none;
+}
+
+.data-ticker::before {
+    left: 0;
+    background: linear-gradient(to right, var(--bloomberg-black), transparent);
+}
+
+.data-ticker::after {
+    right: 0;
+    background: linear-gradient(to left, var(--bloomberg-black), transparent);
 }
 
 .ticker-content {
     display: inline-block;
-    animation: scroll-ticker 45s linear infinite;
+    animation: scroll-ticker 120s linear infinite;
     font-family: var(--font-terminal);
     font-size: 0.9rem;
     font-weight: 600;
