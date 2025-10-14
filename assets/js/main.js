@@ -21,16 +21,16 @@ document.addEventListener('mousemove', (e) => {
     window.mousePosition.y = e.clientY;
 });
 
-// Add scroll effect to header with terminal styling
+// Add scroll effect to header with Apple styling
 window.addEventListener('scroll', () => {
     const header = document.querySelector('.header');
     if (header) {
         if (window.scrollY > 100) {
-            header.style.background = 'rgba(0, 0, 0, 0.98)';
-            header.style.boxShadow = '0 0 30px rgba(0, 255, 65, 0.3)';
+            header.style.background = 'rgba(28, 28, 30, 0.95)';
+            header.style.boxShadow = '0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24)';
         } else {
-            header.style.background = 'rgba(0, 0, 0, 0.95)';
-            header.style.boxShadow = '0 0 20px rgba(0, 255, 65, 0.2)';
+            header.style.background = 'rgba(28, 28, 30, 0.8)';
+            header.style.boxShadow = '0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24)';
         }
     }
 });
@@ -56,11 +56,11 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 });
 
-// Add typing effect to hero title with terminal cursor
+// Add typing effect to hero title with Apple-style cursor
 function typeWriter(element, text, speed = 80) {
     let i = 0;
     element.innerHTML = '';
-    const cursor = '<span class="typing-cursor" style="color: var(--terminal-green); animation: blink 1s infinite;">█</span>';
+    const cursor = '<span class="typing-cursor" style="color: var(--apple-blue); animation: blink 1s infinite;">|</span>';
     
     function type() {
         if (i < text.length) {
@@ -223,17 +223,17 @@ document.addEventListener('DOMContentLoaded', () => {
             
             // Change icon
             const icon = mobileMenuBtn.querySelector('i');
-            if (navLinks.classList.contains('active')) {
-                icon.className = 'fas fa-times';
-                mobileMenuBtn.style.boxShadow = '0 0 20px rgba(255, 102, 0, 0.8)';
-                mobileMenuBtn.style.borderColor = 'var(--bloomberg-orange)';
-                mobileMenuBtn.style.color = 'var(--bloomberg-orange)';
-            } else {
-                icon.className = 'fas fa-bars';
-                mobileMenuBtn.style.boxShadow = 'var(--glow-terminal)';
-                mobileMenuBtn.style.borderColor = 'var(--terminal-green)';
-                mobileMenuBtn.style.color = 'var(--terminal-green)';
-            }
+                if (navLinks.classList.contains('active')) {
+                    icon.className = 'fas fa-times';
+                    mobileMenuBtn.style.boxShadow = '0 3px 6px rgba(0, 0, 0, 0.16), 0 3px 6px rgba(0, 0, 0, 0.23)';
+                    mobileMenuBtn.style.borderColor = 'var(--apple-blue)';
+                    mobileMenuBtn.style.color = 'var(--apple-blue)';
+                } else {
+                    icon.className = 'fas fa-bars';
+                    mobileMenuBtn.style.boxShadow = '0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24)';
+                    mobileMenuBtn.style.borderColor = 'var(--border)';
+                    mobileMenuBtn.style.color = 'var(--text-secondary)';
+                }
         });
         
         // Close menu when clicking outside
@@ -242,9 +242,9 @@ document.addEventListener('DOMContentLoaded', () => {
                 navLinks.classList.remove('active');
                 const icon = mobileMenuBtn.querySelector('i');
                 icon.className = 'fas fa-bars';
-                mobileMenuBtn.style.boxShadow = 'var(--glow-terminal)';
-                mobileMenuBtn.style.borderColor = 'var(--terminal-green)';
-                mobileMenuBtn.style.color = 'var(--terminal-green)';
+                mobileMenuBtn.style.boxShadow = '0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24)';
+                mobileMenuBtn.style.borderColor = 'var(--border)';
+                mobileMenuBtn.style.color = 'var(--text-secondary)';
             }
         });
         
@@ -254,9 +254,9 @@ document.addEventListener('DOMContentLoaded', () => {
                 navLinks.classList.remove('active');
                 const icon = mobileMenuBtn.querySelector('i');
                 icon.className = 'fas fa-bars';
-                mobileMenuBtn.style.boxShadow = 'var(--glow-terminal)';
-                mobileMenuBtn.style.borderColor = 'var(--terminal-green)';
-                mobileMenuBtn.style.color = 'var(--terminal-green)';
+                mobileMenuBtn.style.boxShadow = '0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24)';
+                mobileMenuBtn.style.borderColor = 'var(--border)';
+                mobileMenuBtn.style.color = 'var(--text-secondary)';
             }
         });
     }

@@ -6,27 +6,27 @@ description: Developer, Data-Scientist, and Entrepreneur
 
     <!-- Terminal System Header -->
     <header class="header">
-        <!-- Live Data Ticker -->
-        <div class="data-ticker">
-            <div class="ticker-content" id="ticker-content">
-                <span class="ticker-item">AAPL: $182.52 ↑</span>
-                <span class="ticker-item">TSLA: $248.42 ↓</span>
-                <span class="ticker-item">BTC: $43,250.00 ↑</span>
-                <span class="ticker-item">ETH: $2,650.00 ↑</span>
-                <span class="ticker-item">NVDA: $875.28 ↑</span>
-                <span class="ticker-item">MSFT: $378.85 ↓</span>
-                <span class="ticker-item">GOOGL: $142.30 ↑</span>
-                <span class="ticker-item">AMZN: $155.20 ↓</span>
+            <!-- Apple Stocks Ticker -->
+            <div class="data-ticker">
+                <div class="ticker-content" id="ticker-content">
+                    <span class="ticker-item">AAPL: $182.52 <span class="price-up">↑</span></span>
+                    <span class="ticker-item">TSLA: $248.42 <span class="price-down">↓</span></span>
+                    <span class="ticker-item">BTC: $43,250.00 <span class="price-up">↑</span></span>
+                    <span class="ticker-item">ETH: $2,650.00 <span class="price-up">↑</span></span>
+                    <span class="ticker-item">NVDA: $875.28 <span class="price-up">↑</span></span>
+                    <span class="ticker-item">MSFT: $378.85 <span class="price-down">↓</span></span>
+                    <span class="ticker-item">GOOGL: $142.30 <span class="price-up">↑</span></span>
+                    <span class="ticker-item">AMZN: $155.20 <span class="price-down">↓</span></span>
+                </div>
             </div>
-        </div>
         
         <nav class="nav container">
-            <div class="logo">DA_TERMINAL</div>
+            <div class="logo">Diego Aguirre</div>
             <ul class="nav-links">
-                <li><a href="#about">ABOUT</a></li>
-                <li><a href="#projects">PROJECTS</a></li>
-                <li><a href="#contact">CONTACT</a></li>
-                <li><a href="https://www.instagram.com/deegz.mp3/" target="_blank">ALTER_EGO</a></li>
+                <li><a href="#about">About</a></li>
+                <li><a href="#projects">Projects</a></li>
+                <li><a href="#contact">Contact</a></li>
+                <li><a href="https://www.instagram.com/deegz.mp3/" target="_blank">Instagram</a></li>
             </ul>
             <button class="mobile-menu-btn" id="mobile-menu-btn">
                 <i class="fas fa-bars"></i>
@@ -34,43 +34,39 @@ description: Developer, Data-Scientist, and Entrepreneur
         </nav>
     </header>
 
-<!-- Terminal Hero Section -->
-<section class="hero">
-    <div class="container">
-        <div class="hero-content fade-in-up">
-            <div class="terminal-prompt">
-                <span class="prompt-symbol">$</span>
-                <span class="prompt-text">whoami</span>
+        <!-- Apple-style Hero Section -->
+        <section class="hero">
+            <div class="container">
+                <div class="hero-content fade-in-up">
+                    <div class="terminal-prompt">
+                        <span class="prompt-symbol">$</span>
+                        <span class="prompt-text">whoami</span>
+                    </div>
+                    <h1>Diego Aguirre</h1>
+                    <div class="terminal-prompt">
+                        <span class="prompt-symbol">$</span>
+                        <span class="prompt-text">cat profile.txt</span>
+                    </div>
+                    <p class="terminal-output">Developer, Data-Scientist, and Entrepreneur</p>
+                    <p class="terminal-output">Leveraging Data Science & ML to build innovative solutions that connect people and technology</p>
+                    <div class="cta-buttons">
+                        <a href="#projects" class="btn btn-primary">
+                            <i class="fas fa-code"></i>
+                            View Projects
+                        </a>
+                        <a href="https://github.com/insdaguirre" class="btn btn-secondary" target="_blank">
+                            <i class="fab fa-github"></i>
+                            GitHub
+                        </a>
+                    </div>
+                </div>
             </div>
-            <h1>Diego Aguirre</h1>
-            <div class="terminal-prompt">
-                <span class="prompt-symbol">$</span>
-                <span class="prompt-text">cat profile.txt</span>
-            </div>
-            <p class="terminal-output">Developer, Data-Scientist, and Entrepreneur</p>
-            <p class="terminal-output">Leveraging Data Science & ML to build innovative solutions that connect people and technology</p>
-            <div class="terminal-prompt">
-                <span class="prompt-symbol">$</span>
-                <span class="prompt-text">ls -la projects/</span>
-            </div>
-            <div class="cta-buttons">
-                <a href="#projects" class="btn btn-primary">
-                    <i class="fas fa-terminal"></i>
-                    VIEW_PROJECTS
-                </a>
-                <a href="https://github.com/insdaguirre" class="btn btn-secondary" target="_blank">
-                    <i class="fab fa-github"></i>
-                    GITHUB_REPO
-                </a>
-            </div>
-        </div>
-    </div>
-</section>
+        </section>
 
 <!-- About Section -->
 <section id="about" class="section about">
     <div class="container">
-        <h2 class="section-title">$ cat about.txt</h2>
+        <h2 class="section-title">About</h2>
         <div class="about-content">
             <div class="about-text">
                     <div class="terminal-prompt">
@@ -112,7 +108,7 @@ description: Developer, Data-Scientist, and Entrepreneur
 <!-- Projects Section -->
 <section id="projects" class="section">
     <div class="container">
-        <h2 class="section-title">$ ls -la projects/</h2>
+        <h2 class="section-title">Projects</h2>
         <div class="projects-grid">
             <div class="project-card" data-repo="https://github.com/insdaguirre/Stock_Hub" role="link" tabindex="0">
                 <div class="project-header">
@@ -281,7 +277,7 @@ description: Developer, Data-Scientist, and Entrepreneur
 <section id="contact" class="section contact">
     <div class="container">
         <div class="contact-content">
-            <h2 class="section-title">$ contact --help</h2>
+            <h2 class="section-title">Contact</h2>
             <div class="terminal-prompt">
                 <span class="prompt-symbol">$</span>
                 <span class="prompt-text">cat contact_info.txt</span>

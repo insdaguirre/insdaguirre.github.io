@@ -1,53 +1,69 @@
-/* Import Terminal & Finance fonts */
-@import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@300;400;500;600;700&family=Fira+Code:wght@300;400;500;600;700&family=JetBrains+Mono:wght@300;400;500;600;700&display=swap');
+/* Apple System Fonts */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@300;400;500;600;700&display=swap');
 
 :root {
-    /* Terminal & Bloomberg Color Palette */
-    --terminal-green: #00ff41;
-    --bloomberg-orange: #ff6600;
-    --matrix-green: #00ff00;
-    --terminal-bg: #0a0a0a;
-    --code-blue: #0080ff;
-    --warning-yellow: #ffff00;
-    --error-red: #ff0040;
-    --data-cyan: #00ffff;
-    --terminal-text: #00ff41;
-    --terminal-text-dim: rgba(0, 255, 65, 0.6);
-    --terminal-border: rgba(0, 255, 65, 0.4);
+    /* Apple Stocks Color Palette */
+    --apple-blue: #007AFF;
+    --apple-green: #34C759;
+    --apple-orange: #FF9500;
+    --apple-red: #FF3B30;
+    --apple-purple: #AF52DE;
+    --apple-pink: #FF2D92;
+    --apple-yellow: #FFCC00;
+    
+    /* Background Colors */
+    --background: #000000;
+    --surface: #1C1C1E;
+    --surface-secondary: #2C2C2E;
+    --surface-tertiary: #3A3A3C;
+    
+    /* Text Colors */
+    --text: #FFFFFF;
+    --text-secondary: #8E8E93;
+    --text-tertiary: #636366;
+    --text-quaternary: #48484A;
+    
+    /* Border Colors */
+    --border: #38383A;
+    --border-secondary: #48484A;
+    --border-tertiary: #636366;
+    
+    /* Status Colors */
+    --success: var(--apple-green);
+    --warning: var(--apple-orange);
+    --error: var(--apple-red);
+    --info: var(--apple-blue);
     
     /* Legacy variables for compatibility */
-    --primary: var(--terminal-green);
-    --secondary: var(--code-blue);
-    --accent: var(--bloomberg-orange);
-    --background: var(--terminal-bg);
-    --surface: #000000;
-    --text: var(--terminal-text);
-    --text-secondary: var(--terminal-text-dim);
-    --border: var(--terminal-border);
+    --primary: var(--apple-blue);
+    --secondary: var(--apple-green);
+    --accent: var(--apple-orange);
+    --terminal-green: var(--apple-green);
+    --bloomberg-orange: var(--apple-orange);
+    --terminal-text: var(--text);
+    --terminal-text-dim: var(--text-secondary);
+    --terminal-border: var(--border);
     
-    /* Terminal Glow Effects */
-    --glow-terminal: 0 0 10px rgba(0, 255, 65, 0.5),
-                     0 0 20px rgba(0, 255, 65, 0.3),
-                     0 0 30px rgba(0, 255, 65, 0.1);
-    --glow-terminal-strong: 0 0 10px rgba(0, 255, 65, 0.8),
-                            0 0 20px rgba(0, 255, 65, 0.5),
-                            0 0 40px rgba(0, 255, 65, 0.3),
-                            0 0 60px rgba(0, 255, 65, 0.1);
-    --glow-bloomberg: 0 0 10px rgba(255, 102, 0, 0.5),
-                      0 0 20px rgba(255, 102, 0, 0.3),
-                      0 0 30px rgba(255, 102, 0, 0.1);
-    --glow-matrix: 0 0 10px rgba(0, 255, 0, 0.5),
-                   0 0 20px rgba(0, 255, 0, 0.3),
-                   0 0 30px rgba(0, 255, 0, 0.1);
-    --glow-data: 0 0 10px rgba(0, 255, 255, 0.5),
-                 0 0 20px rgba(0, 255, 255, 0.3),
-                 0 0 30px rgba(0, 255, 255, 0.1);
+    /* Apple Subtle Effects */
+    --shadow-subtle: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24);
+    --shadow-medium: 0 3px 6px rgba(0, 0, 0, 0.16), 0 3px 6px rgba(0, 0, 0, 0.23);
+    --shadow-large: 0 10px 20px rgba(0, 0, 0, 0.19), 0 6px 6px rgba(0, 0, 0, 0.23);
+    --shadow-xl: 0 14px 28px rgba(0, 0, 0, 0.25), 0 10px 10px rgba(0, 0, 0, 0.22);
+    
+    /* Apple Glow Effects (subtle) */
+    --glow-blue: 0 0 20px rgba(0, 122, 255, 0.3);
+    --glow-green: 0 0 20px rgba(52, 199, 89, 0.3);
+    --glow-orange: 0 0 20px rgba(255, 149, 0, 0.3);
+    --glow-red: 0 0 20px rgba(255, 59, 48, 0.3);
     
     /* Legacy glow variables for compatibility */
-    --glow-cyan: var(--glow-terminal);
-    --glow-cyan-strong: var(--glow-terminal-strong);
-    --glow-blue: var(--glow-data);
-    --glow-pink: var(--glow-bloomberg);
+    --glow-terminal: var(--glow-green);
+    --glow-terminal-strong: var(--glow-green);
+    --glow-cyan: var(--glow-blue);
+    --glow-cyan-strong: var(--glow-blue);
+    --glow-bloomberg: var(--glow-orange);
+    --glow-matrix: var(--glow-green);
+    --glow-data: var(--glow-blue);
 }
 
 * {
@@ -57,13 +73,15 @@
 }
 
 body {
-    font-family: 'Fira Code', 'IBM Plex Mono', monospace;
+    font-family: -apple-system, BlinkMacSystemFont, 'Inter', 'Segoe UI', 'Roboto', 'Helvetica Neue', Arial, sans-serif;
     line-height: 1.6;
-    color: var(--terminal-text);
-    background: var(--terminal-bg);
+    color: var(--text);
+    background: var(--background);
     overflow-x: hidden;
     font-size: 1rem;
     font-weight: 400;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
 }
 
 /* Canvas Background */
@@ -77,6 +95,18 @@ body {
     pointer-events: none;
 }
 
+/* Dark overlay for better readability */
+#tron-canvas::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.7);
+    z-index: 1;
+}
+
 .container {
     max-width: 1200px;
     margin: 0 auto;
@@ -85,51 +115,58 @@ body {
     z-index: 1;
 }
 
-/* Terminal System Header */
+/* Apple-style Header */
 .header {
     position: fixed;
     top: 0;
     width: 100%;
-    background: rgba(0, 0, 0, 0.95);
-    backdrop-filter: blur(10px);
+    background: rgba(28, 28, 30, 0.8);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
     z-index: 1000;
-    border-bottom: 2px solid var(--terminal-border);
-    box-shadow: var(--glow-terminal);
-    font-family: 'IBM Plex Mono', monospace;
+    border-bottom: 1px solid var(--border);
+    box-shadow: var(--shadow-subtle);
+    font-family: -apple-system, BlinkMacSystemFont, 'Inter', sans-serif;
     font-size: 0.9rem;
 }
 
-/* Live Data Ticker */
+/* Apple Stocks Ticker */
 .data-ticker {
-    background: rgba(0, 0, 0, 0.8);
-    border-bottom: 1px solid var(--terminal-border);
-    padding: 0.5rem 0;
+    background: rgba(0, 0, 0, 0.9);
+    border-bottom: 1px solid var(--border);
+    padding: 0.75rem 0;
     overflow: hidden;
     white-space: nowrap;
 }
 
 .ticker-content {
     display: inline-block;
-    animation: scroll-ticker 30s linear infinite;
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 0.8rem;
-    color: var(--terminal-text);
+    animation: scroll-ticker 45s linear infinite;
+    font-family: -apple-system, BlinkMacSystemFont, 'Inter', sans-serif;
+    font-size: 0.9rem;
+    font-weight: 500;
+    color: var(--text);
 }
 
 .ticker-item {
     display: inline-block;
-    margin-right: 3rem;
-    padding: 0.2rem 0.5rem;
-    border: 1px solid var(--terminal-border);
-    background: rgba(0, 255, 65, 0.1);
-    color: var(--terminal-green);
-    text-shadow: var(--glow-terminal);
+    margin-right: 2rem;
+    padding: 0.25rem 0.75rem;
+    border-radius: 6px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    color: var(--text);
+    font-size: 0.85rem;
+    font-weight: 600;
+    letter-spacing: 0.3px;
 }
 
-.ticker-item:nth-child(even) {
-    color: var(--bloomberg-orange);
-    background: rgba(255, 102, 0, 0.1);
-    text-shadow: var(--glow-bloomberg);
+.ticker-item .price-up {
+    color: var(--success);
+}
+
+.ticker-item .price-down {
+    color: var(--error);
 }
 
 @keyframes scroll-ticker {
@@ -146,18 +183,11 @@ body {
 }
 
 .logo {
-    font-family: 'IBM Plex Mono', monospace;
-    font-size: 1.1rem;
-    font-weight: 600;
-    color: var(--terminal-green);
-    text-shadow: var(--glow-terminal);
-    animation: logoPulse 3s ease-in-out infinite;
-    letter-spacing: 1px;
-}
-
-@keyframes logoPulse {
-    0%, 100% { text-shadow: var(--glow-terminal); }
-    50% { text-shadow: var(--glow-terminal-strong); }
+    font-family: -apple-system, BlinkMacSystemFont, 'Inter', sans-serif;
+    font-size: 1.3rem;
+    font-weight: 700;
+    color: var(--text);
+    letter-spacing: 0.5px;
 }
 
 .nav-links {
@@ -167,36 +197,31 @@ body {
 }
 
 .nav-links a {
-    font-family: 'IBM Plex Mono', monospace;
+    font-family: -apple-system, BlinkMacSystemFont, 'Inter', sans-serif;
     text-decoration: none;
-    color: var(--terminal-text);
+    color: var(--text-secondary);
     font-weight: 500;
-    font-size: 1rem;
-    letter-spacing: 1px;
-    text-transform: uppercase;
+    font-size: 0.9rem;
+    letter-spacing: 0.3px;
     position: relative;
-    transition: all 0.3s ease;
-    padding: 0.5rem 1rem;
-    border: 1px solid transparent;
+    transition: all 0.2s ease;
+    padding: 0.5rem 0;
 }
 
 .nav-links a::after {
     content: '';
     position: absolute;
-    bottom: -5px;
+    bottom: 0;
     left: 0;
     width: 0;
     height: 2px;
-    background: var(--terminal-green);
-    box-shadow: var(--glow-terminal);
-    transition: width 0.3s ease;
+    background: var(--apple-blue);
+    transition: width 0.2s ease;
+    border-radius: 1px;
 }
 
 .nav-links a:hover {
-    color: var(--terminal-green);
-    text-shadow: var(--glow-terminal);
-    border-color: var(--terminal-border);
-    background: rgba(0, 255, 65, 0.1);
+    color: var(--text);
 }
 
 .nav-links a:hover::after {
@@ -210,70 +235,72 @@ body {
     align-items: center;
     position: relative;
     overflow: hidden;
-}
-
-.hero::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: radial-gradient(ellipse at center, rgba(0, 240, 255, 0.1) 0%, transparent 70%);
-    pointer-events: none;
+    background: linear-gradient(135deg, rgba(0, 0, 0, 0.8) 0%, rgba(28, 28, 30, 0.6) 100%);
 }
 
 .hero-content {
     position: relative;
     z-index: 2;
+    background: rgba(28, 28, 30, 0.9);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border-radius: 16px;
+    padding: 3rem;
+    border: 1px solid var(--border);
+    box-shadow: var(--shadow-large);
+    max-width: 800px;
+    margin: 0 auto;
 }
 
-/* Terminal Prompt Styling */
+/* Apple-style Command Styling */
 .terminal-prompt {
-    font-family: 'IBM Plex Mono', monospace;
-    font-size: 1rem;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.9rem;
     margin-bottom: 0.5rem;
-    color: var(--terminal-text);
+    color: var(--text-secondary);
+    background: rgba(0, 0, 0, 0.3);
+    padding: 0.5rem 1rem;
+    border-radius: 8px;
+    border-left: 3px solid var(--apple-blue);
 }
 
 .prompt-symbol {
-    color: var(--bloomberg-orange);
-    font-weight: 700;
+    color: var(--apple-orange);
+    font-weight: 600;
     margin-right: 0.5rem;
-    text-shadow: var(--glow-bloomberg);
 }
 
 .prompt-text {
-    color: var(--data-cyan);
+    color: var(--apple-blue);
     font-weight: 500;
-    text-shadow: var(--glow-data);
 }
 
 .terminal-output {
-    font-family: 'Fira Code', monospace;
+    font-family: -apple-system, BlinkMacSystemFont, 'Inter', sans-serif;
     font-size: 1.1rem;
     margin-bottom: 1rem;
-    color: var(--terminal-text);
-    margin-left: 1rem;
+    color: var(--text);
+    margin-left: 0;
     position: relative;
-}
-
-.terminal-output::before {
-    content: '> ';
-    color: var(--terminal-green);
-    font-weight: 700;
+    line-height: 1.6;
+    background: rgba(0, 0, 0, 0.2);
+    padding: 1rem;
+    border-radius: 8px;
+    border-left: 3px solid var(--apple-green);
 }
 
 .hero h1 {
-    font-family: 'IBM Plex Mono', monospace;
-    font-size: 2.2rem;
-    font-weight: 700;
+    font-family: -apple-system, BlinkMacSystemFont, 'Inter', sans-serif;
+    font-size: 3rem;
+    font-weight: 800;
     margin-bottom: 1.5rem;
-    line-height: 1.4;
-    color: var(--terminal-green);
-    text-shadow: var(--glow-terminal-strong);
-    letter-spacing: 2px;
-    animation: glitchText 10s infinite;
+    line-height: 1.2;
+    color: var(--text);
+    letter-spacing: -0.5px;
+    background: linear-gradient(135deg, var(--text) 0%, var(--text-secondary) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
 }
 
 @keyframes glitchText {
@@ -296,19 +323,18 @@ body {
 }
 
 .hero p {
-    font-family: 'Fira Code', monospace;
+    font-family: -apple-system, BlinkMacSystemFont, 'Inter', sans-serif;
     font-size: 1.2rem;
     margin-bottom: 1.5rem;
-    color: var(--terminal-text);
+    color: var(--text-secondary);
     font-weight: 400;
-    letter-spacing: 1px;
+    line-height: 1.6;
 }
 
 .hero p:first-of-type {
-    color: var(--bloomberg-orange);
+    color: var(--apple-orange);
     font-size: 1.4rem;
     font-weight: 600;
-    text-shadow: var(--glow-bloomberg);
 }
 
 .cta-buttons {
@@ -319,63 +345,50 @@ body {
 }
 
 .btn {
-    padding: 0.75rem 1.5rem;
-    border-radius: 0;
+    padding: 0.875rem 1.75rem;
+    border-radius: 12px;
     text-decoration: none;
-    font-family: 'IBM Plex Mono', monospace;
-    font-weight: 500;
-    font-size: 1rem;
-    letter-spacing: 1px;
-    text-transform: uppercase;
-    transition: all 0.3s ease;
+    font-family: -apple-system, BlinkMacSystemFont, 'Inter', sans-serif;
+    font-weight: 600;
+    font-size: 0.95rem;
+    letter-spacing: 0.3px;
+    transition: all 0.2s ease;
     display: inline-flex;
     align-items: center;
     gap: 0.5rem;
     position: relative;
     overflow: hidden;
-    border: 2px solid var(--terminal-border);
-    background: transparent;
+    border: 1px solid var(--border);
+    background: var(--surface);
+    color: var(--text);
+    box-shadow: var(--shadow-subtle);
 }
 
-.btn::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: -100%;
-    width: 100%;
-    height: 100%;
-    background: linear-gradient(90deg, transparent, rgba(0, 255, 65, 0.3), transparent);
-    transition: left 0.5s ease;
-}
-
-.btn:hover::before {
-    left: 100%;
+.btn:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-medium);
 }
 
 .btn-primary {
-    background: transparent;
-    color: var(--terminal-green);
-    border: 2px solid var(--terminal-green);
-    box-shadow: var(--glow-terminal);
+    background: var(--apple-blue);
+    color: white;
+    border: 1px solid var(--apple-blue);
 }
 
 .btn-primary:hover {
-    background: rgba(0, 255, 65, 0.1);
-    box-shadow: var(--glow-terminal-strong);
-    transform: translateY(-2px);
+    background: #0056CC;
+    border-color: #0056CC;
 }
 
 .btn-secondary {
     background: transparent;
-    color: var(--bloomberg-orange);
-    border: 2px solid var(--bloomberg-orange);
-    box-shadow: var(--glow-bloomberg);
+    color: var(--apple-orange);
+    border: 1px solid var(--apple-orange);
 }
 
 .btn-secondary:hover {
-    background: rgba(255, 102, 0, 0.1);
-    box-shadow: var(--glow-bloomberg);
-    transform: translateY(-2px);
+    background: var(--apple-orange);
+    color: white;
 }
 
 /* Sections */
@@ -390,21 +403,23 @@ section {
 }
 
 .section-title {
-    font-family: 'IBM Plex Mono', monospace;
-    font-size: 1.5rem;
-    font-weight: 700;
+    font-family: -apple-system, BlinkMacSystemFont, 'Inter', sans-serif;
+    font-size: 2.5rem;
+    font-weight: 800;
     text-align: center;
     margin-bottom: 3rem;
-    color: var(--terminal-green);
-    text-shadow: var(--glow-terminal);
-    letter-spacing: 2px;
-    text-transform: uppercase;
-    line-height: 1.6;
+    color: var(--text);
+    letter-spacing: -0.5px;
+    line-height: 1.2;
+    background: linear-gradient(135deg, var(--text) 0%, var(--text-secondary) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
 }
 
 /* About Section */
 .about {
-    background: linear-gradient(180deg, rgba(0, 240, 255, 0.03) 0%, transparent 100%);
+    background: linear-gradient(180deg, rgba(0, 122, 255, 0.03) 0%, transparent 100%);
 }
 
 .about-content {
@@ -441,24 +456,25 @@ section {
 }
 
 .skill-tag {
-    background: transparent;
-    color: var(--terminal-green);
-    border: 1px solid var(--terminal-border);
-    padding: 0.3rem 0.8rem;
-    border-radius: 0;
-    font-size: 0.8rem;
+    background: var(--surface-secondary);
+    color: var(--text-secondary);
+    border: 1px solid var(--border);
+    padding: 0.5rem 1rem;
+    border-radius: 20px;
+    font-size: 0.85rem;
     font-weight: 500;
-    letter-spacing: 0.5px;
+    letter-spacing: 0.3px;
     text-transform: lowercase;
-    transition: all 0.3s ease;
-    box-shadow: inset 0 0 10px rgba(0, 255, 65, 0.1);
-    font-family: 'Fira Code', monospace;
+    transition: all 0.2s ease;
+    font-family: -apple-system, BlinkMacSystemFont, 'Inter', sans-serif;
 }
 
 .skill-tag:hover {
-    background: rgba(0, 255, 65, 0.1);
-    box-shadow: var(--glow-terminal);
+    background: var(--apple-blue);
+    color: white;
+    border-color: var(--apple-blue);
     transform: translateY(-2px);
+    box-shadow: var(--shadow-subtle);
 }
 
 .about-image {
@@ -543,12 +559,14 @@ section {
 }
 
 .project-card {
-    background: rgba(0, 0, 0, 0.9);
-    backdrop-filter: blur(10px);
-    border: 2px solid var(--terminal-border);
-    padding: 1.5rem;
-    box-shadow: var(--glow-terminal);
-    transition: all 0.3s ease;
+    background: var(--surface);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 2rem;
+    box-shadow: var(--shadow-medium);
+    transition: all 0.2s ease;
     text-decoration: none;
     color: inherit;
     display: flex;
@@ -557,30 +575,14 @@ section {
     min-height: 300px;
     position: relative;
     overflow: hidden;
-    font-family: 'Fira Code', monospace;
-}
-
-.project-card::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    height: 3px;
-    background: linear-gradient(90deg, var(--terminal-green), var(--bloomberg-orange), var(--data-cyan));
-    transform: scaleX(0);
-    transition: transform 0.3s ease;
-}
-
-.project-card:hover::before {
-    transform: scaleX(1);
+    font-family: -apple-system, BlinkMacSystemFont, 'Inter', sans-serif;
 }
 
 .project-card:hover {
-    transform: translateY(-10px) scale(1.02);
-    box-shadow: var(--glow-terminal-strong);
-    border-color: var(--terminal-green);
-    background: rgba(0, 255, 65, 0.05);
+    transform: translateY(-8px);
+    box-shadow: var(--shadow-large);
+    border-color: var(--apple-blue);
+    background: rgba(0, 122, 255, 0.05);
 }
 
 .project-header {
@@ -697,70 +699,69 @@ section {
 }
 
 .social-link {
-    width: 60px;
-    height: 60px;
-    background: transparent;
-    color: var(--terminal-green);
-    border: 2px solid var(--terminal-border);
-    border-radius: 0;
+    width: 50px;
+    height: 50px;
+    background: var(--surface);
+    color: var(--text-secondary);
+    border: 1px solid var(--border);
+    border-radius: 12px;
     display: flex;
     align-items: center;
     justify-content: center;
     text-decoration: none;
-    transition: all 0.3s ease;
-    box-shadow: var(--glow-terminal);
-    font-size: 1.5rem;
-    animation: socialPulse 3s ease-in-out infinite;
-    font-family: 'IBM Plex Mono', monospace;
-}
-
-@keyframes socialPulse {
-    0%, 100% { box-shadow: var(--glow-terminal); }
-    50% { box-shadow: var(--glow-terminal-strong); }
+    transition: all 0.2s ease;
+    box-shadow: var(--shadow-subtle);
+    font-size: 1.25rem;
+    font-family: -apple-system, BlinkMacSystemFont, 'Inter', sans-serif;
 }
 
 .social-link:hover {
-    transform: translateY(-5px) scale(1.1);
-    box-shadow: var(--glow-terminal-strong);
-    background: rgba(0, 255, 65, 0.1);
+    transform: translateY(-3px);
+    box-shadow: var(--shadow-medium);
+    background: var(--apple-blue);
+    color: white;
+    border-color: var(--apple-blue);
 }
 
 /* Footer */
 .footer {
-    background: rgba(0, 0, 0, 0.9);
-    color: var(--terminal-text);
+    background: var(--surface);
+    color: var(--text-secondary);
     text-align: center;
     padding: 2rem 0;
-    border-top: 2px solid var(--terminal-border);
-    box-shadow: var(--glow-terminal);
+    border-top: 1px solid var(--border);
+    box-shadow: var(--shadow-subtle);
 }
 
 .footer p {
-    font-family: 'IBM Plex Mono', monospace;
+    font-family: -apple-system, BlinkMacSystemFont, 'Inter', sans-serif;
     font-weight: 400;
-    letter-spacing: 1px;
-    font-size: 1rem;
+    letter-spacing: 0.3px;
+    font-size: 0.9rem;
 }
 
 /* Mobile Menu Button */
 .mobile-menu-btn {
     display: none;
-    background: transparent;
-    border: 2px solid var(--terminal-border);
-    font-size: 1.5rem;
-    color: var(--terminal-green);
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    font-size: 1.25rem;
+    color: var(--text-secondary);
     cursor: pointer;
-    padding: 0.5rem;
+    padding: 0.75rem;
     position: relative;
     z-index: 1001;
-    box-shadow: var(--glow-terminal);
-    transition: all 0.3s ease;
-    font-family: 'IBM Plex Mono', monospace;
+    box-shadow: var(--shadow-subtle);
+    transition: all 0.2s ease;
+    font-family: -apple-system, BlinkMacSystemFont, 'Inter', sans-serif;
 }
 
 .mobile-menu-btn:hover {
-    background: rgba(0, 255, 65, 0.1);
-    box-shadow: var(--glow-terminal-strong);
+    background: var(--apple-blue);
+    color: white;
+    border-color: var(--apple-blue);
+    box-shadow: var(--shadow-medium);
 }
 
 /* Animations */
