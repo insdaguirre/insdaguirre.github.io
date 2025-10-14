@@ -299,25 +299,39 @@ async function loadGitHubStats() {
         const response = await fetch('/assets/data/github-stats.json');
         const stats = await response.json();
         
-        // Update the stats in the HTML
+        // Update the stats in the HTML with fallback for old data structure
         const statsElements = {
-            commits: stats.total_commits,
-            repos: stats.public_repos,
+            commits: stats.total_commits || stats.estimated_contributions_last_year || 0,
+            repos: stats.public_repos || 0,
             languages: 5  // Keep static
         };
         
         // Trigger number counters
         document.querySelectorAll('[data-counter]').forEach(element => {
             const key = element.getAttribute('data-stat');
-            if (statsElements[key]) {
+            if (statsElements[key] !== undefined) {
                 element.setAttribute('data-counter', statsElements[key]);
                 new NumberCounter(element, statsElements[key]);
             }
         });
         
         console.log('GitHub stats loaded:', stats);
+        console.log('Displayed stats:', statsElements);
     } catch (error) {
         console.error('Failed to load GitHub stats:', error);
+        // Fallback to default values
+        const defaultStats = {
+            commits: 100,
+            repos: 30,
+            languages: 5
+        };
+        document.querySelectorAll('[data-counter]').forEach(element => {
+            const key = element.getAttribute('data-stat');
+            if (defaultStats[key] !== undefined) {
+                element.setAttribute('data-counter', defaultStats[key]);
+                new NumberCounter(element, defaultStats[key]);
+            }
+        });
     }
 }
 

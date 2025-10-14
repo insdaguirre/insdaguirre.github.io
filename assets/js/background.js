@@ -210,8 +210,11 @@ class MatrixBackground {
     }
     
     animate(currentTime) {
-        // Performance optimization - limit to 60fps
-        if (currentTime - this.lastTime >= 1000 / 60) {
+        // Performance optimization - limit to 40fps for better performance
+        const targetFPS = 40;
+        const frameDelay = 1000 / targetFPS;
+        
+        if (currentTime - this.lastTime >= frameDelay) {
             this.updateColumns();
             this.updateParticles();
             this.draw();
@@ -221,7 +224,8 @@ class MatrixBackground {
             
             // Log FPS every 60 frames
             if (this.frameCount % 60 === 0) {
-                console.log(`Matrix FPS: ${Math.round(1000 / (currentTime - this.lastTime))}`);
+                const actualFPS = Math.round(1000 / (currentTime - this.lastTime));
+                console.log(`Matrix FPS: ${actualFPS} (target: ${targetFPS})`);
             }
         }
         
