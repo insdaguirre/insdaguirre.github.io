@@ -200,42 +200,78 @@ class NumberCounter {
 class DynamicTicker {
     constructor() {
         this.ticker = document.getElementById('ticker-content');
-        this.stocks = [
-            { symbol: 'AAPL', price: 182.52, change: 0.15 },
-            { symbol: 'TSLA', price: 248.42, change: -0.08 },
-            { symbol: 'BTC', price: 43250.00, change: 1250.00 },
-            { symbol: 'ETH', price: 2650.00, change: 45.00 },
-            { symbol: 'NVDA', price: 875.28, change: 12.50 },
-            { symbol: 'MSFT', price: 378.85, change: -2.15 },
-            { symbol: 'GOOGL', price: 142.30, change: 0.85 },
-            { symbol: 'AMZN', price: 155.20, change: -1.20 }
-        ];
-        
+        this.stocks = [];
         this.init();
     }
     
-    init() {
+    async init() {
+        await this.loadStockData();
         this.updateTicker();
-        setInterval(() => this.updatePrices(), 5000);
+        // Update every 5 seconds for visual effect (data refreshes daily)
+        setInterval(() => this.updateTicker(), 5000);
     }
     
-    updatePrices() {
-        this.stocks.forEach(stock => {
-            const change = (Math.random() - 0.5) * 10;
-            stock.price += change;
-            stock.change = change;
-        });
-        this.updateTicker();
+    async loadStockData() {
+        try {
+            const response = await fetch('/assets/data/stocks.json');
+            const data = await response.json();
+            this.stocks = data.stocks;
+            console.log(`Loaded ${this.stocks.length} stocks from ${data.last_updated}`);
+        } catch (error) {
+            console.error('Failed to load stock data:', error);
+            // Fallback to default data
+            this.stocks = [
+                { symbol: 'AAPL', price: 182.52, change: 1.25 },
+                { symbol: 'MSFT', price: 378.85, change: -2.15 },
+                { symbol: 'AMZN', price: 155.20, change: -1.20 },
+                { symbol: 'GOOGL', price: 142.30, change: 0.85 },
+                { symbol: 'NVDA', price: 875.28, change: 12.50 },
+                { symbol: 'META', price: 485.20, change: 5.30 },
+                { symbol: 'TSLA', price: 248.42, change: -0.08 },
+                { symbol: 'JPM', price: 185.50, change: 2.15 }
+            ];
+        }
     }
     
     updateTicker() {
+        if (this.stocks.length === 0) return;
+        
         const tickerHTML = this.stocks.map(stock => {
             const changeClass = stock.change >= 0 ? 'price-up' : 'price-down';
             const changeSymbol = stock.change >= 0 ? '↑' : '↓';
-            return `<span class="ticker-item">${stock.symbol}: $${stock.price.toFixed(2)} <span class="${changeClass}">${changeSymbol}</span></span>`;
+            const changeText = Math.abs(stock.change).toFixed(2);
+            return `<span class="ticker-item">${stock.symbol}: $${stock.price.toFixed(2)} <span class="${changeClass}">${changeSymbol} ${changeText}</span></span>`;
         }).join('');
         
         this.ticker.innerHTML = tickerHTML;
+    }
+}
+
+// Load and display GitHub stats
+async function loadGitHubStats() {
+    try {
+        const response = await fetch('/assets/data/github-stats.json');
+        const stats = await response.json();
+        
+        // Update the stats in the HTML
+        const statsElements = {
+            projects: stats.public_repos,
+            contributions: stats.estimated_contributions_last_year,
+            languages: 5  // Keep this static or calculate from repos
+        };
+        
+        // Trigger number counters
+        document.querySelectorAll('[data-counter]').forEach(element => {
+            const key = element.getAttribute('data-stat');
+            if (statsElements[key]) {
+                element.setAttribute('data-counter', statsElements[key]);
+                new NumberCounter(element, statsElements[key]);
+            }
+        });
+        
+        console.log('GitHub stats loaded:', stats);
+    } catch (error) {
+        console.error('Failed to load GitHub stats:', error);
     }
 }
 
@@ -306,6 +342,9 @@ document.addEventListener('DOMContentLoaded', () => {
         const target = parseInt(element.getAttribute('data-counter'));
         new NumberCounter(element, target);
     });
+    
+    // Load GitHub stats
+    loadGitHubStats();
 });
 
 // Add parallax effect to hero section with smoother motion
