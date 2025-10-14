@@ -1,5 +1,5 @@
-/* Import Tron-inspired fonts */
-@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;700;900&family=Rajdhani:wght@300;400;500;600;700&display=swap');
+/* Import Retro Gaming fonts */
+@import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&family=VT323&family=Share+Tech+Mono&display=swap');
 
 :root {
     /* Tron Color Palette */
@@ -35,11 +35,12 @@
 }
 
 body {
-    font-family: 'Rajdhani', sans-serif;
+    font-family: 'VT323', monospace;
     line-height: 1.6;
     color: var(--text);
     background: var(--background);
     overflow-x: hidden;
+    font-size: 1.1rem;
 }
 
 /* Canvas Background */
@@ -82,9 +83,9 @@ body {
 }
 
 .logo {
-    font-family: 'Orbitron', sans-serif;
-    font-size: 1.5rem;
-    font-weight: 900;
+    font-family: 'Press Start 2P', cursive;
+    font-size: 1.2rem;
+    font-weight: 400;
     color: var(--primary);
     text-shadow: var(--glow-cyan);
     animation: logoPulse 3s ease-in-out infinite;
@@ -102,12 +103,12 @@ body {
 }
 
 .nav-links a {
-    font-family: 'Rajdhani', sans-serif;
+    font-family: 'VT323', monospace;
     text-decoration: none;
     color: var(--text);
-    font-weight: 600;
-    font-size: 1.1rem;
-    letter-spacing: 1px;
+    font-weight: 400;
+    font-size: 1.3rem;
+    letter-spacing: 2px;
     text-transform: uppercase;
     position: relative;
     transition: all 0.3s ease;
@@ -160,14 +161,14 @@ body {
 }
 
 .hero h1 {
-    font-family: 'Orbitron', sans-serif;
-    font-size: 4rem;
-    font-weight: 900;
-    margin-bottom: 1rem;
-    line-height: 1.2;
+    font-family: 'Press Start 2P', cursive;
+    font-size: 2.5rem;
+    font-weight: 400;
+    margin-bottom: 1.5rem;
+    line-height: 1.4;
     color: var(--primary);
     text-shadow: var(--glow-cyan-strong);
-    letter-spacing: 2px;
+    letter-spacing: 3px;
     animation: glitchText 10s infinite;
 }
 
@@ -191,18 +192,18 @@ body {
 }
 
 .hero p {
-    font-family: 'Rajdhani', sans-serif;
-    font-size: 1.3rem;
+    font-family: 'VT323', monospace;
+    font-size: 1.5rem;
     margin-bottom: 1.5rem;
     color: var(--text);
-    font-weight: 500;
-    letter-spacing: 1px;
+    font-weight: 400;
+    letter-spacing: 2px;
 }
 
 .hero p:first-of-type {
     color: var(--secondary);
-    font-size: 1.5rem;
-    font-weight: 600;
+    font-size: 1.7rem;
+    font-weight: 400;
 }
 
 .cta-buttons {
@@ -216,10 +217,10 @@ body {
     padding: 0.75rem 1.5rem;
     border-radius: 0;
     text-decoration: none;
-    font-family: 'Rajdhani', sans-serif;
-    font-weight: 700;
-    font-size: 1.1rem;
-    letter-spacing: 2px;
+    font-family: 'VT323', monospace;
+    font-weight: 400;
+    font-size: 1.3rem;
+    letter-spacing: 3px;
     text-transform: uppercase;
     transition: all 0.3s ease;
     display: inline-flex;
@@ -284,15 +285,16 @@ section {
 }
 
 .section-title {
-    font-family: 'Orbitron', sans-serif;
-    font-size: 2.8rem;
-    font-weight: 700;
+    font-family: 'Press Start 2P', cursive;
+    font-size: 1.8rem;
+    font-weight: 400;
     text-align: center;
     margin-bottom: 3rem;
     color: var(--primary);
     text-shadow: var(--glow-cyan);
-    letter-spacing: 3px;
+    letter-spacing: 4px;
     text-transform: uppercase;
+    line-height: 1.6;
 }
 
 /* About Section */
@@ -308,20 +310,22 @@ section {
 }
 
 .about-text h3 {
-    font-family: 'Orbitron', sans-serif;
-    font-size: 1.8rem;
+    font-family: 'Press Start 2P', cursive;
+    font-size: 1.2rem;
     margin-bottom: 1.5rem;
     color: var(--secondary);
     text-shadow: var(--glow-blue);
     letter-spacing: 2px;
+    line-height: 1.8;
 }
 
 .about-text p {
     margin-bottom: 1rem;
     color: var(--text);
-    font-size: 1.1rem;
+    font-size: 1.3rem;
     font-weight: 400;
     line-height: 1.8;
+    font-family: 'VT323', monospace;
 }
 
 .skills {
@@ -500,11 +504,11 @@ section {
 }
 
 .project-title {
-    font-family: 'Orbitron', sans-serif;
-    font-size: 1.2rem;
-    font-weight: 700;
+    font-family: 'VT323', monospace;
+    font-size: 1.4rem;
+    font-weight: 400;
     color: var(--text);
-    letter-spacing: 1px;
+    letter-spacing: 2px;
 }
 
 .project-description {
@@ -572,9 +576,10 @@ section {
 .contact-text {
     color: var(--text);
     margin-bottom: 2rem;
-    font-size: 1.2rem;
+    font-size: 1.4rem;
     line-height: 1.8;
     font-weight: 400;
+    font-family: 'VT323', monospace;
 }
 
 .social-links {
@@ -623,9 +628,10 @@ section {
 }
 
 .footer p {
-    font-family: 'Rajdhani', sans-serif;
-    font-weight: 500;
-    letter-spacing: 1px;
+    font-family: 'VT323', monospace;
+    font-weight: 400;
+    letter-spacing: 2px;
+    font-size: 1.2rem;
 }
 
 /* Mobile Menu Button */
@@ -692,17 +698,19 @@ section {
     }
     
     .hero h1 {
-        font-size: 3rem;
+        font-size: 2rem;
+        line-height: 1.5;
     }
 }
 
 @media (max-width: 768px) {
     .hero h1 {
-        font-size: 2.5rem;
+        font-size: 1.5rem;
+        line-height: 1.6;
     }
 
     .hero p {
-        font-size: 1.1rem;
+        font-size: 1.3rem;
     }
 
     .about-content {
@@ -755,7 +763,8 @@ section {
     }
 
     .section-title {
-        font-size: 2rem;
+        font-size: 1.2rem;
+        line-height: 1.8;
     }
 
     .profile-img {
