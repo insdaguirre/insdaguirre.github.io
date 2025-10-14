@@ -7,7 +7,7 @@ GITHUB_USERNAME = 'insdaguirre'
 GITHUB_API = 'https://api.github.com/graphql'
 
 def fetch_github_stats():
-    token = os.environ.get('GITHUB_TOKEN')
+    token = os.environ.get('PERSONAL_ACCESS_TOKEN')
     headers = {
         'Authorization': f'Bearer {token}',
         'Content-Type': 'application/json'

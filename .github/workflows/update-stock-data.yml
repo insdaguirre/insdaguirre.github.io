@@ -31,7 +31,7 @@ jobs:
       - name: Fetch GitHub stats
         run: python scripts/fetch_github_stats.py
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          PERSONAL_ACCESS_TOKEN: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
       
       - name: Commit and push if changed
         run: |
