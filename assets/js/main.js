@@ -205,10 +205,34 @@ class DynamicTicker {
     }
     
     async init() {
+        // Show loading state immediately
+        this.showLoadingState();
+        
+        // Load data in background
         await this.loadStockData();
         this.updateTicker();
+        
         // Update every 5 seconds for visual effect (data refreshes daily)
         setInterval(() => this.updateTicker(), 5000);
+    }
+    
+    showLoadingState() {
+        if (this.ticker) {
+            // Show a loading message with some sample data for immediate display
+            const loadingHTML = `
+                <span class="ticker-item">Loading live data...</span>
+                <span class="ticker-item">AAPL: $---.-- <span class="price-up">↑</span></span>
+                <span class="ticker-item">MSFT: $---.-- <span class="price-down">↓</span></span>
+                <span class="ticker-item">AMZN: $---.-- <span class="price-up">↑</span></span>
+                <span class="ticker-item">GOOGL: $---.-- <span class="price-down">↓</span></span>
+                <span class="ticker-item">NVDA: $---.-- <span class="price-up">↑</span></span>
+                <span class="ticker-item">TSLA: $---.-- <span class="price-down">↓</span></span>
+                <span class="ticker-item">META: $---.-- <span class="price-up">↑</span></span>
+                <span class="ticker-item">JPM: $---.-- <span class="price-down">↓</span></span>
+            `;
+            // Duplicate for seamless scrolling
+            this.ticker.innerHTML = loadingHTML + loadingHTML + loadingHTML;
+        }
     }
     
     async loadStockData() {

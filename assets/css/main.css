@@ -176,7 +176,7 @@ body {
 
 .ticker-content {
     display: inline-block;
-    animation: scroll-ticker 120s linear infinite;
+    animation: scroll-ticker 400s linear infinite;
     font-family: var(--font-terminal);
     font-size: 0.9rem;
     font-weight: 600;
