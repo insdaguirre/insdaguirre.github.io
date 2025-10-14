@@ -307,11 +307,23 @@ async function loadGitHubStats() {
         };
         
         // Trigger number counters
-        document.querySelectorAll('[data-counter]').forEach(element => {
+        const counterElements = document.querySelectorAll('[data-counter]');
+        console.log(`Found ${counterElements.length} counter elements`);
+        
+        counterElements.forEach(element => {
             const key = element.getAttribute('data-stat');
+            console.log(`Processing element with data-stat: ${key}, current value: ${statsElements[key]}`);
+            
             if (statsElements[key] !== undefined) {
+                // Immediate update first
+                element.textContent = statsElements[key].toLocaleString();
                 element.setAttribute('data-counter', statsElements[key]);
+                
+                // Then animate
                 new NumberCounter(element, statsElements[key]);
+                console.log(`Updated ${key}: ${statsElements[key]}`);
+            } else {
+                console.log(`No value found for ${key}`);
             }
         });
         
@@ -397,14 +409,37 @@ document.addEventListener('DOMContentLoaded', () => {
         new GlitchEffect(title, { interval: 6000, duration: 200, intensity: 0.8 });
     });
     
-    // Add number counters to any elements with data-counter attribute
-    document.querySelectorAll('[data-counter]').forEach(element => {
-        const target = parseInt(element.getAttribute('data-counter'));
-        new NumberCounter(element, target);
-    });
-    
-    // Load GitHub stats
+    // Load GitHub stats immediately
     loadGitHubStats();
+    
+    // Fallback: Set default values if stats don't load within 3 seconds
+    setTimeout(() => {
+        const counterElements = document.querySelectorAll('[data-counter]');
+        let needsFallback = false;
+        
+        counterElements.forEach(element => {
+            if (element.textContent === '0' || element.textContent === 'NaN') {
+                needsFallback = true;
+            }
+        });
+        
+        if (needsFallback) {
+            console.log('Applying fallback stats...');
+            const fallbackStats = {
+                commits: 2957,
+                repos: 37,
+                languages: 5
+            };
+            
+            counterElements.forEach(element => {
+                const key = element.getAttribute('data-stat');
+                if (fallbackStats[key] !== undefined) {
+                    element.textContent = fallbackStats[key].toLocaleString();
+                    console.log(`Fallback updated ${key}: ${fallbackStats[key]}`);
+                }
+            });
+        }
+    }, 3000);
 });
 
 // Add parallax effect to hero section with smoother motion
