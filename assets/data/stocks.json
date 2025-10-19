@@ -1,5 +1,5 @@
 {
-  "last_updated": "2025-10-18T00:52:05.502493+00:00",
+  "last_updated": "2025-10-19T01:01:27.216194+00:00",
   "stocks": [
     {
       "symbol": "AAPL",
@@ -38,8 +38,8 @@
     },
     {
       "symbol": "META",
-      "price": 716.91,
-      "change": 4.84,
+      "price": 716.92,
+      "change": 4.85,
       "change_percent": 0.68,
       "previous_close": 712.07
     },
