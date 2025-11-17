@@ -1,5 +1,5 @@
 {
-  "last_updated": "2025-11-16T01:01:41.625394+00:00",
+  "last_updated": "2025-11-17T00:58:58.110732+00:00",
   "stocks": [
     {
       "symbol": "AAPL",
@@ -122,10 +122,10 @@
     },
     {
       "symbol": "NFLX",
-      "price": 1112.17,
-      "change": -42.06,
+      "price": 111.22,
+      "change": -4.21,
       "change_percent": -3.64,
-      "previous_close": 1154.23
+      "previous_close": 115.42
     },
     {
       "symbol": "TSM",
