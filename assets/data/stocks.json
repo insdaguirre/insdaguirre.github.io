@@ -1,5 +1,5 @@
 {
-  "last_updated": "2026-01-10T01:00:52.159775+00:00",
+  "last_updated": "2026-01-11T01:08:40.350693+00:00",
   "stocks": [
     {
       "symbol": "AAPL",
@@ -74,9 +74,9 @@
     {
       "symbol": "MA",
       "price": 575.54,
-      "change": -4.53,
-      "change_percent": -0.78,
-      "previous_close": 580.07
+      "change": -3.66,
+      "change_percent": -0.63,
+      "previous_close": 579.2
     },
     {
       "symbol": "JNJ",
