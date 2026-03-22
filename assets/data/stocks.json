@@ -1,5 +1,5 @@
 {
-  "last_updated": "2026-03-21T01:11:02.130617+00:00",
+  "last_updated": "2026-03-22T01:19:36.310596+00:00",
   "stocks": [
     {
       "symbol": "AAPL",
@@ -102,9 +102,9 @@
     {
       "symbol": "WMT",
       "price": 119.02,
-      "change": -2.07,
-      "change_percent": -1.71,
-      "previous_close": 121.09
+      "change": -1.82,
+      "change_percent": -1.51,
+      "previous_close": 120.84
     },
     {
       "symbol": "PG",
