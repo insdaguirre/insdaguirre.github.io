@@ -2,14 +2,14 @@
 
 import type { MotionValue } from "framer-motion";
 import type { MutableRefObject, PointerEvent as ReactPointerEvent } from "react";
-import { Suspense, useMemo, useRef } from "react";
+import { Suspense, useMemo, useRef, useState } from "react";
 import { Canvas, useFrame, useLoader } from "@react-three/fiber";
 import { Bounds, Center, Html, Preload } from "@react-three/drei";
 import * as THREE from "three";
-import { OBJLoader } from "three/examples/jsm/loaders/OBJLoader.js";
+import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader.js";
 import { useReducedMotion } from "@/hooks/useReducedMotion";
 
-const MODEL_URL = "/models/mclaren_mp45.obj";
+const MODEL_URL = "/models/uploads_files_6149127_mclaren_mp45_2k.glb";
 
 interface ModelViewerPlaceholderProps {
   scrollYProgress: MotionValue<number>;
@@ -43,24 +43,29 @@ function LoadingState() {
   );
 }
 
+function ErrorState() {
+  return (
+    <Html center>
+      <div className="rounded-full border border-white/10 bg-black/60 px-4 py-2 text-[0.65rem] uppercase tracking-[0.35em] text-white/55 backdrop-blur-sm">
+        Model unavailable
+      </div>
+    </Html>
+  );
+}
+
 function ModelObject({
   scrollYProgress,
   dragQuaternionRef,
   dragTargetQuaternionRef,
 }: ModelObjectProps) {
   const reducedMotion = useReducedMotion();
-  const source = useLoader(OBJLoader, MODEL_URL);
+  const gltf = useLoader(GLTFLoader, MODEL_URL);
   const groupRef = useRef<THREE.Group>(null);
   const baseQuaternionRef = useRef(new THREE.Quaternion());
   const baseEulerRef = useRef(new THREE.Euler());
 
   const model = useMemo(() => {
-    const clone = source.clone();
-    const defaultMaterial = new THREE.MeshStandardMaterial({
-      color: new THREE.Color("#d8d8d8"),
-      metalness: 0.72,
-      roughness: 0.28,
-    });
+    const clone = gltf.scene.clone();
 
     clone.traverse((child) => {
       if (!(child instanceof THREE.Mesh)) {
@@ -69,13 +74,10 @@ function ModelObject({
 
       child.castShadow = true;
       child.receiveShadow = true;
-      child.material = Array.isArray(child.material)
-        ? child.material.map(() => defaultMaterial.clone())
-        : defaultMaterial.clone();
     });
 
     return clone;
-  }, [source]);
+  }, [gltf]);
 
   useFrame((_, delta) => {
     if (!groupRef.current) {
@@ -105,6 +107,33 @@ function ModelObject({
       </Center>
     </group>
   );
+}
+
+function SafeModelObject({
+  scrollYProgress,
+  dragQuaternionRef,
+  dragTargetQuaternionRef,
+}: ModelObjectProps) {
+  const [error, setError] = useState<Error | null>(null);
+
+  if (error) {
+    return <ErrorState />;
+  }
+
+  try {
+    return (
+      <ModelObject
+        scrollYProgress={scrollYProgress}
+        dragQuaternionRef={dragQuaternionRef}
+        dragTargetQuaternionRef={dragTargetQuaternionRef}
+      />
+    );
+  } catch (err) {
+    const error = err instanceof Error ? err : new Error(String(err));
+    setError(error);
+    console.error("Failed to load 3D model:", error);
+    return <ErrorState />;
+  }
 }
 
 export default function ModelViewerPlaceholder({
@@ -205,7 +234,7 @@ export default function ModelViewerPlaceholder({
         />
         <Suspense fallback={<LoadingState />}>
           <Bounds fit clip observe margin={1.2}>
-            <ModelObject
+            <SafeModelObject
               dragQuaternionRef={dragQuaternionRef}
               dragTargetQuaternionRef={dragTargetQuaternionRef}
               scrollYProgress={scrollYProgress}
