@@ -13,25 +13,28 @@ export default function ModelStage({
   scrollYProgress,
 }: ModelStageProps) {
   const reducedMotion = useReducedMotion();
+  const modelRevealStart = 0.03;
+  const modelRevealEnd = 0.08;
+
   const opacity = useTransform(
     scrollYProgress,
-    [0, 0.06, 0.68, 0.86, 1],
-    [0.18, 0.9, 1, 0, 0]
+    [0, 0.025, modelRevealStart, modelRevealEnd, 0.68, 0.86, 1],
+    [0, 0, 0, 1, 1, 0, 0]
   );
   const y = useTransform(
     scrollYProgress,
-    [0, 0.18, 0.68, 0.86, 1],
-    ["34%", "0%", "0%", "-26%", "-26%"]
+    [0, modelRevealStart, 0.68, 0.86, 1],
+    ["0%", "0%", "0%", "-26%", "-26%"]
   );
   const scale = useTransform(
     scrollYProgress,
-    [0, 0.18, 0.68, 0.86, 1],
-    [0.82, 1, 1, 0.92, 0.92]
+    [0, modelRevealStart, 0.68, 0.86, 1],
+    [1, 1, 1, 0.92, 0.92]
   );
   const glowOpacity = useTransform(
     scrollYProgress,
-    [0, 0.2, 0.68, 0.86, 1],
-    [0.08, 0.22, 0.14, 0, 0]
+    [0, modelRevealStart, modelRevealEnd, 0.68, 0.86, 1],
+    [0, 0, 0.22, 0.14, 0, 0]
   );
 
   return (
