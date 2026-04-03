@@ -1,0 +1,63 @@
+"use client";
+
+import type { MotionValue } from "framer-motion";
+import { motion, useTransform } from "framer-motion";
+import { useReducedMotion } from "@/hooks/useReducedMotion";
+
+const identityItems = ["builder", "technologist", "founder"] as const;
+
+interface IdentitySectionProps {
+  scrollYProgress: MotionValue<number>;
+}
+
+interface IdentityLineProps {
+  item: (typeof identityItems)[number];
+  index: number;
+  reducedMotion: boolean;
+  scrollYProgress: MotionValue<number>;
+}
+
+function IdentityLine({
+  item,
+  index,
+  reducedMotion,
+  scrollYProgress,
+}: IdentityLineProps) {
+  const start = 0.72 + index * 0.045;
+  const end = start + 0.08;
+  const opacity = useTransform(scrollYProgress, [0, start, end, 1], [0, 0, 1, 1]);
+  const y = useTransform(scrollYProgress, [0, start, end, 1], [34, 34, 0, 0]);
+
+  return (
+    <motion.li
+      className="list-none text-[clamp(2.8rem,8vw,7.5rem)] font-light uppercase leading-none tracking-[0.18em] text-white/92"
+      style={reducedMotion ? undefined : { opacity, y }}
+    >
+      {item}
+    </motion.li>
+  );
+}
+
+export default function IdentitySection({
+  scrollYProgress,
+}: IdentitySectionProps) {
+  const reducedMotion = useReducedMotion();
+
+  return (
+    <section className="pointer-events-none absolute inset-0 z-30 flex items-end justify-center px-6 pb-[16vh] sm:pb-[18vh]">
+      <div className="mx-auto flex w-full max-w-5xl flex-col gap-4 text-center">
+        <ul className="space-y-4" aria-label="Identity statements">
+          {identityItems.map((item, index) => (
+            <IdentityLine
+              key={item}
+              index={index}
+              item={item}
+              reducedMotion={reducedMotion}
+              scrollYProgress={scrollYProgress}
+            />
+          ))}
+        </ul>
+      </div>
+    </section>
+  );
+}
