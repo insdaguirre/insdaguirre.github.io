@@ -16,8 +16,21 @@ interface ModelViewerPlaceholderProps {
 }
 
 interface ModelObjectProps extends ModelViewerPlaceholderProps {
-  dragOffsetRef: MutableRefObject<number>;
-  dragTargetRef: MutableRefObject<number>;
+  dragQuaternionRef: MutableRefObject<THREE.Quaternion>;
+  dragTargetQuaternionRef: MutableRefObject<THREE.Quaternion>;
+}
+
+function projectToArcball(clientX: number, clientY: number, rect: DOMRect) {
+  const x = ((clientX - rect.left) / rect.width) * 2 - 1;
+  const y = -(((clientY - rect.top) / rect.height) * 2 - 1);
+  const lengthSquared = x * x + y * y;
+
+  if (lengthSquared <= 1) {
+    return new THREE.Vector3(x, y, Math.sqrt(1 - lengthSquared));
+  }
+
+  const scale = 1 / Math.sqrt(lengthSquared);
+  return new THREE.Vector3(x * scale, y * scale, 0);
 }
 
 function LoadingState() {
@@ -32,12 +45,14 @@ function LoadingState() {
 
 function ModelObject({
   scrollYProgress,
-  dragOffsetRef,
-  dragTargetRef,
+  dragQuaternionRef,
+  dragTargetQuaternionRef,
 }: ModelObjectProps) {
   const reducedMotion = useReducedMotion();
   const source = useLoader(OBJLoader, MODEL_URL);
   const groupRef = useRef<THREE.Group>(null);
+  const baseQuaternionRef = useRef(new THREE.Quaternion());
+  const baseEulerRef = useRef(new THREE.Euler());
 
   const model = useMemo(() => {
     const clone = source.clone();
@@ -71,15 +86,16 @@ function ModelObject({
     const spinProgress = THREE.MathUtils.clamp((progress - 0.14) / 0.58, 0, 1);
     const baseRotation = reducedMotion ? 0 : spinProgress * Math.PI * 1.35;
 
-    dragOffsetRef.current = THREE.MathUtils.damp(
-      dragOffsetRef.current,
-      dragTargetRef.current,
-      dragTargetRef.current === 0 ? 9 : 14,
-      delta
+    dragQuaternionRef.current.slerp(
+      dragTargetQuaternionRef.current,
+      1 - Math.exp(-10 * delta)
     );
 
-    groupRef.current.rotation.x = -0.08;
-    groupRef.current.rotation.y = baseRotation + dragOffsetRef.current;
+    baseEulerRef.current.set(-0.08, baseRotation, 0);
+    baseQuaternionRef.current.setFromEuler(baseEulerRef.current);
+    groupRef.current.quaternion.copy(
+      baseQuaternionRef.current.clone().multiply(dragQuaternionRef.current)
+    );
   });
 
   return (
@@ -95,21 +111,26 @@ export default function ModelViewerPlaceholder({
   scrollYProgress,
 }: ModelViewerPlaceholderProps) {
   const wrapperRef = useRef<HTMLDivElement>(null);
-  const dragOffsetRef = useRef(0);
-  const dragTargetRef = useRef(0);
+  const dragQuaternionRef = useRef(new THREE.Quaternion());
+  const dragTargetQuaternionRef = useRef(new THREE.Quaternion());
   const pointerStateRef = useRef({
     active: false,
     pointerId: -1,
-    startX: 0,
-    startOffset: 0,
+    startVector: new THREE.Vector3(0, 0, 1),
+    startQuaternion: new THREE.Quaternion(),
   });
 
   function handlePointerDown(event: ReactPointerEvent<HTMLDivElement>) {
+    const rect = wrapperRef.current?.getBoundingClientRect();
+    if (!rect) {
+      return;
+    }
+
     pointerStateRef.current = {
       active: true,
       pointerId: event.pointerId,
-      startX: event.clientX,
-      startOffset: dragTargetRef.current,
+      startVector: projectToArcball(event.clientX, event.clientY, rect),
+      startQuaternion: dragTargetQuaternionRef.current.clone(),
     };
     event.currentTarget.setPointerCapture(event.pointerId);
   }
@@ -122,15 +143,20 @@ export default function ModelViewerPlaceholder({
       return;
     }
 
-    const width = wrapperRef.current?.clientWidth ?? 1;
-    const deltaX = event.clientX - pointerStateRef.current.startX;
-    const deltaRotation = (deltaX / width) * Math.PI * 0.8;
+    const rect = wrapperRef.current?.getBoundingClientRect();
+    if (!rect) {
+      return;
+    }
 
-    dragTargetRef.current = THREE.MathUtils.clamp(
-      pointerStateRef.current.startOffset + deltaRotation,
-      -0.7,
-      0.7
+    const currentVector = projectToArcball(event.clientX, event.clientY, rect);
+    const deltaQuaternion = new THREE.Quaternion().setFromUnitVectors(
+      pointerStateRef.current.startVector,
+      currentVector
     );
+    const nextQuaternion = pointerStateRef.current.startQuaternion.clone();
+
+    nextQuaternion.premultiply(deltaQuaternion);
+    dragTargetQuaternionRef.current.copy(nextQuaternion);
   }
 
   function handlePointerEnd(event: ReactPointerEvent<HTMLDivElement>) {
@@ -143,7 +169,7 @@ export default function ModelViewerPlaceholder({
 
     pointerStateRef.current.active = false;
     pointerStateRef.current.pointerId = -1;
-    dragTargetRef.current = 0;
+    dragTargetQuaternionRef.current.identity();
   }
 
   return (
@@ -180,8 +206,8 @@ export default function ModelViewerPlaceholder({
         <Suspense fallback={<LoadingState />}>
           <Bounds fit clip observe margin={1.2}>
             <ModelObject
-              dragOffsetRef={dragOffsetRef}
-              dragTargetRef={dragTargetRef}
+              dragQuaternionRef={dragQuaternionRef}
+              dragTargetQuaternionRef={dragTargetQuaternionRef}
               scrollYProgress={scrollYProgress}
             />
           </Bounds>
