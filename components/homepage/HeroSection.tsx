@@ -2,6 +2,7 @@
 
 import type { MotionValue } from "framer-motion";
 import { motion, useTransform } from "framer-motion";
+import ASCIIText from "@/components/homepage/ASCIIText";
 import { useReducedMotion } from "@/hooks/useReducedMotion";
 
 interface HeroSectionProps {
@@ -22,9 +23,17 @@ export default function HeroSection({
       style={reducedMotion ? undefined : { opacity, y, scale }}
     >
       <div className="text-center">
-        <h1 className="text-[clamp(3.6rem,11vw,10rem)] font-bold leading-none tracking-[-0.05em] text-white">
-          Diego Aguirre
-        </h1>
+        <h1 className="sr-only">Diego Aguirre</h1>
+        <div
+          aria-hidden="true"
+          className="relative mx-auto h-[clamp(16rem,24vw,20rem)] w-[min(100vw,95rem)]"
+        >
+          <ASCIIText
+            text="Diego Aguirre"
+            textColor="#fdf9f3"
+            enableWaves
+          />
+        </div>
       </div>
     </motion.section>
   );
