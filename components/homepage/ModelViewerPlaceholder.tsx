@@ -86,7 +86,7 @@ function ModelObject({
 
     const progress = scrollYProgress.get();
     const spinProgress = THREE.MathUtils.clamp((progress - 0.14) / 0.58, 0, 1);
-    const baseRotation = reducedMotion ? 0 : spinProgress * Math.PI * 1.35;
+    const baseRotation = reducedMotion ? 0 : -spinProgress * Math.PI * 1.35;
 
     dragQuaternionRef.current.slerp(
       dragTargetQuaternionRef.current,
