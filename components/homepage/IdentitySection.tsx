@@ -2,9 +2,10 @@
 
 import type { MotionValue } from "framer-motion";
 import { motion, useTransform } from "framer-motion";
+import GradientText from "@/components/homepage/GradientText";
 import { useReducedMotion } from "@/hooks/useReducedMotion";
 
-const identityItems = ["builder", "technologist", "founder"] as const;
+const identityItems = ["BUILDER", "TECHNOLOGIST", "FOUNDER"] as const;
 
 interface IdentitySectionProps {
   scrollYProgress: MotionValue<number>;
@@ -30,10 +31,17 @@ function IdentityLine({
 
   return (
     <motion.li
-      className="list-none text-[clamp(2.8rem,8vw,7.5rem)] font-light uppercase leading-none tracking-[0.18em] text-white/92"
+      className="list-none text-[clamp(2.8rem,8vw,7.5rem)] font-light leading-none tracking-[0.18em] text-white/92"
       style={reducedMotion ? undefined : { opacity, y }}
     >
-      {item}
+      <GradientText
+        colors={["#FF9FFC", "#B19EEF", "#68fc51", "#ff00d1"]}
+        animationSpeed={8}
+        showBorder={false}
+        className="!font-light"
+      >
+        {item}
+      </GradientText>
     </motion.li>
   );
 }
