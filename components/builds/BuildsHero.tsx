@@ -1,4 +1,4 @@
-import Ballpit from "@/components/shared/Ballpit";
+import Lightning from "@/components/shared/Lightning";
 import PillLink from "@/components/shared/PillLink";
 
 const heroSignals = [
@@ -12,17 +12,13 @@ export default function BuildsHero() {
     <section className="relative isolate flex min-h-[100svh] items-center overflow-hidden border-b border-white/8">
       <div aria-hidden="true" className="absolute inset-0">
         <div className="absolute inset-0 bg-black">
-          <Ballpit
+          <Lightning
             className="h-full w-full"
-            count={78}
-            colors={[0x5227ff, 0xb19eef, 0xff00d1]}
-            gravity={0.01}
-            friction={0.9975}
-            wallBounce={0.95}
-            minSize={0.45}
-            maxSize={0.95}
-            maxVelocity={0.11}
-            followCursor={false}
+            hue={266}
+            xOffset={0}
+            speed={0.5}
+            intensity={0.9}
+            size={0.95}
           />
         </div>
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_20%,rgba(255,255,255,0.12),transparent_20%),radial-gradient(circle_at_18%_25%,rgba(82,39,255,0.12),transparent_18%),radial-gradient(circle_at_82%_30%,rgba(255,0,209,0.08),transparent_16%),linear-gradient(180deg,rgba(0,0,0,0.12),rgba(0,0,0,0.34)_45%,rgba(0,0,0,0.82)_100%)]" />

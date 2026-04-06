@@ -12,6 +12,11 @@ const navigationItems = [
     description: "Intro sequence and landing experience",
   },
   {
+    href: "/about",
+    label: "About",
+    description: "Background, approach, and product perspective",
+  },
+  {
     href: "/builds",
     label: "Builds",
     description: "Selected products, systems, and experiments",

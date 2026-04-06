@@ -81,9 +81,14 @@ export default function IdentitySection({
           <p className="text-balance text-[0.98rem] font-light leading-[1.85] tracking-[0.04em] text-white/72 sm:text-[1.05rem]">
             {introCopy}
           </p>
-          <PillLink href="/builds" className="group">
-            <span>builds</span>
-          </PillLink>
+          <div className="flex flex-wrap items-center justify-center gap-3">
+            <PillLink href="/builds" className="group">
+              <span>builds</span>
+            </PillLink>
+            <PillLink href="/about" className="group" variant="subtle">
+              <span>about</span>
+            </PillLink>
+          </div>
         </motion.div>
       </div>
     </section>

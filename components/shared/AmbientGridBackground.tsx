@@ -1,6 +1,6 @@
 import DotGrid from "@/components/shared/DotGrid";
 
-export default function BuildsAmbientBackground() {
+export default function AmbientGridBackground() {
   return (
     <div aria-hidden="true" className="pointer-events-none absolute inset-0">
       <div className="absolute inset-0 opacity-85">

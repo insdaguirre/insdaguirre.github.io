@@ -8,6 +8,7 @@ interface FooterLink {
 
 const footerLinks: FooterLink[] = [
   { href: "/", label: "Home" },
+  { href: "/about", label: "About" },
   { href: "/builds", label: "Builds" },
   { href: "https://github.com/insdaguirre", label: "GitHub", external: true },
 ];
