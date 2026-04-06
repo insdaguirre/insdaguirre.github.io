@@ -16,15 +16,30 @@ interface InteractiveCarModelProps {
   boundsMargin?: number;
   cameraFov?: number;
   cameraPosition?: [number, number, number];
+  followDamping?: number;
+  followStiffness?: number;
   modelTilt?: number;
+  returnDamping?: number;
+  returnStiffness?: number;
   rotationAmplitude?: number;
 }
 
 interface ModelObjectProps {
   boundsMargin: number;
-  dragQuaternionRef: MutableRefObject<THREE.Quaternion>;
-  dragTargetQuaternionRef: MutableRefObject<THREE.Quaternion>;
+  dragRotationRef: MutableRefObject<THREE.Vector3>;
+  dragTargetRotationRef: MutableRefObject<THREE.Vector3>;
+  dragVelocityRef: MutableRefObject<THREE.Vector3>;
+  followDamping: number;
+  followStiffness: number;
   modelTilt?: number;
+  pointerStateRef: MutableRefObject<{
+    active: boolean;
+    pointerId: number;
+    startQuaternion: THREE.Quaternion;
+    startVector: THREE.Vector3;
+  }>;
+  returnDamping: number;
+  returnStiffness: number;
   rotationAmplitude?: number;
   rotationProgress: MotionValue<number>;
 }
@@ -62,11 +77,55 @@ function ErrorState() {
   );
 }
 
+function quaternionToRotationVector(quaternion: THREE.Quaternion) {
+  const normalized = quaternion.clone().normalize();
+
+  if (normalized.w < 0) {
+    normalized.set(
+      -normalized.x,
+      -normalized.y,
+      -normalized.z,
+      -normalized.w
+    );
+  }
+
+  const clampedW = THREE.MathUtils.clamp(normalized.w, -1, 1);
+  const angle = 2 * Math.acos(clampedW);
+  const sinHalfAngle = Math.sqrt(Math.max(1 - clampedW * clampedW, 0));
+
+  if (angle < 1e-4 || sinHalfAngle < 1e-4) {
+    return new THREE.Vector3();
+  }
+
+  return new THREE.Vector3(
+    normalized.x / sinHalfAngle,
+    normalized.y / sinHalfAngle,
+    normalized.z / sinHalfAngle
+  ).multiplyScalar(angle);
+}
+
+function rotationVectorToQuaternion(vector: THREE.Vector3) {
+  const angle = vector.length();
+
+  if (angle < 1e-4) {
+    return new THREE.Quaternion();
+  }
+
+  const axis = vector.clone().multiplyScalar(1 / angle);
+  return new THREE.Quaternion().setFromAxisAngle(axis, angle);
+}
+
 function ModelObject({
   boundsMargin,
-  dragQuaternionRef,
-  dragTargetQuaternionRef,
+  dragRotationRef,
+  dragTargetRotationRef,
+  dragVelocityRef,
+  followDamping,
+  followStiffness,
   modelTilt = -0.08,
+  pointerStateRef,
+  returnDamping,
+  returnStiffness,
   rotationAmplitude = Math.PI * 1.35,
   rotationProgress,
 }: ModelObjectProps) {
@@ -98,16 +157,36 @@ function ModelObject({
 
     const spinProgress = THREE.MathUtils.clamp(rotationProgress.get(), 0, 1);
     const baseRotation = reducedMotion ? 0 : spinProgress * rotationAmplitude;
+    const targetRotation = dragTargetRotationRef.current;
+    const currentRotation = dragRotationRef.current;
+    const velocity = dragVelocityRef.current;
+    const isDragging = pointerStateRef.current.active;
+    const springStiffness = isDragging ? followStiffness : returnStiffness;
+    const springDamping = isDragging ? followDamping : returnDamping;
 
-    dragQuaternionRef.current.slerp(
-      dragTargetQuaternionRef.current,
-      1 - Math.exp(-10 * delta)
+    velocity.addScaledVector(
+      targetRotation.clone().sub(currentRotation),
+      springStiffness * delta
     );
+    velocity.multiplyScalar(Math.exp(-springDamping * delta));
+    currentRotation.addScaledVector(velocity, delta);
+
+    if (
+      !isDragging &&
+      currentRotation.lengthSq() < 1e-5 &&
+      velocity.lengthSq() < 1e-5 &&
+      targetRotation.lengthSq() < 1e-5
+    ) {
+      currentRotation.set(0, 0, 0);
+      velocity.set(0, 0, 0);
+    }
 
     baseEulerRef.current.set(modelTilt, baseRotation, 0);
     baseQuaternionRef.current.setFromEuler(baseEulerRef.current);
     groupRef.current.quaternion.copy(
-      baseQuaternionRef.current.clone().multiply(dragQuaternionRef.current)
+      baseQuaternionRef.current
+        .clone()
+        .multiply(rotationVectorToQuaternion(currentRotation))
     );
   });
 
@@ -144,13 +223,18 @@ export default function InteractiveCarModel({
   cameraFov = 30,
   cameraPosition = [0, 0.9, 8],
   className = "",
+  followDamping = 13,
+  followStiffness = 34,
   modelTilt = -0.08,
+  returnDamping = 11,
+  returnStiffness = 20,
   rotationAmplitude = Math.PI * 1.35,
   rotationProgress,
 }: InteractiveCarModelProps) {
   const wrapperRef = useRef<HTMLDivElement>(null);
-  const dragQuaternionRef = useRef(new THREE.Quaternion());
-  const dragTargetQuaternionRef = useRef(new THREE.Quaternion());
+  const dragRotationRef = useRef(new THREE.Vector3());
+  const dragTargetRotationRef = useRef(new THREE.Vector3());
+  const dragVelocityRef = useRef(new THREE.Vector3());
   const pointerStateRef = useRef({
     active: false,
     pointerId: -1,
@@ -172,7 +256,9 @@ export default function InteractiveCarModel({
       active: true,
       pointerId: event.pointerId,
       startVector: projectToArcball(event.clientX, event.clientY, rect),
-      startQuaternion: dragTargetQuaternionRef.current.clone(),
+      startQuaternion: rotationVectorToQuaternion(
+        dragTargetRotationRef.current.clone()
+      ),
     };
     event.currentTarget.setPointerCapture(event.pointerId);
   }
@@ -198,7 +284,7 @@ export default function InteractiveCarModel({
     const nextQuaternion = pointerStateRef.current.startQuaternion.clone();
 
     nextQuaternion.premultiply(deltaQuaternion);
-    dragTargetQuaternionRef.current.copy(nextQuaternion);
+    dragTargetRotationRef.current.copy(quaternionToRotationVector(nextQuaternion));
   }
 
   function handlePointerEnd(event: ReactPointerEvent<HTMLDivElement>) {
@@ -211,7 +297,7 @@ export default function InteractiveCarModel({
 
     pointerStateRef.current.active = false;
     pointerStateRef.current.pointerId = -1;
-    dragTargetQuaternionRef.current.identity();
+    dragTargetRotationRef.current.set(0, 0, 0);
   }
 
   return (
@@ -223,7 +309,7 @@ export default function InteractiveCarModel({
       onPointerMove={handlePointerMove}
       onPointerUp={handlePointerEnd}
       onPointerCancel={handlePointerEnd}
-      onPointerLeave={handlePointerEnd}
+      onLostPointerCapture={handlePointerEnd}
     >
       <Canvas
         className="h-full w-full"
@@ -249,9 +335,15 @@ export default function InteractiveCarModel({
         <Suspense fallback={<LoadingState />}>
           <SafeModelObject
             boundsMargin={boundsMargin}
-            dragQuaternionRef={dragQuaternionRef}
-            dragTargetQuaternionRef={dragTargetQuaternionRef}
+            dragRotationRef={dragRotationRef}
+            dragTargetRotationRef={dragTargetRotationRef}
+            dragVelocityRef={dragVelocityRef}
+            followDamping={followDamping}
+            followStiffness={followStiffness}
             modelTilt={modelTilt}
+            pointerStateRef={pointerStateRef}
+            returnDamping={returnDamping}
+            returnStiffness={returnStiffness}
             rotationAmplitude={rotationAmplitude}
             rotationProgress={rotationProgress}
           />

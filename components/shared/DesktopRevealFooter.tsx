@@ -6,7 +6,7 @@ import { useScroll } from "framer-motion";
 import FooterCarStage from "@/components/shared/FooterCarStage";
 import FooterContent from "@/components/shared/FooterContent";
 
-const FOOTER_REVEAL_HEIGHT = "45vh";
+const FOOTER_REVEAL_HEIGHT = "65vh";
 const FOOTER_CONTENT_HEIGHT = "14rem";
 
 interface DesktopRevealFooterProps {
@@ -30,16 +30,17 @@ export default function DesktopRevealFooter({
         <footer
           style={
             {
+              height: FOOTER_REVEAL_HEIGHT,
               "--footer-reveal-height": FOOTER_REVEAL_HEIGHT,
               "--footer-content-height": FOOTER_CONTENT_HEIGHT,
             } as CSSProperties
           }
-          className="pointer-events-auto relative h-[45vh] overflow-hidden border-t border-white/10 bg-black/60 backdrop-blur-sm"
+          className="pointer-events-auto relative overflow-hidden border-t border-white/10 bg-black/60 backdrop-blur-sm"
         >
           <FooterCarStage revealProgress={scrollYProgress} />
 
           <div className="relative z-10 flex h-full flex-col justify-end">
-            <FooterContent className="min-h-[14rem] items-center" />
+            <FooterContent className="min-h-[var(--footer-content-height)] items-center" />
           </div>
         </footer>
       </div>
@@ -53,7 +54,8 @@ export default function DesktopRevealFooter({
       <div
         aria-hidden="true"
         ref={runwayRef}
-        className="hidden h-[45vh] lg:block"
+        className="hidden lg:block"
+        style={{ height: FOOTER_REVEAL_HEIGHT }}
       />
     </>
   );
