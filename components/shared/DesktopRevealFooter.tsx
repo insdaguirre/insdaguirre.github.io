@@ -39,8 +39,8 @@ export default function DesktopRevealFooter({
         >
           <FooterCarStage revealProgress={scrollYProgress} />
 
-          <div className="relative z-10 flex h-full flex-col justify-end">
-            <FooterContent className="min-h-[var(--footer-content-height)] items-center" />
+          <div className="pointer-events-none relative z-10 flex h-full flex-col justify-end">
+            <FooterContent className="pointer-events-auto min-h-[var(--footer-content-height)] items-center" />
           </div>
         </footer>
       </div>
