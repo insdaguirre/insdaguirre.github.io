@@ -1,4 +1,4 @@
-import DotGrid from "@/components/shared/DotGrid";
+import Ballpit from "@/components/shared/Ballpit";
 import PillLink from "@/components/shared/PillLink";
 
 const heroSignals = [
@@ -11,23 +11,23 @@ export default function BuildsHero() {
   return (
     <section className="relative isolate flex min-h-[100svh] items-center overflow-hidden border-b border-white/8">
       <div aria-hidden="true" className="absolute inset-0">
-        <div className="absolute inset-0 opacity-85">
-          <DotGrid
-            dotSize={4}
-            gap={18}
-            baseColor="#23192f"
-            activeColor="#6b42ff"
-            proximity={100}
-            shockRadius={200}
-            shockStrength={3.5}
-            resistance={800}
-            returnDuration={1.3}
+        <div className="absolute inset-0 bg-black">
+          <Ballpit
+            className="h-full w-full"
+            count={78}
+            colors={[0x5227ff, 0xb19eef, 0xff00d1]}
+            gravity={0.01}
+            friction={0.9975}
+            wallBounce={0.95}
+            minSize={0.45}
+            maxSize={0.95}
+            maxVelocity={0.11}
+            followCursor={false}
           />
         </div>
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_top,rgba(255,255,255,0.08),transparent_24%),radial-gradient(circle_at_50%_38%,rgba(82,39,255,0.23),transparent_20%),radial-gradient(circle_at_70%_40%,rgba(255,0,209,0.12),transparent_18%),linear-gradient(180deg,rgba(0,0,0,0.08),rgba(0,0,0,0.48)_55%,#000_100%)]" />
-        <div className="absolute inset-0 bg-[linear-gradient(120deg,rgba(255,255,255,0.04),transparent_18%,transparent_80%,rgba(255,255,255,0.03)),linear-gradient(180deg,transparent,rgba(255,255,255,0.04)_78%,transparent)]" />
-        <div className="absolute left-[12%] top-[16%] h-52 w-52 rounded-full bg-[#5227ff]/18 blur-[110px]" />
-        <div className="absolute right-[12%] top-[28%] h-44 w-44 rounded-full bg-[#ff00d1]/12 blur-[100px]" />
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_20%,rgba(255,255,255,0.12),transparent_20%),radial-gradient(circle_at_18%_25%,rgba(82,39,255,0.12),transparent_18%),radial-gradient(circle_at_82%_30%,rgba(255,0,209,0.08),transparent_16%),linear-gradient(180deg,rgba(0,0,0,0.12),rgba(0,0,0,0.34)_45%,rgba(0,0,0,0.82)_100%)]" />
+        <div className="absolute inset-0 bg-[linear-gradient(120deg,rgba(255,255,255,0.05),transparent_16%,transparent_82%,rgba(255,255,255,0.03))]" />
+        <div className="absolute inset-x-0 bottom-0 h-40 bg-[linear-gradient(180deg,transparent,rgba(0,0,0,0.82))]" />
       </div>
 
       <div className="relative z-10 mx-auto flex w-full max-w-6xl flex-col gap-14 px-6 pb-16 pt-28 sm:px-8 sm:pt-32 lg:px-12">

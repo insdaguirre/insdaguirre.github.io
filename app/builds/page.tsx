@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import BuildsAmbientBackground from "@/components/builds/BuildsAmbientBackground";
 import BuildsHero from "@/components/builds/BuildsHero";
 import BuildsShowcase from "@/components/builds/BuildsShowcase";
 import GitHubPanel from "@/components/builds/GitHubPanel";
@@ -14,16 +15,15 @@ export default function BuildsPage() {
   return (
     <main className="relative min-h-screen overflow-hidden bg-black text-white">
       <MenuButton />
-      <div
-        aria-hidden="true"
-        className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_top,rgba(255,255,255,0.06),transparent_18%),linear-gradient(180deg,#050505_0%,#000_24%,#000_100%)]"
-      />
       <BuildsHero />
-      <div className="relative bg-[linear-gradient(180deg,rgba(255,255,255,0.02),transparent_16%)]">
-        <BuildsShowcase />
-        <GitHubPanel />
-        <SiteFooter />
+      <div className="relative">
+        <BuildsAmbientBackground />
+        <div className="relative z-10 bg-[linear-gradient(180deg,rgba(255,255,255,0.02),transparent_16%)]">
+          <BuildsShowcase />
+          <GitHubPanel />
+        </div>
       </div>
+      <SiteFooter />
     </main>
   );
 }
