@@ -16,6 +16,7 @@ export default function ModelViewerPlaceholder({
   return (
     <InteractiveCarModel
       className="h-[66vh] max-w-[1080px]"
+      rotationAmplitude={-Math.PI * 1.35}
       returnDamping={10.5}
       returnStiffness={19}
       rotationProgress={spinProgress}

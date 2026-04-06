@@ -23,7 +23,7 @@ export default function BuildsHero() {
         </div>
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_20%,rgba(255,255,255,0.12),transparent_20%),radial-gradient(circle_at_18%_25%,rgba(82,39,255,0.12),transparent_18%),radial-gradient(circle_at_82%_30%,rgba(255,0,209,0.08),transparent_16%),linear-gradient(180deg,rgba(0,0,0,0.12),rgba(0,0,0,0.34)_45%,rgba(0,0,0,0.82)_100%)]" />
         <div className="absolute inset-0 bg-[linear-gradient(120deg,rgba(255,255,255,0.05),transparent_16%,transparent_82%,rgba(255,255,255,0.03))]" />
-        <div className="absolute inset-x-0 bottom-0 h-40 bg-[linear-gradient(180deg,transparent,rgba(0,0,0,0.82))]" />
+        <div className="absolute inset-x-0 bottom-0 h-24 bg-[linear-gradient(180deg,transparent,rgba(0,0,0,0.4))]" />
       </div>
 
       <div className="relative z-10 mx-auto flex w-full max-w-6xl flex-col gap-14 px-6 pb-16 pt-28 sm:px-8 sm:pt-32 lg:px-12">

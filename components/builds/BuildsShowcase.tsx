@@ -49,7 +49,7 @@ export default function BuildsShowcase() {
   return (
     <section
       id="projects"
-      className="relative z-10 mx-auto -mt-16 w-full max-w-6xl px-6 pb-8 sm:px-8 lg:-mt-20 lg:px-12"
+      className="relative z-10 mx-auto w-full max-w-6xl px-6 pb-8 pt-12 sm:px-8 lg:px-12 lg:pb-10 lg:pt-16"
     >
       <div className="overflow-hidden rounded-[2.2rem] border border-white/10 bg-[linear-gradient(180deg,rgba(255,255,255,0.05),rgba(255,255,255,0.02))] shadow-[0_24px_90px_rgba(0,0,0,0.45)] backdrop-blur-md">
         <div className="border-b border-white/8 px-6 py-8 sm:px-8 sm:py-10 lg:px-10">
