@@ -16,7 +16,7 @@ const footerLinks: FooterLink[] = [
 export default function SiteFooter() {
   return (
     <footer className="border-t border-white/10 bg-black/60">
-      <div className="mx-auto flex w-full max-w-6xl flex-col gap-6 px-6 py-8 sm:px-8 lg:flex-row lg:items-center lg:justify-between lg:px-12">
+      <div className="mx-auto flex w-full max-w-6xl flex-col gap-6 px-6 py-8 sm:px-8 lg:flex-row lg:items-center lg:justify-between lg:gap-10 lg:px-12 lg:py-12">
         <div className="space-y-2">
           <p className="text-[0.68rem] uppercase tracking-[0.36em] text-white/45">
             Diego Aguirre
