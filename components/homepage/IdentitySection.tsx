@@ -6,6 +6,8 @@ import GradientText from "@/components/homepage/GradientText";
 import { useReducedMotion } from "@/hooks/useReducedMotion";
 
 const identityItems = ["BUILDER", "TECHNOLOGIST", "FOUNDER"] as const;
+const introCopy =
+  "Hi, I’m Diego. I am obsessed with users. I ship fast like an f1 car. I ask the difficult questions. I build with intent.";
 
 interface IdentitySectionProps {
   scrollYProgress: MotionValue<number>;
@@ -50,10 +52,16 @@ export default function IdentitySection({
   scrollYProgress,
 }: IdentitySectionProps) {
   const reducedMotion = useReducedMotion();
+  const introOpacity = useTransform(
+    scrollYProgress,
+    [0, 0.84, 0.9, 1],
+    [0, 0, 1, 1]
+  );
+  const introY = useTransform(scrollYProgress, [0, 0.84, 0.9, 1], [26, 26, 0, 0]);
 
   return (
     <section className="pointer-events-none absolute inset-0 z-30 flex items-end justify-center px-6 pb-[16vh] sm:pb-[18vh]">
-      <div className="mx-auto flex w-full max-w-5xl flex-col gap-4 text-center">
+      <div className="mx-auto flex w-full max-w-5xl flex-col gap-6 text-center">
         <ul className="space-y-4" aria-label="Identity statements">
           {identityItems.map((item, index) => (
             <IdentityLine
@@ -65,6 +73,22 @@ export default function IdentitySection({
             />
           ))}
         </ul>
+        <motion.div
+          className="pointer-events-auto mx-auto flex w-full max-w-[40rem] flex-col items-center gap-5 px-2"
+          style={reducedMotion ? undefined : { opacity: introOpacity, y: introY }}
+        >
+          <p className="text-balance text-[0.98rem] font-light leading-[1.85] tracking-[0.04em] text-white/72 sm:text-[1.05rem]">
+            {introCopy}
+          </p>
+          <button
+            type="button"
+            aria-label="builds"
+            aria-disabled="true"
+            className="group inline-flex min-h-11 items-center justify-center rounded-full border border-white/14 bg-black/30 px-6 py-3 text-[0.68rem] uppercase tracking-[0.34em] text-white/88 backdrop-blur-sm transition duration-300 hover:border-white/28 hover:bg-black/40 hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/30"
+          >
+            <span>builds</span>
+          </button>
+        </motion.div>
       </div>
     </section>
   );
