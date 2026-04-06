@@ -4,7 +4,7 @@ import BuildsShowcase from "@/components/builds/BuildsShowcase";
 import GitHubPanel from "@/components/builds/GitHubPanel";
 import MenuButton from "@/components/homepage/MenuButton";
 import AmbientGridBackground from "@/components/shared/AmbientGridBackground";
-import SiteFooter from "@/components/shared/SiteFooter";
+import RevealFooterLayout from "@/components/shared/RevealFooterLayout";
 
 export const metadata: Metadata = {
   title: "Builds | Diego Aguirre",
@@ -13,7 +13,7 @@ export const metadata: Metadata = {
 
 export default function BuildsPage() {
   return (
-    <main className="relative min-h-screen overflow-hidden bg-black text-white">
+    <RevealFooterLayout surfaceClassName="overflow-hidden">
       <MenuButton />
       <BuildsHero />
       <div className="relative">
@@ -23,7 +23,6 @@ export default function BuildsPage() {
           <GitHubPanel />
         </div>
       </div>
-      <SiteFooter />
-    </main>
+    </RevealFooterLayout>
   );
 }

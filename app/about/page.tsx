@@ -3,7 +3,7 @@ import AboutContent from "@/components/about/AboutContent";
 import AboutHero from "@/components/about/AboutHero";
 import MenuButton from "@/components/homepage/MenuButton";
 import AmbientGridBackground from "@/components/shared/AmbientGridBackground";
-import SiteFooter from "@/components/shared/SiteFooter";
+import RevealFooterLayout from "@/components/shared/RevealFooterLayout";
 
 export const metadata: Metadata = {
   title: "About | Diego Aguirre",
@@ -12,7 +12,7 @@ export const metadata: Metadata = {
 
 export default function AboutPage() {
   return (
-    <main className="relative min-h-screen overflow-hidden bg-black text-white">
+    <RevealFooterLayout surfaceClassName="overflow-hidden">
       <MenuButton />
       <AboutHero />
       <div className="relative">
@@ -21,7 +21,6 @@ export default function AboutPage() {
           <AboutContent />
         </div>
       </div>
-      <SiteFooter />
-    </main>
+    </RevealFooterLayout>
   );
 }

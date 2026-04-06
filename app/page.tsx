@@ -6,7 +6,7 @@ import HeroSection from "@/components/homepage/HeroSection";
 import IdentitySection from "@/components/homepage/IdentitySection";
 import MenuButton from "@/components/homepage/MenuButton";
 import AboutHeroBackground from "@/components/shared/AboutHeroBackground";
-import SiteFooter from "@/components/shared/SiteFooter";
+import RevealFooterLayout from "@/components/shared/RevealFooterLayout";
 import { useSectionScrollProgress } from "@/hooks/useSectionScrollProgress";
 
 const ModelStage = dynamic(() => import("@/components/homepage/ModelStage"), {
@@ -18,7 +18,7 @@ export default function Home() {
   const scrollYProgress = useSectionScrollProgress(scrollRef);
 
   return (
-    <main className="relative min-h-screen bg-black text-white">
+    <RevealFooterLayout>
       <MenuButton />
       <section
         ref={scrollRef}
@@ -34,7 +34,6 @@ export default function Home() {
           <IdentitySection scrollYProgress={scrollYProgress} />
         </div>
       </section>
-      <SiteFooter />
-    </main>
+    </RevealFooterLayout>
   );
 }

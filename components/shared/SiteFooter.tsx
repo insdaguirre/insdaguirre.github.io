@@ -6,6 +6,11 @@ interface FooterLink {
   external?: boolean;
 }
 
+interface SiteFooterProps {
+  className?: string;
+  contentClassName?: string;
+}
+
 const footerLinks: FooterLink[] = [
   { href: "/", label: "Home" },
   { href: "/about", label: "About" },
@@ -13,10 +18,17 @@ const footerLinks: FooterLink[] = [
   { href: "https://github.com/insdaguirre", label: "GitHub", external: true },
 ];
 
-export default function SiteFooter() {
+export default function SiteFooter({
+  className = "",
+  contentClassName = "",
+}: SiteFooterProps) {
   return (
-    <footer className="border-t border-white/10 bg-black/60">
-      <div className="mx-auto flex w-full max-w-6xl flex-col gap-6 px-6 py-8 sm:px-8 lg:flex-row lg:items-center lg:justify-between lg:gap-10 lg:px-12 lg:py-12">
+    <footer
+      className={`border-t border-white/10 bg-black/60 backdrop-blur-sm ${className}`.trim()}
+    >
+      <div
+        className={`mx-auto flex w-full max-w-6xl flex-col gap-6 px-6 py-8 sm:px-8 lg:flex-row lg:justify-between lg:gap-10 lg:px-12 lg:py-12 ${contentClassName}`.trim()}
+      >
         <div className="space-y-2">
           <p className="text-[0.68rem] uppercase tracking-[0.36em] text-white/45">
             Diego Aguirre
