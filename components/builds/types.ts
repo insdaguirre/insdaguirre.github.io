@@ -17,3 +17,9 @@ export interface BuildProject {
   primaryLink?: BuildLink;
   secondaryLinks?: BuildLink[];
 }
+
+export interface PastProject {
+  name: string;
+  href: string;
+  repository: string;
+}

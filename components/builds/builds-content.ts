@@ -1,4 +1,4 @@
-import type { BuildProject } from "@/components/builds/types";
+import type { BuildProject, PastProject } from "@/components/builds/types";
 
 export const buildProjects: BuildProject[] = [
   {
@@ -83,27 +83,57 @@ export const recentWorkSignals = [
   },
 ] as const;
 
-export const githubPanelCopy = {
-  eyebrow: "GitHub Context",
-  heading: "Public repositories stay close to the work where open product detail adds signal.",
+export const pastProjectsSectionCopy = {
+  eyebrow: "Archive",
+  heading: "Past Projects",
   description:
-    "Narrative includes a public repository that documents the architecture behind the live platform. CRAIIVE is represented through its beta-stage product, and NestIQ remains framed here as a validation-stage direction rather than a public codebase.",
+    "Selected public repositories from earlier product, automation, and web experiments.",
 };
 
-export const githubSignals = [
+export const pastProjects: PastProject[] = [
   {
-    label: "Open Repo",
-    description:
-      "Narrative's public repo documents the higher-ed platform's multi-tenant, workflow, and AI-assisted system design.",
+    name: "TheraMisty",
+    href: "https://github.com/insdaguirre/TheraMistyOverview",
+    repository: "insdaguirre/TheraMistyOverview",
   },
   {
-    label: "Selective Visibility",
-    description:
-      "Not every build on the page maps to a public codebase. Some products are shown through the product itself, while validation-stage work stays intentionally high level.",
+    name: "SentimentWatch",
+    href: "https://github.com/insdaguirre/SentimentWatch",
+    repository: "insdaguirre/SentimentWatch",
   },
   {
-    label: "Supporting Context",
-    description:
-      "GitHub supports the portfolio here as implementation context, not as a replacement for the shipped product.",
+    name: "InferEcon",
+    href: "https://github.com/insdaguirre/InferEcon",
+    repository: "insdaguirre/InferEcon",
   },
-] as const;
+  {
+    name: "StockHUB",
+    href: "https://github.com/insdaguirre/Stock_Hub",
+    repository: "insdaguirre/Stock_Hub",
+  },
+  {
+    name: "RecycLens",
+    href: "https://github.com/insdaguirre/RecycLens_React",
+    repository: "insdaguirre/RecycLens_React",
+  },
+  {
+    name: "InstaBotLocal",
+    href: "https://github.com/insdaguirre/InstaGrowthManual",
+    repository: "insdaguirre/InstaGrowthManual",
+  },
+  {
+    name: "InstaBotChrome",
+    href: "https://github.com/insdaguirre/InstaBot_ChromeExtension",
+    repository: "insdaguirre/InstaBot_ChromeExtension",
+  },
+  {
+    name: "InstaBotAWS",
+    href: "https://github.com/insdaguirre/AWS_Instagram_Bot",
+    repository: "insdaguirre/AWS_Instagram_Bot",
+  },
+  {
+    name: "BigRedWeb",
+    href: "https://github.com/insdaguirre/Big_Red_Web",
+    repository: "insdaguirre/Big_Red_Web",
+  },
+];
