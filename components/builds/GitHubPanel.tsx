@@ -1,10 +1,8 @@
 import PillLink from "@/components/shared/PillLink";
-
-const githubSignals = [
-  "Pinned repos and case-study links can live here.",
-  "Recent activity or contributions can be layered in later.",
-  "The shell stays compact so the page remains focused on the work.",
-] as const;
+import {
+  githubPanelCopy,
+  githubSignals,
+} from "@/components/builds/builds-content";
 
 export default function GitHubPanel() {
   return (
@@ -14,41 +12,42 @@ export default function GitHubPanel() {
         <div className="relative grid gap-8 lg:grid-cols-[minmax(0,1.1fr)_minmax(18rem,0.9fr)] lg:items-center">
           <div className="space-y-4">
             <p className="text-[0.7rem] uppercase tracking-[0.34em] text-white/44">
-              GitHub Tie-In
+              {githubPanelCopy.eyebrow}
             </p>
             <h2 className="max-w-2xl text-balance text-[clamp(1.8rem,3vw,3rem)] font-light leading-tight tracking-[0.08em] text-white/92">
-              GitHub stays close to the work, without taking over the page.
+              {githubPanelCopy.heading}
             </h2>
             <p className="max-w-2xl text-pretty leading-7 text-white/62">
-              This section is intentionally compact. It is ready to house
-              repository highlights, contribution snapshots, or a lightweight
-              activity feed when you want to wire it in.
+              {githubPanelCopy.description}
             </p>
             <div className="flex flex-wrap gap-4">
-              <PillLink href="https://github.com/insdaguirre" external>
-                View GitHub
+              <PillLink
+                href="https://github.com/insdaguirre/narrative-edu"
+                external
+              >
+                Narrative Repo
               </PillLink>
-              <PillLink href="#projects" variant="subtle">
-                Back to Builds
+              <PillLink href="https://github.com/insdaguirre" external variant="subtle">
+                GitHub Profile
               </PillLink>
             </div>
           </div>
 
           <div className="rounded-[1.75rem] border border-white/10 bg-black/35 p-5 backdrop-blur-sm">
             <p className="text-[0.68rem] uppercase tracking-[0.3em] text-white/40">
-              Ready Shell
+              Public Signals
             </p>
             <div className="mt-5 space-y-4">
-              {githubSignals.map((signal, index) => (
+              {githubSignals.map((signal) => (
                 <div
-                  key={signal}
+                  key={signal.label}
                   className="rounded-2xl border border-white/8 bg-white/[0.03] px-4 py-4"
                 >
                   <p className="text-[0.64rem] uppercase tracking-[0.28em] text-white/36">
-                    Slot 0{index + 1}
+                    {signal.label}
                   </p>
                   <p className="mt-2 text-sm leading-6 text-white/62">
-                    {signal}
+                    {signal.description}
                   </p>
                 </div>
               ))}

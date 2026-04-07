@@ -1,50 +1,12 @@
-import BuildCard, { type BuildProject } from "@/components/builds/BuildCard";
-
-const projects: BuildProject[] = [
-  {
-    id: "Build 01",
-    label: "Featured System",
-    name: "Signal Atlas",
-    status: "Shipping",
-    description:
-      "A product intelligence layer for turning fragmented customer, growth, and operational signals into a fast decision surface.",
-    summary:
-      "Structured to hold case studies, live links, supporting screenshots, and implementation notes without changing the layout system.",
-    tags: ["Next.js", "Analytics", "Workflow Design", "AI Ops"],
-    links: [
-      {
-        href: "https://github.com/insdaguirre",
-        label: "GitHub",
-        external: true,
-      },
-    ],
-  },
-  {
-    id: "Build 02",
-    name: "Operator Console",
-    status: "In Progress",
-    description:
-      "An internal-facing control plane for managing experiments, instrumentation, and the product decisions that come out of them.",
-    tags: ["React", "Design Systems", "Experimentation"],
-  },
-  {
-    id: "Build 03",
-    name: "Acquisition Studio",
-    status: "Exploring",
-    description:
-      "A launch environment for shaping narratives, rapid landing pages, and conversion loops around a new product thesis.",
-    tags: ["Growth", "Messaging", "Landing Systems"],
-  },
-];
-
-const operatingPrinciples = [
-  "Reusable build cards with room for links, status, and stack metadata.",
-  "A layout that scales from one featured build to a larger project index.",
-  "Polished enough for today without boxing in future case-study depth.",
-] as const;
+import BuildCard from "@/components/builds/BuildCard";
+import {
+  buildProjects,
+  buildsShowcaseCopy,
+  recentWorkSignals,
+} from "@/components/builds/builds-content";
 
 export default function BuildsShowcase() {
-  const [featuredProject, ...secondaryProjects] = projects;
+  const [featuredProject, ...secondaryProjects] = buildProjects;
 
   return (
     <section
@@ -53,30 +15,36 @@ export default function BuildsShowcase() {
     >
       <div className="overflow-hidden rounded-[2.2rem] border border-white/10 bg-[linear-gradient(180deg,rgba(255,255,255,0.05),rgba(255,255,255,0.02))] shadow-[0_24px_90px_rgba(0,0,0,0.45)] backdrop-blur-md">
         <div className="border-b border-white/8 px-6 py-8 sm:px-8 sm:py-10 lg:px-10">
-          <div className="grid gap-8 lg:grid-cols-[minmax(0,1.45fr)_minmax(20rem,0.8fr)] lg:items-end">
-            <div className="space-y-4">
+          <div className="max-w-5xl space-y-8 lg:space-y-10">
+            <div className="space-y-5">
               <p className="text-[0.7rem] uppercase tracking-[0.34em] text-white/44">
-                Main Content
+                {buildsShowcaseCopy.eyebrow}
               </p>
-              <h2 className="max-w-3xl text-balance text-[clamp(2rem,4vw,3.75rem)] font-light leading-tight tracking-[0.08em] text-white/92">
-                A scalable system for selected projects, not a static one-off
-                layout.
+              <h2 className="max-w-4xl text-balance text-[clamp(2.15rem,4.3vw,4rem)] font-light leading-[1.02] tracking-[0.07em] text-white/92">
+                {buildsShowcaseCopy.heading}
               </h2>
-              <p className="max-w-2xl text-pretty leading-7 text-white/62">
-                Each build slot is ready for a richer story later: product
-                framing, stack, outcome, external links, and the right amount of
-                signal up front.
+              <p className="max-w-3xl text-pretty text-base leading-7 text-white/62 sm:text-lg">
+                {buildsShowcaseCopy.description}
               </p>
             </div>
-            <div className="rounded-[1.75rem] border border-white/10 bg-black/30 p-5">
-              <p className="text-[0.68rem] uppercase tracking-[0.3em] text-white/40">
-                Operating Notes
-              </p>
-              <ul className="mt-4 space-y-3 text-sm leading-6 text-white/60">
-                {operatingPrinciples.map((principle) => (
-                  <li key={principle}>{principle}</li>
-                ))}
-              </ul>
+
+            <div className="grid gap-3 sm:grid-cols-3">
+              {recentWorkSignals.map((signal) => (
+                <div
+                  key={signal.title}
+                  className="rounded-[1.4rem] border border-white/10 bg-black/22 px-4 py-4 backdrop-blur-sm"
+                >
+                  <p className="text-[0.62rem] uppercase tracking-[0.3em] text-white/36">
+                    {signal.stage}
+                  </p>
+                  <p className="mt-3 text-[1.05rem] uppercase tracking-[0.12em] text-white/88">
+                    {signal.title}
+                  </p>
+                  <p className="mt-2 text-sm leading-6 text-white/54">
+                    {signal.detail}
+                  </p>
+                </div>
+              ))}
             </div>
           </div>
         </div>
@@ -86,7 +54,7 @@ export default function BuildsShowcase() {
             <BuildCard project={featuredProject} featured />
           </div>
           {secondaryProjects.map((project) => (
-            <div key={project.id} className="lg:col-span-6">
+            <div key={project.id} className="lg:col-span-6 lg:h-full">
               <BuildCard project={project} />
             </div>
           ))}

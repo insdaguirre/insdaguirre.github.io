@@ -20,6 +20,8 @@ function compileShader(
   const shader = gl.createShader(type);
 
   if (!shader) {
+    console.error("Lightning shader creation error");
+
     return null;
   }
 
@@ -38,7 +40,7 @@ function compileShader(
 export default function Lightning({
   className = "",
   hue = 260,
-  xOffset = 0,
+  xOffset = -1,
   speed = 1,
   intensity = 1,
   size = 1,
