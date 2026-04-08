@@ -1,15 +1,9 @@
 import Lightning from "@/components/shared/Lightning";
 import PillLink from "@/components/shared/PillLink";
 
-const heroSignals = [
-  "0 to 1 product systems",
-  "Operator-first UX",
-  "Experiments built for signal",
-] as const;
-
 export default function BuildsHero() {
   return (
-    <section className="relative isolate flex min-h-[100svh] items-center overflow-hidden border-b border-white/8">
+    <section className="relative isolate flex min-h-[100svh] items-start overflow-hidden border-b border-white/8">
       <div aria-hidden="true" className="absolute inset-0">
         <div className="absolute inset-0 bg-black">
           <Lightning
@@ -26,7 +20,7 @@ export default function BuildsHero() {
         <div className="absolute inset-x-0 bottom-0 h-24 bg-[linear-gradient(180deg,transparent,rgba(0,0,0,0.4))]" />
       </div>
 
-      <div className="relative z-10 mx-auto flex w-full max-w-6xl flex-col gap-14 px-6 pb-16 pt-28 sm:px-8 sm:pt-32 lg:px-12">
+      <div className="relative z-10 mx-auto flex w-full max-w-6xl flex-col px-6 pb-16 pt-16 sm:px-8 sm:pt-20 lg:px-12">
         <div className="max-w-4xl space-y-8">
           <div className="inline-flex items-center rounded-full border border-white/10 bg-black/35 px-4 py-2 text-[0.65rem] uppercase tracking-[0.34em] text-white/55 backdrop-blur-sm">
             Selected Builds
@@ -47,19 +41,6 @@ export default function BuildsHero() {
               GitHub
             </PillLink>
           </div>
-        </div>
-
-        <div className="grid gap-4 md:grid-cols-3">
-          {heroSignals.map((signal) => (
-            <div
-              key={signal}
-              className="rounded-[1.6rem] border border-white/10 bg-black/35 px-5 py-5 backdrop-blur-sm"
-            >
-              <p className="text-sm uppercase tracking-[0.28em] text-white/62">
-                {signal}
-              </p>
-            </div>
-          ))}
         </div>
       </div>
     </section>

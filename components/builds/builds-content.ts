@@ -62,7 +62,7 @@ export const buildsShowcaseCopy = {
   heading:
     "Shipping across higher-ed intelligence, consumer AI, and acquisition workflows.",
   description:
-    "A current read on the products in motion right now: one live platform, one beta waitlist-stage app, and one validation-stage acquisition workflow direction.",
+    "My wheels are always spinning: one live platform, one beta waitlist-stage app, and one validation-stage acquisition workflow.",
 };
 
 export const recentWorkSignals = [

@@ -18,16 +18,16 @@ const values = [
 
 const experience = [
   {
-    title: "Product and systems thinking",
-    body: "I work across product direction, UI architecture, interaction design, and implementation, keeping strategy close to execution.",
+    title: "Family",
+    body: "I have a younger brother and sister, an Australian Shepherd named Zia, and a tortoiseshell cat named Ginger.",
   },
   {
-    title: "Operational product building",
-    body: "I like building the layers behind the surface too: internal tooling, decision systems, workflows, and the connective tissue that keeps shipping coherent.",
+    title: "Sidequests",
+    body: "Skiing down sand-dunes, opening for Gunna & Flo-Rida, surfing the great-lakes, and running ultra-marathons.  ",
   },
   {
-    title: "User-centered rigor",
-    body: "The work gets better when it stays grounded in behavior, not just taste. I pay attention to what users actually do and what the product is teaching them.",
+    title: "Hottest Takes",
+    body: "OUATIH is Tarantino's best film and the top GUIs of this decade will be custom interfaces assembled live by AI. ",
   },
 ] as const;
 
@@ -59,10 +59,9 @@ export default function AboutContent() {
               judgment, and user empathy all have to meet in the same place.
             </p>
             <p>
-              This page is placeholder content for now, but the structure is
-              designed to hold a sharper story later: background, principles,
-              execution style, and the kinds of products I want to keep pushing
-              forward.
+              I have worked across research, engineering, and product, 
+              and that range has shaped how I build. I care about clarity early, 
+              momentum during execution, and products that stay grounded in real user behavior.
             </p>
           </div>
         </section>
@@ -86,7 +85,7 @@ export default function AboutContent() {
               </p>
               <p className="mt-3 text-sm leading-6 text-white/62">
                 Thoughtful speed, clean systems, and product choices that stay
-                anchored to users.
+                anchored to users. 
               </p>
             </div>
             <div className="rounded-[1.4rem] border border-white/8 bg-white/[0.03] p-5">
@@ -133,7 +132,7 @@ export default function AboutContent() {
       <section className="mt-6 grid gap-6 lg:grid-cols-[minmax(0,1fr)_minmax(18rem,0.85fr)]">
         <div className="rounded-[2rem] border border-white/10 bg-[linear-gradient(180deg,rgba(255,255,255,0.05),rgba(255,255,255,0.02))] p-6 backdrop-blur-md sm:p-8">
           <p className="text-[0.7rem] uppercase tracking-[0.34em] text-white/42">
-            Background / Experience
+            Personal
           </p>
           <div className="mt-6 space-y-5">
             {experience.map((item) => (
@@ -166,12 +165,10 @@ export default function AboutContent() {
           </ul>
           <div className="mt-6 rounded-[1.5rem] border border-white/10 bg-[linear-gradient(135deg,rgba(82,39,255,0.15),rgba(0,0,0,0.14)_45%,rgba(255,0,209,0.08)_100%)] p-5">
             <p className="text-[0.64rem] uppercase tracking-[0.28em] text-white/36">
-              Placeholder Note
+              Ethical Work!!
             </p>
             <p className="mt-3 text-sm leading-7 text-white/66">
-              This module is intentionally easy to swap later for a more personal
-              founder story, experience timeline, or philosophy section without
-              changing the page system.
+              Software is never neutral in practice. I try to be thoughtful about what a product encourages, rewards, and normalizes once it is in someone’s hands.
             </p>
           </div>
         </div>
