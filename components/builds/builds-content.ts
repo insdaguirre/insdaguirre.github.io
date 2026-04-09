@@ -1,4 +1,12 @@
 import type { BuildProject, PastProject } from "@/components/builds/types";
+import BigRedWebImage from "@/guis/BigRedWeb.png";
+import InferEconImage from "@/guis/InferEcon.png";
+import InstaBotAwsImage from "@/guis/InstaBot_AWS.png";
+import InstaBotChromeImage from "@/guis/InstaBotChromeExtension.png";
+import InstaBotManualImage from "@/guis/InstaBotManual.png";
+import RecycLensImage from "@/guis/RecyLens_React.png";
+import SentimentWatchImage from "@/guis/SentimentWatchDemoGUI.png";
+import StockHubImage from "@/guis/StockHubDemoGUI.png";
 
 export const buildProjects: BuildProject[] = [
   {
@@ -90,50 +98,117 @@ export const pastProjectsSectionCopy = {
     "Selected public repositories from earlier product, automation, and web experiments.",
 };
 
+const pastProjectImageMap = {
+  // No matching local GUI asset exists in `/guis` for this archive item yet.
+  TheraMisty: undefined,
+  SentimentWatch: SentimentWatchImage.src,
+  InferEcon: InferEconImage.src,
+  StockHUB: StockHubImage.src,
+  RecycLens: RecycLensImage.src,
+  InstaBotLocal: InstaBotManualImage.src,
+  InstaBotChrome: InstaBotChromeImage.src,
+  InstaBotAWS: InstaBotAwsImage.src,
+  BigRedWeb: BigRedWebImage.src,
+} as const;
+
 export const pastProjects: PastProject[] = [
   {
     name: "TheraMisty",
     href: "https://github.com/insdaguirre/TheraMistyOverview",
     repository: "insdaguirre/TheraMistyOverview",
+    imageSrc: pastProjectImageMap.TheraMisty,
+    imageAlt: "TheraMisty project preview",
+    badgeLabel: "GitHub",
+    ctaLabel: "Open Repository",
+    ariaLabel: "Open TheraMisty on GitHub",
+    external: true,
   },
   {
     name: "SentimentWatch",
     href: "https://github.com/insdaguirre/SentimentWatch",
     repository: "insdaguirre/SentimentWatch",
+    imageSrc: pastProjectImageMap.SentimentWatch,
+    imageAlt: "SentimentWatch project preview",
+    badgeLabel: "GitHub",
+    ctaLabel: "Open Repository",
+    ariaLabel: "Open SentimentWatch on GitHub",
+    external: true,
   },
   {
     name: "InferEcon",
     href: "https://github.com/insdaguirre/InferEcon",
     repository: "insdaguirre/InferEcon",
+    imageSrc: pastProjectImageMap.InferEcon,
+    imageAlt: "InferEcon project preview",
+    badgeLabel: "GitHub",
+    ctaLabel: "Open Repository",
+    ariaLabel: "Open InferEcon on GitHub",
+    external: true,
   },
   {
     name: "StockHUB",
     href: "https://github.com/insdaguirre/Stock_Hub",
     repository: "insdaguirre/Stock_Hub",
+    imageSrc: pastProjectImageMap.StockHUB,
+    imageAlt: "StockHUB project preview",
+    badgeLabel: "GitHub",
+    ctaLabel: "Open Repository",
+    ariaLabel: "Open StockHUB on GitHub",
+    external: true,
   },
   {
     name: "RecycLens",
     href: "https://github.com/insdaguirre/RecycLens_React",
     repository: "insdaguirre/RecycLens_React",
+    imageSrc: pastProjectImageMap.RecycLens,
+    imageAlt: "RecycLens project preview",
+    badgeLabel: "GitHub",
+    ctaLabel: "Open Repository",
+    ariaLabel: "Open RecycLens on GitHub",
+    external: true,
   },
   {
     name: "InstaBotLocal",
     href: "https://github.com/insdaguirre/InstaGrowthManual",
     repository: "insdaguirre/InstaGrowthManual",
+    imageSrc: pastProjectImageMap.InstaBotLocal,
+    imageAlt: "InstaBotLocal project preview",
+    badgeLabel: "GitHub",
+    ctaLabel: "Open Repository",
+    ariaLabel: "Open InstaBotLocal on GitHub",
+    external: true,
   },
   {
     name: "InstaBotChrome",
     href: "https://github.com/insdaguirre/InstaBot_ChromeExtension",
     repository: "insdaguirre/InstaBot_ChromeExtension",
+    imageSrc: pastProjectImageMap.InstaBotChrome,
+    imageAlt: "InstaBotChrome project preview",
+    badgeLabel: "GitHub",
+    ctaLabel: "Open Repository",
+    ariaLabel: "Open InstaBotChrome on GitHub",
+    external: true,
   },
   {
     name: "InstaBotAWS",
     href: "https://github.com/insdaguirre/AWS_Instagram_Bot",
     repository: "insdaguirre/AWS_Instagram_Bot",
+    imageSrc: pastProjectImageMap.InstaBotAWS,
+    imageAlt: "InstaBotAWS project preview",
+    badgeLabel: "GitHub",
+    ctaLabel: "Open Repository",
+    ariaLabel: "Open InstaBotAWS on GitHub",
+    external: true,
   },
   {
     name: "BigRedWeb",
     href: "https://github.com/insdaguirre/Big_Red_Web",
     repository: "insdaguirre/Big_Red_Web",
+    imageSrc: pastProjectImageMap.BigRedWeb,
+    imageAlt: "BigRedWeb project preview",
+    badgeLabel: "GitHub",
+    ctaLabel: "Open Repository",
+    ariaLabel: "Open BigRedWeb on GitHub",
+    external: true,
   },
 ];

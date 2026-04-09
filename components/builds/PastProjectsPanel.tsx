@@ -1,4 +1,4 @@
-import Link from "next/link";
+import ArchiveDomeGallery from "@/components/builds/ArchiveDomeGallery";
 import {
   pastProjects,
   pastProjectsSectionCopy,
@@ -22,41 +22,31 @@ export default function PastProjectsPanel() {
             </p>
           </div>
 
-          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-            {pastProjects.map((project, index) => (
-              <Link
-                key={project.href}
-                href={project.href}
-                target="_blank"
-                rel="noreferrer"
-                aria-label={`Open ${project.name} on GitHub`}
-                className="group relative flex min-h-[11rem] flex-col justify-between overflow-hidden rounded-[1.6rem] border border-white/10 bg-white/[0.03] p-5 transition duration-300 hover:-translate-y-1 hover:border-white/18 hover:bg-white/[0.05] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/70 focus-visible:ring-offset-2 focus-visible:ring-offset-black"
-              >
-                <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_right,rgba(255,0,209,0.12),transparent_34%),radial-gradient(circle_at_bottom_left,rgba(82,39,255,0.16),transparent_40%)] opacity-0 transition duration-500 group-hover:opacity-100" />
-                <div className="relative flex items-center justify-between gap-3">
-                  <span className="text-[0.62rem] uppercase tracking-[0.3em] text-white/36">
-                    {String(index + 1).padStart(2, "0")}
-                  </span>
-                  <span className="rounded-full border border-white/10 bg-black/35 px-3 py-1 text-[0.6rem] uppercase tracking-[0.26em] text-white/52">
-                    GitHub
-                  </span>
-                </div>
-
-                <div className="relative space-y-3">
-                  <h3 className="text-[1.25rem] font-light tracking-[0.08em] text-white/90 sm:text-[1.35rem]">
-                    {project.name}
-                  </h3>
-                  <p className="font-mono text-[0.7rem] leading-6 text-white/44 sm:text-[0.74rem]">
-                    {project.repository}
-                  </p>
-                </div>
-
-                <div className="relative flex items-center justify-between gap-3 text-[0.66rem] uppercase tracking-[0.26em] text-white/56 transition duration-300 group-hover:text-white/72">
-                  <span>Open Repository</span>
-                  <span aria-hidden="true">[&gt;]</span>
-                </div>
-              </Link>
-            ))}
+          <div className="relative overflow-hidden rounded-[1.8rem] border border-white/10 bg-[linear-gradient(180deg,rgba(255,255,255,0.05),rgba(255,255,255,0.01))] shadow-[0_28px_90px_rgba(0,0,0,0.34)]">
+            <div className="absolute inset-0 bg-[radial-gradient(circle_at_top,rgba(255,255,255,0.08),transparent_32%),linear-gradient(135deg,rgba(82,39,255,0.08),transparent_45%,rgba(255,0,209,0.06)_100%)]" />
+            <div className="relative flex items-center justify-between gap-4 border-b border-white/8 px-5 py-4 sm:px-6">
+              <p className="text-[0.62rem] uppercase tracking-[0.3em] text-white/38">
+                {pastProjects.length.toString().padStart(2, "0")} archived builds
+              </p>
+              <p className="hidden text-[0.62rem] uppercase tracking-[0.26em] text-white/32 sm:block">
+                Drag to orbit. Click a tile to focus.
+              </p>
+            </div>
+            <div className="relative h-[27rem] sm:h-[34rem] lg:h-[40rem]">
+              <ArchiveDomeGallery
+                projects={pastProjects}
+                fit={1.02}
+                fitBasis="width"
+                minRadius={620}
+                maxRadius={960}
+                padFactor={0.06}
+                maxVerticalRotationDeg={9}
+                dragSensitivity={20}
+                dragDampening={0.82}
+                segments={30}
+                overlayBlurColor="#080511"
+              />
+            </div>
           </div>
         </div>
       </div>
