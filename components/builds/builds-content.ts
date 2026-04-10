@@ -7,6 +7,7 @@ import InstaBotManualImage from "@/guis/InstaBotManual.png";
 import RecycLensImage from "@/guis/RecyLens_React.png";
 import SentimentWatchImage from "@/guis/SentimentWatchDemoGUI.png";
 import StockHubImage from "@/guis/StockHubDemoGUI.png";
+import TheraMistyImage from "@/guis/theramisty.png";
 
 export const buildProjects: BuildProject[] = [
   {
@@ -99,8 +100,11 @@ export const pastProjectsSectionCopy = {
 };
 
 const pastProjectImageMap = {
-  // No matching local GUI asset exists in `/guis` for this archive item yet.
-  TheraMisty: undefined,
+  TheraMisty: {
+    src: TheraMistyImage.src,
+    width: TheraMistyImage.width,
+    height: TheraMistyImage.height,
+  },
   SentimentWatch: {
     src: SentimentWatchImage.src,
     width: SentimentWatchImage.width,
@@ -148,10 +152,10 @@ export const pastProjects: PastProject[] = [
     name: "TheraMisty",
     href: "https://github.com/insdaguirre/TheraMistyOverview",
     repository: "insdaguirre/TheraMistyOverview",
-    imageSrc: undefined,
+    imageSrc: pastProjectImageMap.TheraMisty.src,
     imageAlt: "TheraMisty project preview",
-    imageWidth: undefined,
-    imageHeight: undefined,
+    imageWidth: pastProjectImageMap.TheraMisty.width,
+    imageHeight: pastProjectImageMap.TheraMisty.height,
     badgeLabel: "GitHub",
     ctaLabel: "Open Repository",
     ariaLabel: "Open TheraMisty on GitHub",
@@ -167,6 +171,8 @@ export const pastProjects: PastProject[] = [
     imageHeight: pastProjectImageMap.SentimentWatch.height,
     badgeLabel: "GitHub",
     ctaLabel: "Open Repository",
+    demoUrl: "https://diego-aguirre.com/SentimentWatch-Demo/",
+    demoLabel: "View Demo",
     ariaLabel: "Open SentimentWatch on GitHub",
     external: true,
   },
@@ -180,6 +186,8 @@ export const pastProjects: PastProject[] = [
     imageHeight: pastProjectImageMap.InferEcon.height,
     badgeLabel: "GitHub",
     ctaLabel: "Open Repository",
+    demoUrl: "https://inferecon.streamlit.app/",
+    demoLabel: "View Demo",
     ariaLabel: "Open InferEcon on GitHub",
     external: true,
   },
@@ -193,6 +201,8 @@ export const pastProjects: PastProject[] = [
     imageHeight: pastProjectImageMap.StockHUB.height,
     badgeLabel: "GitHub",
     ctaLabel: "Open Repository",
+    demoUrl: "https://diego-aguirre.com/StockHub-Demo/",
+    demoLabel: "View Demo",
     ariaLabel: "Open StockHUB on GitHub",
     external: true,
   },

@@ -28,6 +28,8 @@ export interface PastProject {
   imageHeight?: number;
   badgeLabel?: string;
   ctaLabel?: string;
+  demoUrl?: string;
+  demoLabel?: string;
   ariaLabel?: string;
   external?: boolean;
 }

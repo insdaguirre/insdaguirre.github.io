@@ -862,6 +862,17 @@ export default function ArchiveDomeGallery({
               </div>
 
               <div className={styles.focusActions}>
+                {openedTile.project.demoUrl ? (
+                  <Link
+                    href={openedTile.project.demoUrl}
+                    target="_blank"
+                    rel="noreferrer"
+                    className={`${styles.focusActionLink} ${styles.focusActionLinkSecondary}`}
+                  >
+                    {openedTile.project.demoLabel ?? "View Demo"}
+                  </Link>
+                ) : null}
+
                 <Link
                   href={openedTile.project.href}
                   target={

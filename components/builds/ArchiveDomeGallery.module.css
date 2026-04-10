@@ -432,6 +432,8 @@
 }
 
 .focusActions {
+  display: flex;
+  flex-wrap: wrap;
   justify-content: flex-end;
 }
 
@@ -457,6 +459,17 @@
   outline: none;
   transform: translateY(-1px);
   background: #fff;
+}
+
+.focusActionLinkSecondary {
+  background: rgba(255, 255, 255, 0.08);
+  color: rgba(255, 255, 255, 0.92);
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.12);
+}
+
+.focusActionLinkSecondary:hover,
+.focusActionLinkSecondary:focus-visible {
+  background: rgba(255, 255, 255, 0.14);
 }
 
 @media (max-width: 1024px) {
