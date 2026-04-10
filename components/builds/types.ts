@@ -24,6 +24,8 @@ export interface PastProject {
   repository: string;
   imageSrc?: string;
   imageAlt?: string;
+  imageWidth?: number;
+  imageHeight?: number;
   badgeLabel?: string;
   ctaLabel?: string;
   ariaLabel?: string;

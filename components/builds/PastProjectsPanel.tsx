@@ -32,18 +32,18 @@ export default function PastProjectsPanel() {
                 Drag to orbit. Click a tile to focus.
               </p>
             </div>
-            <div className="relative h-[27rem] sm:h-[34rem] lg:h-[40rem]">
+            <div className="relative h-[32rem] sm:h-[40rem] lg:h-[46rem]">
               <ArchiveDomeGallery
                 projects={pastProjects}
-                fit={1.02}
+                fit={1.2}
                 fitBasis="width"
-                minRadius={620}
-                maxRadius={960}
-                padFactor={0.06}
+                minRadius={560}
+                maxRadius={1240}
+                padFactor={0.05}
                 maxVerticalRotationDeg={9}
                 dragSensitivity={20}
                 dragDampening={0.82}
-                segments={30}
+                segments={21}
                 overlayBlurColor="#080511"
               />
             </div>

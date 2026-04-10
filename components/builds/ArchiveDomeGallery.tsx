@@ -37,6 +37,7 @@ type ItemDef = {
   y: number;
   sizeX: number;
   sizeY: number;
+  aspectRatio: number;
 };
 
 type RectDef = {
@@ -59,7 +60,7 @@ type OpenedTileState = {
 const DEFAULTS = {
   maxVerticalRotationDeg: 10,
   dragSensitivity: 20,
-  segments: 30,
+  segments: 21,
 };
 
 const clamp = (value: number, min: number, max: number) =>
@@ -71,50 +72,70 @@ const wrapAngleSigned = (degrees: number) => {
 };
 
 function buildItems(pool: PastProject[], segments: number): ItemDef[] {
-  const xStart = -(segments - 1);
-  const xColumns = Array.from({ length: segments }, (_, index) => xStart + index * 2);
-  const evenRows = [-4, -2, 0, 2, 4];
-  const oddRows = [-3, -1, 1, 3, 5];
-
-  const coordinates = xColumns.flatMap((x, columnIndex) => {
-    const rows = columnIndex % 2 === 0 ? evenRows : oddRows;
-    return rows.map((y) => ({ x, y, sizeX: 2, sizeY: 2 }));
-  });
-
   if (pool.length === 0) {
     return [];
   }
 
-  const normalizedProjects = pool.map((project, projectOrder) => ({
-    project,
-    projectOrder,
-  }));
-
-  const usedProjects = Array.from(
-    { length: coordinates.length },
-    (_, index) => normalizedProjects[index % normalizedProjects.length],
+  const slotsPerColumn = 4;
+  const tileWidth = 2.2;
+  const horizontalGap = 0.44;
+  const verticalGap = 0.46;
+  const fallbackAspectRatio = 0.92;
+  const columnStride = tileWidth + horizontalGap;
+  const xStart = -((segments - 1) * columnStride) / 2;
+  const xColumns = Array.from(
+    { length: segments },
+    (_, index) => xStart + index * columnStride,
   );
+  const normalizedProjects = pool.map((project, projectOrder) => {
+    const aspectRatio =
+      project.imageWidth && project.imageHeight
+        ? project.imageWidth / project.imageHeight
+        : fallbackAspectRatio;
+    const sizeY = clamp(tileWidth / aspectRatio, 1.16, 2.78);
 
-  for (let index = 1; index < usedProjects.length; index += 1) {
-    if (usedProjects[index].project.href === usedProjects[index - 1].project.href) {
-      for (let swapIndex = index + 1; swapIndex < usedProjects.length; swapIndex += 1) {
-        if (
-          usedProjects[swapIndex].project.href !== usedProjects[index].project.href
-        ) {
-          const nextProject = usedProjects[index];
-          usedProjects[index] = usedProjects[swapIndex];
-          usedProjects[swapIndex] = nextProject;
-          break;
-        }
-      }
-    }
-  }
+    return {
+      project,
+      projectOrder,
+      aspectRatio,
+      sizeX: tileWidth,
+      sizeY,
+    };
+  });
 
-  return coordinates.map((coordinate, index) => ({
-    ...coordinate,
-    project: usedProjects[index].project,
-    projectOrder: usedProjects[index].projectOrder,
-  }));
+  const totalSlots = xColumns.length * slotsPerColumn;
+  const projectStep = normalizedProjects.length > 1 ? 5 : 1;
+  const usedProjects = Array.from({ length: totalSlots }, (_, index) => {
+    const projectIndex = (index * projectStep) % normalizedProjects.length;
+    return normalizedProjects[projectIndex];
+  });
+
+  return xColumns.flatMap((x, columnIndex) => {
+    const columnItems = usedProjects.slice(
+      columnIndex * slotsPerColumn,
+      (columnIndex + 1) * slotsPerColumn,
+    );
+    const totalHeight =
+      columnItems.reduce((sum, item) => sum + item.sizeY, 0) +
+      verticalGap * Math.max(0, columnItems.length - 1);
+    const stagger = columnIndex % 2 === 0 ? -0.22 : 0.22;
+    let cursor = -(totalHeight / 2) + stagger;
+
+    return columnItems.map((item) => {
+      const nextItem = {
+        project: item.project,
+        projectOrder: item.projectOrder,
+        x,
+        y: cursor + item.sizeY / 2,
+        sizeX: item.sizeX,
+        sizeY: item.sizeY,
+        aspectRatio: item.aspectRatio,
+      };
+
+      cursor += item.sizeY + verticalGap;
+      return nextItem;
+    });
+  });
 }
 
 function isExternalHref(href: string) {
@@ -142,13 +163,56 @@ function getRectRelativeToRoot(rect: DOMRect, rootRect: DOMRect): RectDef {
   };
 }
 
+function getProjectAspectRatio(project: PastProject) {
+  if (project.imageWidth && project.imageHeight) {
+    return project.imageWidth / project.imageHeight;
+  }
+
+  return 0.92;
+}
+
+function getViewerPadding(root: HTMLDivElement) {
+  const value = Number.parseFloat(
+    getComputedStyle(root).getPropertyValue("--viewer-pad"),
+  );
+
+  return Number.isFinite(value) ? value : 24;
+}
+
+function getFocusTargetRect(
+  rootRect: DOMRect,
+  viewerPadding: number,
+  aspectRatio: number,
+): RectDef {
+  const maxWidth = Math.min(rootRect.width - viewerPadding * 2, rootRect.width * 0.82);
+  const maxHeight = Math.min(
+    rootRect.height - viewerPadding * 2,
+    rootRect.height * 0.74,
+  );
+
+  let width = Math.min(maxWidth, maxHeight * aspectRatio);
+  let height = width / aspectRatio;
+
+  if (height > maxHeight) {
+    height = maxHeight;
+    width = height * aspectRatio;
+  }
+
+  return {
+    left: (rootRect.width - width) / 2,
+    top: (rootRect.height - height) / 2,
+    width,
+    height,
+  };
+}
+
 export default function ArchiveDomeGallery({
   projects,
-  fit = 1.02,
+  fit = 1.2,
   fitBasis = "auto",
-  minRadius = 620,
+  minRadius = 560,
   maxRadius = Infinity,
-  padFactor = 0.06,
+  padFactor = 0.05,
   overlayBlurColor = "#080511",
   maxVerticalRotationDeg = DEFAULTS.maxVerticalRotationDeg,
   dragSensitivity = DEFAULTS.dragSensitivity,
@@ -158,7 +222,6 @@ export default function ArchiveDomeGallery({
 }: DomeGalleryProps) {
   const rootRef = useRef<HTMLDivElement>(null);
   const sphereRef = useRef<HTMLDivElement>(null);
-  const frameRef = useRef<HTMLDivElement>(null);
   const closeButtonRef = useRef<HTMLButtonElement>(null);
   const lastFocusedTileRef = useRef<HTMLButtonElement | null>(null);
   const openStartedAtRef = useRef(0);
@@ -178,6 +241,7 @@ export default function ArchiveDomeGallery({
   const [openedTile, setOpenedTile] = useState<OpenedTileState | null>(null);
 
   const items = useMemo(() => buildItems(projects, segments), [projects, segments]);
+  const verticalSegments = Math.max(28, Math.round(segments * 1.35));
 
   const applyTransform = useCallback((xDegrees: number, yDegrees: number) => {
     if (!sphereRef.current) {
@@ -271,7 +335,7 @@ export default function ArchiveDomeGallery({
       }
 
       let radius = basis * fit;
-      radius = Math.min(radius, height * 1.48);
+      radius = Math.min(radius, height * 1.6);
       radius = clamp(radius, minRadius, maxRadius);
 
       const viewerPad = Math.max(12, Math.round(minDimension * padFactor));
@@ -281,6 +345,21 @@ export default function ArchiveDomeGallery({
       root.style.setProperty("--overlay-blur-color", overlayBlurColor);
       root.style.setProperty("--image-filter", grayscale ? "grayscale(1)" : "none");
       applyTransform(rotationRef.current.x, rotationRef.current.y);
+
+      setOpenedTile((current) => {
+        if (!current || current.closing) {
+          return current;
+        }
+
+        return {
+          ...current,
+          targetRect: getFocusTargetRect(
+            root.getBoundingClientRect(),
+            viewerPad,
+            getProjectAspectRatio(current.project),
+          ),
+        };
+      });
     });
 
     resizeObserver.observe(root);
@@ -399,16 +478,8 @@ export default function ArchiveDomeGallery({
       };
       velocityRef.current = { x: 0, y: 0 };
       movedRef.current = false;
-
-      if (event.pointerType === "touch") {
-        touchPendingRef.current = true;
-        draggingRef.current = false;
-        return;
-      }
-
-      draggingRef.current = true;
-      touchPendingRef.current = false;
-      event.currentTarget.setPointerCapture(event.pointerId);
+      draggingRef.current = false;
+      touchPendingRef.current = event.pointerType === "touch";
     },
     [openedTile, stopInertia],
   );
@@ -422,15 +493,15 @@ export default function ArchiveDomeGallery({
         return;
       }
 
-      if (touchPendingRef.current && !draggingRef.current) {
-        const deltaX = event.clientX - dragStartRef.current.x;
-        const deltaY = event.clientY - dragStartRef.current.y;
+      const deltaX = event.clientX - dragStartRef.current.x;
+      const deltaY = event.clientY - dragStartRef.current.y;
 
+      if (!draggingRef.current) {
         if (deltaX * deltaX + deltaY * deltaY < 36) {
           return;
         }
 
-        if (Math.abs(deltaX) <= Math.abs(deltaY) + 4) {
+        if (touchPendingRef.current && Math.abs(deltaX) <= Math.abs(deltaY) + 4) {
           clearPointerTracking();
           return;
         }
@@ -449,13 +520,6 @@ export default function ArchiveDomeGallery({
         event.currentTarget.setPointerCapture(event.pointerId);
         return;
       }
-
-      if (!draggingRef.current) {
-        return;
-      }
-
-      const deltaX = event.clientX - dragStartRef.current.x;
-      const deltaY = event.clientY - dragStartRef.current.y;
 
       if (!movedRef.current && deltaX * deltaX + deltaY * deltaY > 16) {
         movedRef.current = true;
@@ -500,7 +564,9 @@ export default function ArchiveDomeGallery({
         return;
       }
 
-      const shouldContinueInertia = draggingRef.current && movedRef.current;
+      const wasDragging = draggingRef.current;
+      const didMove = movedRef.current;
+      const shouldContinueInertia = wasDragging && didMove;
       const { x: velocityX, y: velocityY } = velocityRef.current;
 
       if (draggingRef.current && event.currentTarget.hasPointerCapture(event.pointerId)) {
@@ -509,8 +575,11 @@ export default function ArchiveDomeGallery({
 
       clearPointerTracking();
 
-      if (shouldContinueInertia) {
+      if (didMove) {
         lastDragEndAtRef.current = performance.now();
+      }
+
+      if (shouldContinueInertia) {
         startInertia(velocityX, velocityY);
       }
     },
@@ -524,15 +593,18 @@ export default function ArchiveDomeGallery({
       sourceButton: HTMLButtonElement,
     ) => {
       const root = rootRef.current;
-      const frame = frameRef.current;
 
-      if (!root || !frame) {
+      if (!root) {
         return;
       }
 
       const rootRect = root.getBoundingClientRect();
       const sourceRect = sourceButton.getBoundingClientRect();
-      const frameRect = frame.getBoundingClientRect();
+      const targetRect = getFocusTargetRect(
+        rootRect,
+        getViewerPadding(root),
+        getProjectAspectRatio(item.project),
+      );
 
       openStartedAtRef.current = performance.now();
       stopInertia();
@@ -543,7 +615,7 @@ export default function ArchiveDomeGallery({
         projectOrder: item.projectOrder,
         tileInstanceIndex,
         originRect: getRectRelativeToRoot(sourceRect, rootRect),
-        targetRect: getRectRelativeToRoot(frameRect, rootRect),
+        targetRect,
         expanded: false,
         closing: false,
       });
@@ -630,7 +702,7 @@ export default function ArchiveDomeGallery({
       style={
         {
           ["--segments-x" as string]: segments,
-          ["--segments-y" as string]: segments,
+          ["--segments-y" as string]: verticalSegments,
         } as CSSProperties
       }
     >
@@ -653,6 +725,7 @@ export default function ArchiveDomeGallery({
                     ["--offset-y" as string]: item.y,
                     ["--item-size-x" as string]: item.sizeX,
                     ["--item-size-y" as string]: item.sizeY,
+                    ["--item-aspect" as string]: item.aspectRatio,
                   } as CSSProperties
                 }
               >
@@ -704,7 +777,6 @@ export default function ArchiveDomeGallery({
           onClick={() => requestClose(false)}
           aria-label="Close focused project"
         />
-        <div ref={frameRef} className={styles.frame} aria-hidden="true" />
 
         {openedTile && openedCardStyle ? (
           <div
