@@ -162,9 +162,11 @@
 }
 
 .tileVisual {
+  overflow: hidden;
   background:
     linear-gradient(180deg, rgba(255, 255, 255, 0.04), rgba(255, 255, 255, 0)),
     linear-gradient(135deg, rgba(82, 39, 255, 0.12), rgba(8, 8, 14, 0.08) 42%, rgba(255, 0, 209, 0.08) 100%);
+  transition: transform 260ms ease;
 }
 
 .tileVisual::after,
@@ -187,12 +189,61 @@
 
 .tileImage {
   filter: var(--image-filter, none);
-  transition: transform 380ms ease;
+  transition:
+    filter 260ms ease,
+    transform 260ms ease;
+}
+
+.tileCaption {
+  position: absolute;
+  right: 0.8rem;
+  bottom: 0.8rem;
+  left: 0.8rem;
+  z-index: 2;
+  display: flex;
+  justify-content: flex-start;
+  pointer-events: none;
+  opacity: 0;
+  transform: translateY(8px);
+  transition:
+    opacity 220ms ease,
+    transform 220ms ease;
+}
+
+.tileCaptionText {
+  display: inline-flex;
+  align-items: center;
+  min-height: 2rem;
+  max-width: 100%;
+  padding: 0.38rem 0.7rem;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 999px;
+  background: rgba(5, 6, 10, 0.62);
+  color: rgba(255, 255, 255, 0.94);
+  font-size: 0.66rem;
+  font-weight: 500;
+  letter-spacing: 0.05em;
+  line-height: 1.2;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.24);
+}
+
+.tileButton:hover .tileVisual,
+.tileButton:focus-visible .tileVisual {
+  transform: scale(1.05);
 }
 
 .tileButton:hover .tileImage,
 .tileButton:focus-visible .tileImage {
-  transform: scale(1.04);
+  filter: blur(1.6px) brightness(0.76) saturate(0.92);
+}
+
+.tileButton:hover .tileCaption,
+.tileButton:focus-visible .tileCaption {
+  opacity: 1;
+  transform: translateY(0);
 }
 
 .tileFallback,
@@ -477,6 +528,12 @@
     inset: 5px;
     border-radius: 1.28rem;
   }
+
+  .tileCaption {
+    right: 0.7rem;
+    bottom: 0.7rem;
+    left: 0.7rem;
+  }
 }
 
 @media (max-width: 767px) {
@@ -487,6 +544,18 @@
   .tileButton {
     inset: 5px;
     border-radius: 1rem;
+  }
+
+  .tileCaption {
+    right: 0.6rem;
+    bottom: 0.6rem;
+    left: 0.6rem;
+  }
+
+  .tileCaptionText {
+    min-height: 1.85rem;
+    padding: 0.34rem 0.62rem;
+    font-size: 0.6rem;
   }
 
   .edgeFade {
@@ -537,7 +606,17 @@
     opacity: 0;
   }
 
-  .tileButton:hover .tileImage {
+  .tileButton:hover .tileVisual {
     transform: none;
+  }
+
+  .tileButton:hover .tileImage {
+    filter: var(--image-filter, none);
+    transform: none;
+  }
+
+  .tileButton:hover .tileCaption {
+    opacity: 0;
+    transform: translateY(8px);
   }
 }

@@ -778,6 +778,12 @@ export default function ArchiveDomeGallery({
                         <span>{getProjectMonogram(item.project.name)}</span>
                       </div>
                     )}
+
+                    <div className={styles.tileCaption} aria-hidden="true">
+                      <span className={styles.tileCaptionText}>
+                        {item.project.name}
+                      </span>
+                    </div>
                   </div>
                 </button>
               </div>

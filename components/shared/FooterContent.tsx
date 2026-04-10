@@ -15,6 +15,11 @@ const footerLinks: FooterLink[] = [
   { href: "/about", label: "About" },
   { href: "/builds", label: "Builds" },
   { href: "https://github.com/insdaguirre", label: "GitHub", external: true },
+  {
+    href: "https://www.instagram.com/deegz.mp3/",
+    label: "Alter-Ego",
+    external: true,
+  },
 ];
 
 export default function FooterContent({
