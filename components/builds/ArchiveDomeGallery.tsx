@@ -78,13 +78,16 @@ function buildItems(pool: PastProject[], segments: number): ItemDef[] {
 
   const slotsPerColumn = 4;
   const tileWidth = 2.2;
-  const horizontalGap = 0.44;
+  const targetHorizontalGap = 0.44;
   const verticalGap = 0.46;
   const fallbackAspectRatio = 0.92;
-  const columnStride = tileWidth + horizontalGap;
-  const xStart = -((segments - 1) * columnStride) / 2;
+  const ringUnits = segments * 2;
+  const targetColumnStride = tileWidth + targetHorizontalGap;
+  const columnCount = Math.max(1, Math.round(ringUnits / targetColumnStride));
+  const columnStride = ringUnits / columnCount;
+  const xStart = -((columnCount - 1) * columnStride) / 2;
   const xColumns = Array.from(
-    { length: segments },
+    { length: columnCount },
     (_, index) => xStart + index * columnStride,
   );
   const normalizedProjects = pool.map((project, projectOrder) => {
