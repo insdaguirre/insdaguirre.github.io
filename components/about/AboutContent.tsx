@@ -27,7 +27,7 @@ const experience = [
   },
   {
     title: "Hottest Takes",
-    body: "OUATIH is Tarantino's best film and the top GUIs of this decade will be custom interfaces assembled live by AI. ",
+    body: "OUATIH is Tarantino's best film andthe top GUIs of this decade will be custom interfaces assembled live by AI. ",
   },
 ] as const;
 

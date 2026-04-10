@@ -1,0 +1,622 @@
+.root {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  --radius: 520px;
+  --viewer-pad: 28px;
+  --circ: calc(var(--radius) * 3.14);
+  --rot-y: calc((360deg / var(--segments-x)) / 2);
+  --rot-x: calc((360deg / var(--segments-y)) / 2);
+  --item-width: calc(var(--circ) / var(--segments-x));
+  --item-height: calc(var(--circ) / var(--segments-y));
+}
+
+.root * {
+  box-sizing: border-box;
+}
+
+.sphere,
+.item,
+.tileButton {
+  transform-style: preserve-3d;
+}
+
+.main {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  overflow: hidden;
+  touch-action: pan-y;
+  user-select: none;
+  -webkit-user-select: none;
+  background:
+    radial-gradient(circle at top, rgba(255, 255, 255, 0.04), transparent 28%),
+    linear-gradient(180deg, rgba(7, 7, 14, 0.28), rgba(7, 7, 14, 0.08));
+  transition: transform 260ms ease;
+}
+
+.root[data-open="true"] .main {
+  transform: scale(0.996);
+}
+
+.stage {
+  width: 100%;
+  height: 100%;
+  display: grid;
+  place-items: center;
+  perspective: calc(var(--radius) * 2);
+  perspective-origin: 50% 50%;
+  contain: layout paint size;
+  transition:
+    filter 340ms ease,
+    transform 340ms ease;
+}
+
+.root[data-open="true"] .stage {
+  filter: blur(8px) saturate(0.82) brightness(0.54);
+  transform: scale(1.015);
+}
+
+.sphere {
+  transform: translateZ(calc(var(--radius) * -1));
+  will-change: transform;
+}
+
+.overlay {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  pointer-events: none;
+  background-image:
+    radial-gradient(circle at 50% 48%, rgba(0, 0, 0, 0) 38%, rgba(6, 5, 16, 0.08) 78%, rgba(6, 5, 16, 0.18) 100%),
+    radial-gradient(circle at top right, rgba(255, 255, 255, 0.05), transparent 30%);
+  transition: opacity 260ms ease;
+}
+
+.root[data-open="true"] .overlay {
+  opacity: 0.44;
+}
+
+.item {
+  width: calc(var(--item-width) * var(--item-size-x));
+  height: calc(var(--item-height) * var(--item-size-y));
+  position: absolute;
+  top: -999px;
+  right: -999px;
+  bottom: -999px;
+  left: -999px;
+  margin: auto;
+  transform-origin: 50% 50%;
+  backface-visibility: hidden;
+  pointer-events: none;
+  transform:
+    rotateY(calc(var(--rot-y) * var(--offset-x)))
+    rotateX(calc(var(--rot-x) * var(--offset-y)))
+    translateZ(var(--radius));
+}
+
+.tileButton {
+  position: absolute;
+  inset: 5px;
+  display: block;
+  width: auto;
+  padding: 0;
+  border: 0;
+  border-radius: 1.5rem;
+  overflow: hidden;
+  background: transparent;
+  cursor: pointer;
+  backface-visibility: hidden;
+  box-shadow:
+    0 12px 26px rgba(0, 0, 0, 0.28),
+    inset 0 0 0 1px rgba(255, 255, 255, 0.08);
+  transition:
+    transform 240ms ease,
+    box-shadow 240ms ease;
+  -webkit-tap-highlight-color: transparent;
+  pointer-events: auto;
+}
+
+.tileButton::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(circle at top left, rgba(255, 255, 255, 0.08), transparent 34%),
+    linear-gradient(180deg, rgba(255, 255, 255, 0.02), rgba(255, 255, 255, 0));
+  opacity: 0;
+  transition: opacity 220ms ease;
+}
+
+.tileButton:hover,
+.tileButton:focus-visible {
+  transform: translateZ(10px);
+  box-shadow:
+    0 20px 42px rgba(0, 0, 0, 0.36),
+    inset 0 0 0 1px rgba(255, 255, 255, 0.14);
+}
+
+.tileButton:hover::after,
+.tileButton:focus-visible::after {
+  opacity: 1;
+}
+
+.tileButton:focus-visible {
+  outline: none;
+  box-shadow:
+    0 20px 48px rgba(0, 0, 0, 0.42),
+    inset 0 0 0 1px rgba(255, 255, 255, 0.16),
+    0 0 0 2px rgba(255, 255, 255, 0.72);
+}
+
+.tileButtonHidden {
+  opacity: 0;
+  visibility: hidden;
+}
+
+.tileVisual,
+.focusMedia {
+  position: absolute;
+  inset: 0;
+}
+
+.tileVisual {
+  overflow: hidden;
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.04), rgba(255, 255, 255, 0)),
+    linear-gradient(135deg, rgba(82, 39, 255, 0.12), rgba(8, 8, 14, 0.08) 42%, rgba(255, 0, 209, 0.08) 100%);
+  transition: transform 260ms ease;
+}
+
+.tileVisual::after,
+.focusMedia::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(180deg, rgba(5, 6, 10, 0.02), rgba(5, 6, 10, 0.12)),
+    radial-gradient(circle at top left, rgba(255, 255, 255, 0.04), transparent 34%);
+}
+
+.tileImage,
+.focusImage {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center top;
+}
+
+.tileImage {
+  filter: var(--image-filter, none);
+  transition:
+    filter 260ms ease,
+    transform 260ms ease;
+}
+
+.tileCaption {
+  position: absolute;
+  right: 0.8rem;
+  bottom: 0.8rem;
+  left: 0.8rem;
+  z-index: 2;
+  display: flex;
+  justify-content: flex-start;
+  pointer-events: none;
+  opacity: 0;
+  transform: translateY(8px);
+  transition:
+    opacity 220ms ease,
+    transform 220ms ease;
+}
+
+.tileCaptionText {
+  display: inline-flex;
+  align-items: center;
+  min-height: 2rem;
+  max-width: 100%;
+  padding: 0.38rem 0.7rem;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 999px;
+  background: rgba(5, 6, 10, 0.62);
+  color: rgba(255, 255, 255, 0.94);
+  font-size: 0.66rem;
+  font-weight: 500;
+  letter-spacing: 0.05em;
+  line-height: 1.2;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.24);
+}
+
+.tileButton:hover .tileVisual,
+.tileButton:focus-visible .tileVisual {
+  transform: scale(1.05);
+}
+
+.tileButton:hover .tileImage,
+.tileButton:focus-visible .tileImage {
+  filter: blur(1.6px) brightness(0.76) saturate(0.92);
+}
+
+.tileButton:hover .tileCaption,
+.tileButton:focus-visible .tileCaption {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.tileFallback,
+.focusFallback {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  background:
+    radial-gradient(circle at top left, rgba(255, 255, 255, 0.14), transparent 28%),
+    linear-gradient(135deg, rgba(82, 39, 255, 0.34), rgba(7, 7, 14, 0.92) 58%, rgba(255, 0, 209, 0.22));
+  color: rgba(255, 255, 255, 0.9);
+  letter-spacing: 0.26em;
+  text-transform: uppercase;
+}
+
+.tileFallback {
+  font-size: clamp(1.05rem, 1.8vw, 1.7rem);
+}
+
+.edgeFade {
+  position: absolute;
+  left: 0;
+  right: 0;
+  z-index: 3;
+  height: 44px;
+  pointer-events: none;
+  background: linear-gradient(to bottom, transparent, var(--overlay-blur-color, #080511));
+}
+
+.edgeFadeTop {
+  top: 0;
+  transform: rotate(180deg);
+}
+
+.edgeFadeBottom {
+  bottom: 0;
+}
+
+.viewer {
+  position: absolute;
+  inset: 0;
+  z-index: 20;
+  pointer-events: none;
+}
+
+.scrim {
+  position: absolute;
+  inset: 0;
+  border: 0;
+  background: rgba(5, 6, 10, 0.18);
+  backdrop-filter: blur(14px) saturate(0.84);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 300ms ease;
+}
+
+.root[data-open="true"] .scrim {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.focusCard {
+  position: absolute;
+  z-index: 2;
+  display: grid;
+  grid-template-rows: auto minmax(0, 1fr) auto;
+  gap: 0.875rem;
+  padding: 1rem;
+  overflow: hidden;
+  border-radius: 1.55rem;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: rgba(9, 10, 18, 0.94);
+  box-shadow:
+    0 36px 120px rgba(0, 0, 0, 0.56),
+    0 0 0 1px rgba(255, 255, 255, 0.04);
+  will-change: left, top, width, height;
+  transition:
+    left 360ms cubic-bezier(0.22, 1, 0.36, 1),
+    top 360ms cubic-bezier(0.22, 1, 0.36, 1),
+    width 360ms cubic-bezier(0.22, 1, 0.36, 1),
+    height 360ms cubic-bezier(0.22, 1, 0.36, 1),
+    border-radius 360ms cubic-bezier(0.22, 1, 0.36, 1),
+    box-shadow 320ms ease;
+  pointer-events: auto;
+}
+
+.focusCard[data-expanded="true"] {
+  border-radius: 2rem;
+  box-shadow:
+    0 42px 140px rgba(0, 0, 0, 0.6),
+    0 0 0 1px rgba(255, 255, 255, 0.06);
+}
+
+.focusHeader,
+.focusDetails {
+  opacity: 0;
+  transform: translateY(10px);
+  transition:
+    opacity 220ms ease,
+    transform 220ms ease;
+}
+
+.focusCard[data-expanded="true"] .focusHeader,
+.focusCard[data-expanded="true"] .focusDetails,
+.focusCard[data-expanded="true"] .focusCloseButton {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.focusHeader {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: start;
+  gap: 1rem;
+}
+
+.focusHeading {
+  display: grid;
+  justify-items: start;
+  text-align: left;
+  min-width: 0;
+}
+
+.focusMedia {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  border-radius: 1.55rem;
+  background:
+    radial-gradient(circle at top left, rgba(255, 255, 255, 0.06), transparent 28%),
+    linear-gradient(135deg, rgba(82, 39, 255, 0.1), rgba(8, 8, 14, 0.08) 42%, rgba(255, 0, 209, 0.08) 100%);
+}
+
+.focusImageFrame {
+  position: relative;
+  min-height: 0;
+  overflow: hidden;
+  border-radius: 1.55rem;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.04), rgba(255, 255, 255, 0)),
+    rgba(5, 6, 10, 0.36);
+  box-shadow:
+    inset 0 0 0 1px rgba(255, 255, 255, 0.03),
+    0 18px 46px rgba(0, 0, 0, 0.26);
+}
+
+.focusImage {
+  position: absolute;
+  inset: 0;
+  filter: none;
+}
+
+.focusFallback {
+  font-size: clamp(1.8rem, 3vw, 2.4rem);
+}
+
+.focusEyebrowRow,
+.focusActions {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.focusIndex {
+  font-size: 0.58rem;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.76);
+}
+
+.focusBadge,
+.focusCloseButton {
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 999px;
+  background: rgba(0, 0, 0, 0.28);
+  color: rgba(255, 255, 255, 0.8);
+}
+
+.focusBadge {
+  padding: 0.4rem 0.72rem;
+  font-size: 0.54rem;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+}
+
+.focusCloseButton {
+  padding: 0.52rem 0.82rem;
+  font-size: 0.58rem;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+  transition:
+    opacity 200ms ease,
+    transform 200ms ease,
+    border-color 200ms ease,
+    background 200ms ease,
+    color 200ms ease;
+}
+
+.focusCloseButton:hover,
+.focusCloseButton:focus-visible {
+  outline: none;
+  border-color: rgba(255, 255, 255, 0.22);
+  background: rgba(255, 255, 255, 0.08);
+  color: rgba(255, 255, 255, 0.94);
+}
+
+.focusTitle {
+  margin: 0;
+  font-size: clamp(1.2rem, 2vw, 1.72rem);
+  font-weight: 300;
+  letter-spacing: 0.08em;
+  color: rgba(255, 255, 255, 0.95);
+}
+
+.focusDetails {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: end;
+  gap: 1rem;
+}
+
+.focusMeta {
+  display: grid;
+  gap: 0.5rem;
+  min-width: 0;
+}
+
+.focusRepository {
+  margin: 0;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
+  font-size: 0.72rem;
+  line-height: 1.65;
+  color: rgba(255, 255, 255, 0.72);
+}
+
+.focusActions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+}
+
+.focusActionLink {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.78rem 1.04rem;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.94);
+  color: rgba(7, 7, 14, 0.94);
+  text-decoration: none;
+  font-size: 0.68rem;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+  transition:
+    transform 180ms ease,
+    background 180ms ease;
+}
+
+.focusActionLink:hover,
+.focusActionLink:focus-visible {
+  outline: none;
+  transform: translateY(-1px);
+  background: #fff;
+}
+
+.focusActionLinkSecondary {
+  background: rgba(255, 255, 255, 0.08);
+  color: rgba(255, 255, 255, 0.92);
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.12);
+}
+
+.focusActionLinkSecondary:hover,
+.focusActionLinkSecondary:focus-visible {
+  background: rgba(255, 255, 255, 0.14);
+}
+
+@media (max-width: 1024px) {
+  .tileButton {
+    inset: 5px;
+    border-radius: 1.28rem;
+  }
+
+  .tileCaption {
+    right: 0.7rem;
+    bottom: 0.7rem;
+    left: 0.7rem;
+  }
+}
+
+@media (max-width: 767px) {
+  .root {
+    --viewer-pad: 18px;
+  }
+
+  .tileButton {
+    inset: 5px;
+    border-radius: 1rem;
+  }
+
+  .tileCaption {
+    right: 0.6rem;
+    bottom: 0.6rem;
+    left: 0.6rem;
+  }
+
+  .tileCaptionText {
+    min-height: 1.85rem;
+    padding: 0.34rem 0.62rem;
+    font-size: 0.6rem;
+  }
+
+  .edgeFade {
+    height: 44px;
+  }
+
+  .focusCard {
+    gap: 0.75rem;
+    padding: 0.8rem;
+  }
+
+  .focusHeader {
+    gap: 0.7rem;
+  }
+
+  .focusHeading {
+    justify-items: end;
+  }
+
+  .focusTitle {
+    font-size: 1.1rem;
+  }
+
+  .focusDetails {
+    grid-template-columns: 1fr;
+    align-items: stretch;
+  }
+
+  .focusActions {
+    justify-content: stretch;
+  }
+
+  .focusRepository {
+    font-size: 0.66rem;
+  }
+
+  .focusActionLink {
+    width: 100%;
+  }
+}
+
+@media (hover: none) {
+  .tileButton:hover {
+    transform: none;
+  }
+
+  .tileButton:hover::after {
+    opacity: 0;
+  }
+
+  .tileButton:hover .tileVisual {
+    transform: none;
+  }
+
+  .tileButton:hover .tileImage {
+    filter: var(--image-filter, none);
+    transform: none;
+  }
+
+  .tileButton:hover .tileCaption {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+}

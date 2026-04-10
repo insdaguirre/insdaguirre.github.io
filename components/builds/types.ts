@@ -22,4 +22,14 @@ export interface PastProject {
   name: string;
   href: string;
   repository: string;
+  imageSrc?: string;
+  imageAlt?: string;
+  imageWidth?: number;
+  imageHeight?: number;
+  badgeLabel?: string;
+  ctaLabel?: string;
+  demoUrl?: string;
+  demoLabel?: string;
+  ariaLabel?: string;
+  external?: boolean;
 }
