@@ -187,19 +187,36 @@ function getFocusTargetRect(
   viewerPadding: number,
   aspectRatio: number,
 ): RectDef {
-  const maxWidth = Math.min(rootRect.width - viewerPadding * 2, rootRect.width * 0.82);
+  const shellPadding = 16;
+  const headerHeight = 54;
+  const footerHeight = 92;
+  const internalGap = 14;
+  const chromeHeight =
+    shellPadding * 2 + headerHeight + footerHeight + internalGap * 2;
+  const maxWidth = Math.min(
+    rootRect.width - viewerPadding * 2,
+    rootRect.width * 0.84,
+  );
   const maxHeight = Math.min(
     rootRect.height - viewerPadding * 2,
-    rootRect.height * 0.74,
+    rootRect.height * 0.88,
   );
+  const availableImageWidth = Math.max(140, maxWidth - shellPadding * 2);
+  const availableImageHeight = Math.max(180, maxHeight - chromeHeight);
 
-  let width = Math.min(maxWidth, maxHeight * aspectRatio);
-  let height = width / aspectRatio;
+  let imageWidth = Math.min(
+    availableImageWidth,
+    availableImageHeight * aspectRatio,
+  );
+  let imageHeight = imageWidth / aspectRatio;
 
-  if (height > maxHeight) {
-    height = maxHeight;
-    width = height * aspectRatio;
+  if (imageHeight > availableImageHeight) {
+    imageHeight = availableImageHeight;
+    imageWidth = imageHeight * aspectRatio;
   }
+
+  const width = imageWidth + shellPadding * 2;
+  const height = imageHeight + chromeHeight;
 
   return {
     left: (rootRect.width - width) / 2,
@@ -793,30 +810,14 @@ export default function ArchiveDomeGallery({
             aria-labelledby={`archive-focus-title-${openedTile.tileInstanceIndex}`}
             onTransitionEnd={handleOpenedTileTransitionEnd}
           >
-            <div className={styles.focusMedia}>
-              {openedTile.project.imageSrc ? (
-                <img
-                  src={openedTile.project.imageSrc}
-                  alt={openedTile.project.imageAlt ?? openedTile.project.name}
-                  className={styles.focusImage}
-                />
-              ) : (
-                <div className={styles.focusFallback} aria-hidden="true">
-                  <span>{getProjectMonogram(openedTile.project.name)}</span>
-                </div>
-              )}
-            </div>
-
-            <div className={styles.focusShade} />
-
-            <div className={styles.focusTopRow}>
-              <div className={styles.focusEyebrowRow}>
-                <span className={styles.focusIndex}>
-                  {String(openedTile.projectOrder + 1).padStart(2, "0")}
-                </span>
-                <span className={styles.focusBadge}>
-                  {openedTile.project.badgeLabel ?? "GitHub"}
-                </span>
+            <div className={styles.focusHeader}>
+              <div className={styles.focusHeading}>
+                <h3
+                  id={`archive-focus-title-${openedTile.tileInstanceIndex}`}
+                  className={styles.focusTitle}
+                >
+                  {openedTile.project.name}
+                </h3>
               </div>
 
               <button
@@ -829,14 +830,32 @@ export default function ArchiveDomeGallery({
               </button>
             </div>
 
-            <div className={styles.focusInfo}>
-              <div className={styles.focusCopy}>
-                <h3
-                  id={`archive-focus-title-${openedTile.tileInstanceIndex}`}
-                  className={styles.focusTitle}
-                >
-                  {openedTile.project.name}
-                </h3>
+            <div className={styles.focusImageFrame}>
+              <div className={styles.focusMedia}>
+                {openedTile.project.imageSrc ? (
+                  <img
+                    src={openedTile.project.imageSrc}
+                    alt={openedTile.project.imageAlt ?? openedTile.project.name}
+                    className={styles.focusImage}
+                  />
+                ) : (
+                  <div className={styles.focusFallback} aria-hidden="true">
+                    <span>{getProjectMonogram(openedTile.project.name)}</span>
+                  </div>
+                )}
+              </div>
+            </div>
+
+            <div className={styles.focusDetails}>
+              <div className={styles.focusMeta}>
+                <div className={styles.focusEyebrowRow}>
+                  <span className={styles.focusIndex}>
+                    {String(openedTile.projectOrder + 1).padStart(2, "0")}
+                  </span>
+                  <span className={styles.focusBadge}>
+                    {openedTile.project.badgeLabel ?? "GitHub"}
+                  </span>
+                </div>
                 <p className={styles.focusRepository}>
                   {openedTile.project.repository}
                 </p>
