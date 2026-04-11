@@ -1,3 +1,5 @@
+import type { StaticImageData } from "next/image";
+
 export interface BuildLink {
   href: string;
   label: string;
@@ -32,4 +34,12 @@ export interface PastProject {
   demoLabel?: string;
   ariaLabel?: string;
   external?: boolean;
+}
+
+export interface RecentWorkSignal {
+  stage: string;
+  title: string;
+  detail: string;
+  image: StaticImageData;
+  imageAlt: string;
 }

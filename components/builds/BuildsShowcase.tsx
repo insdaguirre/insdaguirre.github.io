@@ -1,4 +1,5 @@
 import BuildCard from "@/components/builds/BuildCard";
+import RecentWorkSignalCard from "@/components/builds/RecentWorkSignalCard";
 import {
   buildProjects,
   buildsShowcaseCopy,
@@ -30,20 +31,7 @@ export default function BuildsShowcase() {
 
             <div className="grid gap-3 sm:grid-cols-3">
               {recentWorkSignals.map((signal) => (
-                <div
-                  key={signal.title}
-                  className="rounded-[1.4rem] border border-white/10 bg-black/22 px-4 py-4 backdrop-blur-sm"
-                >
-                  <p className="text-[0.62rem] uppercase tracking-[0.3em] text-white/36">
-                    {signal.stage}
-                  </p>
-                  <p className="mt-3 text-[1.05rem] uppercase tracking-[0.12em] text-white/88">
-                    {signal.title}
-                  </p>
-                  <p className="mt-2 text-sm leading-6 text-white/54">
-                    {signal.detail}
-                  </p>
-                </div>
+                <RecentWorkSignalCard key={signal.title} signal={signal} />
               ))}
             </div>
           </div>
