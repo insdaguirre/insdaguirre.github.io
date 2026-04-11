@@ -1,9 +1,17 @@
-import type { BuildProject, PastProject } from "@/components/builds/types";
+import type {
+  BuildProject,
+  PastProject,
+  RecentWorkSignal,
+} from "@/components/builds/types";
 import BigRedWebImage from "@/guis/BigRedWeb.png";
+import CraiiveImage from "@/guis/Craiive.png";
+import DeegzDevImage from "@/guis/DeegzDev.png";
 import InferEconImage from "@/guis/InferEcon.png";
 import InstaBotAwsImage from "@/guis/InstaBot_AWS.png";
 import InstaBotChromeImage from "@/guis/InstaBotChromeExtension.png";
 import InstaBotManualImage from "@/guis/InstaBotManual.png";
+import NarrativeImage from "@/guis/Narrative.png";
+import NestIQImage from "@/guis/NestIQ.png";
 import RecycLensImage from "@/guis/RecyLens_React.png";
 import SentimentWatchImage from "@/guis/SentimentWatchDemoGUI.png";
 import StockHubImage from "@/guis/StockHubDemoGUI.png";
@@ -74,23 +82,29 @@ export const buildsShowcaseCopy = {
     "My wheels are always spinning: one live platform, one beta waitlist-stage app, and one validation-stage acquisition workflow.",
 };
 
-export const recentWorkSignals = [
+export const recentWorkSignals: RecentWorkSignal[] = [
   {
     stage: "LIVE NOW",
     title: "Narrative",
     detail: "Production higher-ed intelligence and response workflows.",
+    image: NarrativeImage,
+    imageAlt: "Narrative GUI screenshot",
   },
   {
     stage: "BETA",
     title: "CRAIIVE",
     detail: "Waitlist-stage consumer AI for inventory, planning, and recipes.",
+    image: CraiiveImage,
+    imageAlt: "CRAIIVE GUI screenshot",
   },
   {
     stage: "VALIDATION",
     title: "NestIQ",
     detail: "Acquisition workflow direction being pressure-tested through validation.",
+    image: NestIQImage,
+    imageAlt: "NestIQ GUI screenshot",
   },
-] as const;
+];
 
 export const pastProjectsSectionCopy = {
   eyebrow: "Archive",
@@ -115,7 +129,7 @@ const pastProjectImageMap = {
     width: InferEconImage.width,
     height: InferEconImage.height,
   },
-  StockHUB: {
+  StockHub: {
     src: StockHubImage.src,
     width: StockHubImage.width,
     height: StockHubImage.height,
@@ -144,6 +158,11 @@ const pastProjectImageMap = {
     src: BigRedWebImage.src,
     width: BigRedWebImage.width,
     height: BigRedWebImage.height,
+  },
+  DeegzDev: {
+    src: DeegzDevImage.src,
+    width: DeegzDevImage.width,
+    height: DeegzDevImage.height,
   },
 } as const;
 
@@ -192,18 +211,18 @@ export const pastProjects: PastProject[] = [
     external: true,
   },
   {
-    name: "StockHUB",
+    name: "StockHub",
     href: "https://github.com/insdaguirre/Stock_Hub",
     repository: "insdaguirre/Stock_Hub",
-    imageSrc: pastProjectImageMap.StockHUB.src,
-    imageAlt: "StockHUB project preview",
-    imageWidth: pastProjectImageMap.StockHUB.width,
-    imageHeight: pastProjectImageMap.StockHUB.height,
+    imageSrc: pastProjectImageMap.StockHub.src,
+    imageAlt: "StockHub project preview",
+    imageWidth: pastProjectImageMap.StockHub.width,
+    imageHeight: pastProjectImageMap.StockHub.height,
     badgeLabel: "GitHub",
     ctaLabel: "Open Repository",
     demoUrl: "https://diego-aguirre.com/StockHub-Demo/",
     demoLabel: "View Demo",
-    ariaLabel: "Open StockHUB on GitHub",
+    ariaLabel: "Open StockHub on GitHub",
     external: true,
   },
   {
@@ -269,6 +288,21 @@ export const pastProjects: PastProject[] = [
     badgeLabel: "GitHub",
     ctaLabel: "Open Repository",
     ariaLabel: "Open BigRedWeb on GitHub",
+    external: true,
+  },
+  {
+    name: "Deegz.Dev",
+    href: "https://github.com/insdaguirre/Old-Personal-Site-From-College",
+    repository: "insdaguirre/Old-Personal-Site-From-College",
+    imageSrc: pastProjectImageMap.DeegzDev.src,
+    imageAlt: "Deegz.Dev project preview",
+    imageWidth: pastProjectImageMap.DeegzDev.width,
+    imageHeight: pastProjectImageMap.DeegzDev.height,
+    badgeLabel: "GitHub",
+    ctaLabel: "Open Repository",
+    demoUrl: "https://diego-aguirre.com/Old-Personal-Site-From-College/",
+    demoLabel: "View Demo",
+    ariaLabel: "Open Deegz.Dev on GitHub",
     external: true,
   },
 ];
