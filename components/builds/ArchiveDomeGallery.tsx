@@ -66,6 +66,47 @@ const DEFAULTS = {
 const clamp = (value: number, min: number, max: number) =>
   Math.min(Math.max(value, min), max);
 
+const gcd = (left: number, right: number): number => {
+  let a = Math.abs(left);
+  let b = Math.abs(right);
+
+  while (b !== 0) {
+    const remainder = a % b;
+    a = b;
+    b = remainder;
+  }
+
+  return a;
+};
+
+function getProjectStep(projectCount: number) {
+  if (projectCount <= 1) {
+    return 1;
+  }
+
+  const preferredStep = 5;
+  const maxOffset = Math.max(projectCount, preferredStep);
+
+  for (let offset = 0; offset <= maxOffset; offset += 1) {
+    const lowerCandidate = preferredStep - offset;
+
+    if (lowerCandidate >= 1 && gcd(lowerCandidate, projectCount) === 1) {
+      return lowerCandidate;
+    }
+
+    const upperCandidate = preferredStep + offset;
+
+    if (
+      upperCandidate < projectCount &&
+      gcd(upperCandidate, projectCount) === 1
+    ) {
+      return upperCandidate;
+    }
+  }
+
+  return 1;
+}
+
 const wrapAngleSigned = (degrees: number) => {
   const normalized = (((degrees + 180) % 360) + 360) % 360;
   return normalized - 180;
@@ -107,7 +148,7 @@ function buildItems(pool: PastProject[], segments: number): ItemDef[] {
   });
 
   const totalSlots = xColumns.length * slotsPerColumn;
-  const projectStep = normalizedProjects.length > 1 ? 5 : 1;
+  const projectStep = getProjectStep(normalizedProjects.length);
   const usedProjects = Array.from({ length: totalSlots }, (_, index) => {
     const projectIndex = (index * projectStep) % normalizedProjects.length;
     return normalizedProjects[projectIndex];

@@ -1,5 +1,6 @@
 import type { BuildProject, PastProject } from "@/components/builds/types";
 import BigRedWebImage from "@/guis/BigRedWeb.png";
+import DeegzDevImage from "@/guis/DeegzDev.png";
 import InferEconImage from "@/guis/InferEcon.png";
 import InstaBotAwsImage from "@/guis/InstaBot_AWS.png";
 import InstaBotChromeImage from "@/guis/InstaBotChromeExtension.png";
@@ -145,6 +146,11 @@ const pastProjectImageMap = {
     width: BigRedWebImage.width,
     height: BigRedWebImage.height,
   },
+  DeegzDev: {
+    src: DeegzDevImage.src,
+    width: DeegzDevImage.width,
+    height: DeegzDevImage.height,
+  },
 } as const;
 
 export const pastProjects: PastProject[] = [
@@ -269,6 +275,21 @@ export const pastProjects: PastProject[] = [
     badgeLabel: "GitHub",
     ctaLabel: "Open Repository",
     ariaLabel: "Open BigRedWeb on GitHub",
+    external: true,
+  },
+  {
+    name: "Deegz.Dev",
+    href: "https://github.com/insdaguirre/Old-Personal-Site-From-College",
+    repository: "insdaguirre/Old-Personal-Site-From-College",
+    imageSrc: pastProjectImageMap.DeegzDev.src,
+    imageAlt: "Deegz.Dev project preview",
+    imageWidth: pastProjectImageMap.DeegzDev.width,
+    imageHeight: pastProjectImageMap.DeegzDev.height,
+    badgeLabel: "GitHub",
+    ctaLabel: "Open Repository",
+    demoUrl: "https://diego-aguirre.com/Old-Personal-Site-From-College/",
+    demoLabel: "View Demo",
+    ariaLabel: "Open Deegz.Dev on GitHub",
     external: true,
   },
 ];
