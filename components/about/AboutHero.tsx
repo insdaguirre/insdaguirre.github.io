@@ -27,7 +27,7 @@ export default function AboutHero() {
       <div className="relative z-10 mx-auto flex w-full max-w-6xl flex-col px-6 pb-16 pt-16 sm:px-8 sm:pt-20 lg:px-12">
         <div className="max-w-4xl space-y-8">
           <div className="inline-flex items-center rounded-full border border-white/10 bg-black/35 px-4 py-2 text-[0.65rem] uppercase tracking-[0.34em] text-white/55 backdrop-blur-sm">
-            About Diego
+            About Me
           </div>
           <div className="space-y-6">
             <h1 className="max-w-5xl text-balance text-[clamp(3rem,8vw,6.6rem)] font-light uppercase leading-[0.92] tracking-[0.12em] text-white/94">

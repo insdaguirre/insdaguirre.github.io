@@ -71,7 +71,7 @@ export default function StaggeredMenu({
   const pathname = usePathname();
   const reducedMotion = useReducedMotion();
   const [open, setOpen] = useState(false);
-  const [textLines, setTextLines] = useState<string[]>(["Menu", "Close"]);
+  const [textLines, setTextLines] = useState<string[]>(["Explore", "Close"]);
   const openRef = useRef(false);
   const busyRef = useRef(false);
 
@@ -455,13 +455,16 @@ export default function StaggeredMenu({
       textCycleAnimRef.current?.kill();
 
       if (reducedMotion) {
-        setTextLines([opening ? "Menu" : "Close", opening ? "Close" : "Menu"]);
+        setTextLines([
+          opening ? "Explore" : "Close",
+          opening ? "Close" : "Explore",
+        ]);
         gsap.set(inner, { yPercent: -50 });
         return;
       }
 
-      const currentLabel = opening ? "Menu" : "Close";
-      const targetLabel = opening ? "Close" : "Menu";
+      const currentLabel = opening ? "Explore" : "Close";
+      const targetLabel = opening ? "Close" : "Explore";
       const sequence = [currentLabel, targetLabel, currentLabel, targetLabel];
 
       setTextLines(sequence);
@@ -674,7 +677,7 @@ export default function StaggeredMenu({
           {showSocials ? (
             <div className={styles.socials} aria-label="Social links">
               <h3 data-sm-social-title className={styles.socialsTitle}>
-                Elsewhere
+                Lets talk
               </h3>
               <ul className={styles.socialsList} role="list">
                 {socialItems.map((socialItem, index) => (
