@@ -216,6 +216,22 @@ function GitHubMarkIcon({ className }: { className?: string }) {
   );
 }
 
+function ExternalSiteIcon({ className }: { className?: string }) {
+  return (
+    <svg
+      viewBox="0 0 16 16"
+      aria-hidden="true"
+      focusable="false"
+      className={className}
+    >
+      <path
+        fill="currentColor"
+        d="M9.5 1a.75.75 0 0 0 0 1.5h1.69L6.72 6.97a.75.75 0 1 0 1.06 1.06l4.47-4.47V5.25a.75.75 0 0 0 1.5 0v-3.5A.75.75 0 0 0 13 1h-3.5ZM3.75 3A1.75 1.75 0 0 0 2 4.75v7.5C2 13.216 2.784 14 3.75 14h7.5A1.75 1.75 0 0 0 13 12.25V9a.75.75 0 0 0-1.5 0v3.25a.25.25 0 0 1-.25.25h-7.5a.25.25 0 0 1-.25-.25v-7.5a.25.25 0 0 1 .25-.25H7a.75.75 0 0 0 0-1.5H3.75Z"
+      />
+    </svg>
+  );
+}
+
 function getRectRelativeToRoot(rect: DOMRect, rootRect: DOMRect): RectDef {
   return {
     left: rect.left - rootRect.left,
@@ -231,6 +247,40 @@ function getProjectAspectRatio(project: PastProject) {
   }
 
   return 0.92;
+}
+
+function getProjectLinkKind(project: PastProject) {
+  return project.linkKind ?? "github";
+}
+
+function getProjectActionLabel(project: PastProject) {
+  return (
+    project.ctaLabel ??
+    (getProjectLinkKind(project) === "external" ? "Visit Site" : "Open Repository")
+  );
+}
+
+function getProjectActionAriaLabel(project: PastProject) {
+  if (project.ariaLabel) {
+    return project.ariaLabel;
+  }
+
+  return getProjectLinkKind(project) === "external"
+    ? `Visit ${project.name}`
+    : `Open GitHub repository for ${project.name}`;
+}
+
+function getProjectActionTitle(project: PastProject) {
+  return getProjectLinkKind(project) === "external"
+    ? getProjectActionLabel(project)
+    : "Open GitHub repository";
+}
+
+function getProjectBadgeLabel(project: PastProject) {
+  return (
+    project.badgeLabel ??
+    (getProjectLinkKind(project) === "external" ? "Live Site" : "GitHub")
+  );
 }
 
 function getViewerPadding(root: HTMLDivElement) {
@@ -819,7 +869,7 @@ export default function ArchiveDomeGallery({
                   aria-expanded={openedTile?.tileInstanceIndex === tileInstanceIndex}
                   aria-label={
                     item.project.ariaLabel ??
-                    `${item.project.ctaLabel ?? "Open Repository"} for ${item.project.name}`
+                    `${getProjectActionLabel(item.project)} for ${item.project.name}`
                   }
                   onClick={handleTileClick(item, tileInstanceIndex)}
                 >
@@ -918,7 +968,7 @@ export default function ArchiveDomeGallery({
                     {String(openedTile.projectOrder + 1).padStart(2, "0")}
                   </span>
                   <span className={styles.focusBadge}>
-                    {openedTile.project.badgeLabel ?? "GitHub"}
+                    {getProjectBadgeLabel(openedTile.project)}
                   </span>
                 </div>
                 <p className={styles.focusRepository}>
@@ -953,13 +1003,16 @@ export default function ArchiveDomeGallery({
                       : undefined
                   }
                   aria-label={
-                    openedTile.project.ariaLabel ??
-                    `Open GitHub repository for ${openedTile.project.name}`
+                    getProjectActionAriaLabel(openedTile.project)
                   }
-                  title="Open GitHub repository"
+                  title={getProjectActionTitle(openedTile.project)}
                   className={styles.focusIconLink}
                 >
-                  <GitHubMarkIcon className={styles.focusIcon} />
+                  {getProjectLinkKind(openedTile.project) === "external" ? (
+                    <ExternalSiteIcon className={styles.focusIcon} />
+                  ) : (
+                    <GitHubMarkIcon className={styles.focusIcon} />
+                  )}
                 </Link>
               </div>
             </div>
