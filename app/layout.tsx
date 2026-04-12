@@ -1,5 +1,6 @@
 import type { Metadata, Viewport } from "next";
 import JsonLd from "@/components/seo/JsonLd";
+import PlausibleAnalytics from "@/components/seo/PlausibleAnalytics";
 import { GeistSans } from "geist/font/sans";
 import { siteConfig } from "@/lib/site";
 import {
@@ -16,6 +17,11 @@ export const metadata: Metadata = {
   authors: [{ name: siteConfig.name, url: siteConfig.url }],
   creator: siteConfig.name,
   publisher: siteConfig.name,
+  verification: siteConfig.verification.google
+    ? {
+        google: siteConfig.verification.google,
+      }
+    : undefined,
   referrer: "origin-when-cross-origin",
   robots: {
     index: true,
@@ -74,6 +80,7 @@ export default function RootLayout({
     <html lang="en" className={GeistSans.variable}>
       <body className="overflow-x-hidden bg-black font-sans text-white antialiased">
         <JsonLd data={[createWebSiteSchema(), createPersonSchema()]} />
+        <PlausibleAnalytics />
         {children}
       </body>
     </html>

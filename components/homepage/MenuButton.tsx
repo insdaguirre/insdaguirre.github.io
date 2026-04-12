@@ -1,39 +1,22 @@
 "use client";
 
 import StaggeredMenu from "@/components/navigation/StaggeredMenu";
-
-const navigationItems = [
-  {
-    link: "/",
-    label: "Home",
-    ariaLabel: "Go to the home page",
-  },
-  {
-    link: "/about",
-    label: "About",
-    ariaLabel: "Go to the about page",
-  },
-  {
-    link: "/builds",
-    label: "Builds",
-    ariaLabel: "Go to the builds page",
-  },
-] as const;
-
-const socialItems = [
-  {
-    label: "GitHub",
-    link: "https://github.com/insdaguirre",
-  },
-] as const;
+import { siteConfig } from "@/lib/site";
 
 export default function MenuButton() {
   return (
     <StaggeredMenu
       position="right"
-      items={[...navigationItems]}
-      socialItems={[...socialItems]}
-      displaySocials={socialItems.length > 0}
+      items={siteConfig.primaryNavigationLinks.map((item) => ({
+        link: item.href,
+        label: item.label,
+        ariaLabel: item.ariaLabel ?? item.label,
+      }))}
+      socialItems={siteConfig.menuSocialLinks.map((item) => ({
+        label: item.label,
+        link: item.href,
+      }))}
+      displaySocials={siteConfig.menuSocialLinks.length > 0}
       displayItemNumbering
       panelEyebrow="Diego Aguirre"
       panelDescription="Builder, Technologist, & Founder"

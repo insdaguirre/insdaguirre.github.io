@@ -17,11 +17,18 @@ import SentimentWatchImage from "@/guis/SentimentWatchDemoGUI.png";
 import StockHubImage from "@/guis/StockHubDemoGUI.png";
 import TheraMistyImage from "@/guis/theramisty.png";
 
+export function getBuildProjectPath(slug: string) {
+  return `/builds/${slug}/`;
+}
+
 export const buildProjects: BuildProject[] = [
   {
     id: "Build 01",
+    slug: "narrative",
     label: "Featured Build",
     name: "Narrative",
+    image: NarrativeImage,
+    imageAlt: "Narrative platform interface for higher-ed intelligence workflows",
     status: "LIVE",
     statusTone: "live",
     description:
@@ -29,13 +36,50 @@ export const buildProjects: BuildProject[] = [
     summary:
       "Built as a production-minded system spanning monitoring, briefing, and response workflows for communications and student affairs teams.",
     tags: ["NEXT.JS", "MULTI-TENANT", "WORKFLOWS", "AI OPS"],
+    role:
+      "Founder-led product engineering, workflow design, and system shaping across monitoring, briefing, and response operations.",
+    stackSummary:
+      "Next.js, multi-tenant product architecture, workflow systems, and AI-assisted operating loops.",
+    statusSummary:
+      "Live and framed as a production-facing higher-ed intelligence product for daily team use.",
+    pageTitle: "Narrative | Higher-Ed Intelligence Platform by Diego Aguirre",
+    pageDescription:
+      "Narrative is a higher-ed intelligence and response platform by Diego Aguirre, built to help campus teams detect emerging narratives, prioritize risk, and coordinate action.",
+    productType: "Higher education intelligence platform",
+    detailSections: [
+      {
+        title: "What It Does",
+        body:
+          "Narrative is positioned as a daily operating layer for campus communications and student-affairs teams. The core job is to surface emerging narratives early, make them easier to interpret, and turn that signal into a response workflow that teams can actually run.",
+      },
+      {
+        title: "How It Is Framed",
+        body:
+          "The product is described in the repo as a production-minded system spanning monitoring, briefing, and coordinated response. That framing matters because it moves beyond passive listening into an operational tool that helps teams prioritize, brief, and act.",
+      },
+      {
+        title: "Why It Matters",
+        body:
+          "Higher-ed teams often need fast signal without adding more dashboard noise. Narrative is the strongest example in this site of product, workflow, and engineering being treated as one system rather than separate layers.",
+      },
+    ],
     primaryLink: {
-      href: "https://www.narrative-edu.com/",
-      label: "Visit Narrative",
-      ariaLabel: "Visit the Narrative live site",
-      external: true,
+      href: getBuildProjectPath("narrative"),
+      label: "View Narrative project page",
+      ariaLabel: "Open the Narrative project detail page",
     },
     secondaryLinks: [
+      {
+        href: getBuildProjectPath("narrative"),
+        label: "Project Page",
+        ariaLabel: "Open the Narrative project detail page",
+      },
+      {
+        href: "https://www.narrative-edu.com/",
+        label: "Live Site",
+        ariaLabel: "Visit the Narrative live site",
+        external: true,
+      },
       {
         href: "https://github.com/insdaguirre/narrative-edu",
         label: "GitHub",
@@ -43,11 +87,26 @@ export const buildProjects: BuildProject[] = [
         external: true,
       },
     ],
+    liveLink: {
+      href: "https://www.narrative-edu.com/",
+      label: "Visit Narrative",
+      ariaLabel: "Visit the Narrative live site",
+      external: true,
+    },
+    repositoryLink: {
+      href: "https://github.com/insdaguirre/narrative-edu",
+      label: "GitHub",
+      ariaLabel: "Open the Narrative GitHub repository",
+      external: true,
+    },
   },
   {
     id: "Build 02",
+    slug: "craiive",
     label: "Join Waitlist",
     name: "CRAIIVE",
+    image: CraiiveImage,
+    imageAlt: "CRAIIVE mobile interface for food inventory and recipe planning",
     status: "BETA",
     statusTone: "beta",
     description:
@@ -55,7 +114,52 @@ export const buildProjects: BuildProject[] = [
     summary:
       "Built to make grocery planning smarter, reduce waste, and turn everyday food habits into a more curated workflow.",
     tags: ["FLUTTER", "FIRESTORE", "FIREBASE", "GEMINI"],
+    role:
+      "Product shaping, mobile workflow design, and AI-assisted feature integration around inventory, planning, and recipe discovery.",
+    stackSummary:
+      "Flutter, Firestore, Firebase, and Gemini-backed AI features.",
+    statusSummary:
+      "Beta and currently positioned as a waitlist-stage consumer AI product.",
+    pageTitle: "CRAIIVE | AI Food Inventory App by Diego Aguirre",
+    pageDescription:
+      "CRAIIVE is an AI-powered food inventory app by Diego Aguirre, built to help users track ingredients, get expiration alerts, and discover recipes from what they already have.",
+    productType: "Consumer AI food inventory application",
+    detailSections: [
+      {
+        title: "What It Does",
+        body:
+          "CRAIIVE focuses on a familiar but messy consumer problem: people buy food without a clean picture of what they already have, when it expires, or what they can make next. The product centers that gap and turns inventory into a more guided workflow.",
+      },
+      {
+        title: "How It Is Positioned",
+        body:
+          "The current framing ties together tracking, expiration reminders, and recipe discovery. That makes the product more than a pantry log. It becomes a lightweight decision layer for planning meals, reducing waste, and getting more value from ingredients already at home.",
+      },
+      {
+        title: "Why It Matters",
+        body:
+          "CRAIIVE shows the consumer side of the portfolio: personal workflow improvement, tighter mobile UX constraints, and AI features used to simplify a repeated habit instead of adding novelty for its own sake.",
+      },
+    ],
     primaryLink: {
+      href: getBuildProjectPath("craiive"),
+      label: "View CRAIIVE project page",
+      ariaLabel: "Open the CRAIIVE project detail page",
+    },
+    secondaryLinks: [
+      {
+        href: getBuildProjectPath("craiive"),
+        label: "Project Page",
+        ariaLabel: "Open the CRAIIVE project detail page",
+      },
+      {
+        href: "https://www.craiive.com/",
+        label: "Live Site",
+        ariaLabel: "Visit the CRAIIVE beta waitlist site",
+        external: true,
+      },
+    ],
+    liveLink: {
       href: "https://www.craiive.com/",
       label: "Visit CRAIIVE",
       ariaLabel: "Visit the CRAIIVE beta waitlist site",
@@ -64,13 +168,55 @@ export const buildProjects: BuildProject[] = [
   },
   {
     id: "Build 03",
+    slug: "nestiq",
     label: "Validation Stage",
     name: "NestIQ",
+    image: NestIQImage,
+    imageAlt: "NestIQ interface concept for real estate acquisition workflows",
     status: "VALIDATION",
     statusTone: "validation",
     description:
       "A seller intelligence platform for real estate acquisition teams that surfaces which homeowners are most likely to sell and turns fragmented market signals into a ranked worklist.",
     tags: ["SELLER INTEL", "ACQUISITION", "LEAD SCORING", "WORKFLOWS"],
+    role:
+      "Validation-stage product framing, workflow modeling, and market-signal synthesis for acquisition operators.",
+    stackSummary:
+      "Seller-intelligence modeling, acquisition workflows, lead scoring, and ranked worklist design.",
+    statusSummary:
+      "Validation stage and currently being pressure-tested before a larger production commitment.",
+    pageTitle: "NestIQ | Seller Intelligence Platform by Diego Aguirre",
+    pageDescription:
+      "NestIQ is a seller intelligence platform concept by Diego Aguirre, built to help real estate acquisition teams rank homeowners, prioritize outreach, and act on fragmented market signals.",
+    productType: "Seller intelligence platform",
+    detailSections: [
+      {
+        title: "What It Does",
+        body:
+          "NestIQ is framed around a real acquisition bottleneck: teams collect scattered market signals but still need a sharper way to decide where to spend time first. The product centers on converting that fragmented information into a prioritized worklist.",
+      },
+      {
+        title: "How It Is Approached",
+        body:
+          "Unlike the live and beta products on the site, NestIQ is presented as a validation-stage build. That matters because the emphasis is on pressure-testing demand, workflow fit, and scoring logic before locking into a heavier implementation path.",
+      },
+      {
+        title: "Why It Matters",
+        body:
+          "NestIQ adds a different operating context to the portfolio: acquisition teams, ranked seller intent, and workflow systems built around prioritization. It broadens the proof surface without pretending the product is further along than it is.",
+      },
+    ],
+    primaryLink: {
+      href: getBuildProjectPath("nestiq"),
+      label: "View NestIQ project page",
+      ariaLabel: "Open the NestIQ project detail page",
+    },
+    secondaryLinks: [
+      {
+        href: getBuildProjectPath("nestiq"),
+        label: "Project Page",
+        ariaLabel: "Open the NestIQ project detail page",
+      },
+    ],
   },
 ];
 
@@ -306,3 +452,7 @@ export const pastProjects: PastProject[] = [
     external: true,
   },
 ];
+
+export function getBuildProjectBySlug(slug: string) {
+  return buildProjects.find((project) => project.slug === slug);
+}
