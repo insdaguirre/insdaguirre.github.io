@@ -1,3 +1,5 @@
+import AboutStackBand from "@/components/about/AboutStackBand";
+
 const values = [
   {
     label: "01",
@@ -102,6 +104,8 @@ export default function AboutContent() {
           </div>
         </aside>
       </div>
+
+      <AboutStackBand />
 
       <section className="mt-6 rounded-[2rem] border border-white/10 bg-black/26 p-6 backdrop-blur-sm sm:p-8">
         <div className="max-w-2xl">
