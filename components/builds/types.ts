@@ -42,6 +42,7 @@ export interface PastProject {
   name: string;
   href: string;
   repository: string;
+  linkKind?: "github" | "external";
   imageSrc?: string;
   imageAlt?: string;
   imageWidth?: number;

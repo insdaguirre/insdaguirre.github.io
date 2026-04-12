@@ -6,6 +6,7 @@ import type {
 import BigRedWebImage from "@/guis/BigRedWeb.png";
 import CraiiveImage from "@/guis/Craiive.png";
 import DeegzDevImage from "@/guis/DeegzDev.png";
+import FAlphaImage from "@/guis/fAlpha.png";
 import InferEconImage from "@/guis/InferEcon.png";
 import InstaBotAwsImage from "@/guis/InstaBot_AWS.png";
 import InstaBotChromeImage from "@/guis/InstaBotChromeExtension.png";
@@ -286,6 +287,11 @@ const pastProjectImageMap = {
     width: DeegzDevImage.width,
     height: DeegzDevImage.height,
   },
+  fAlpha: {
+    src: FAlphaImage.src,
+    width: FAlphaImage.width,
+    height: FAlphaImage.height,
+  },
 } as const;
 
 export const pastProjects: PastProject[] = [
@@ -425,6 +431,20 @@ export const pastProjects: PastProject[] = [
     demoUrl: "https://diego-aguirre.com/Old-Personal-Site-From-College/",
     demoLabel: "View Demo",
     ariaLabel: "Open Deegz.Dev on GitHub",
+    external: true,
+  },
+  {
+    name: "fAlpha",
+    href: "https://falpha.ai/",
+    repository: "falpha.ai",
+    linkKind: "external",
+    imageSrc: pastProjectImageMap.fAlpha.src,
+    imageAlt: "fAlpha project preview",
+    imageWidth: pastProjectImageMap.fAlpha.width,
+    imageHeight: pastProjectImageMap.fAlpha.height,
+    badgeLabel: "Live Site",
+    ctaLabel: "Visit Site",
+    ariaLabel: "Visit the fAlpha live site",
     external: true,
   },
 ];
