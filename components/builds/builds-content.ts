@@ -230,9 +230,9 @@ export const recentWorkSignals: RecentWorkSignal[] = [
 
 export const pastProjectsSectionCopy = {
   eyebrow: "Archive",
-  heading: "Past Projects",
+  heading: "Past Work",
   description:
-    "Earlier public repositories spanning analytics, automation, machine learning, and web product experiments.",
+    "Earlier ventures spanning AI-research, machine learning, quantitative finance, and product design.",
 };
 
 const pastProjectImageMap = {

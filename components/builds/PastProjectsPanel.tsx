@@ -1,4 +1,4 @@
-import ArchiveDomeGallery from "@/components/builds/ArchiveDomeGallery";
+import ArchivedBuildsEntry from "@/components/builds/ArchivedBuildsEntry";
 import {
   pastProjects,
   pastProjectsSectionCopy,
@@ -29,24 +29,22 @@ export default function PastProjectsPanel() {
                 {pastProjects.length.toString().padStart(2, "0")} archived builds
               </p>
               <p className="hidden text-[0.62rem] uppercase tracking-[0.26em] text-white/32 sm:block">
-                Drag to orbit. Click a tile to focus.
+                Click the computer to open the archive.
               </p>
             </div>
-            <div className="relative h-[32rem] sm:h-[40rem] lg:h-[46rem]">
-              <ArchiveDomeGallery
-                projects={pastProjects}
-                fit={1.2}
-                fitBasis="width"
-                minRadius={560}
-                maxRadius={1240}
-                padFactor={0.05}
-                maxVerticalRotationDeg={9}
-                dragSensitivity={20}
-                dragDampening={0.82}
-                segments={21}
-                overlayBlurColor="#080511"
-              />
-            </div>
+            <ArchivedBuildsEntry
+              projects={pastProjects}
+              fit={1.2}
+              fitBasis="width"
+              minRadius={560}
+              maxRadius={1240}
+              padFactor={0.05}
+              maxVerticalRotationDeg={9}
+              dragSensitivity={20}
+              dragDampening={0.82}
+              segments={21}
+              overlayBlurColor="#080511"
+            />
           </div>
         </div>
       </div>
