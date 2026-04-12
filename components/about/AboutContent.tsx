@@ -26,7 +26,7 @@ const experience = [
     body: "Skiing down sand-dunes, opening for Gunna & Flo-Rida, surfing the great-lakes, and running ultra-marathons.  ",
   },
   {
-    title: "Hottest Takes",
+    title: "Hot Takes",
     body: "Once Upon a Time in Hollywood is Tarantino's best film, and the best GUIs of this decade will be custom interfaces assembled live by AI.",
   },
 ] as const;
