@@ -9,6 +9,17 @@ interface FooterContentProps {
 export default function FooterContent({
   className = "",
 }: FooterContentProps) {
+  const footerNavLinks = siteConfig.footerLinks.map((link) =>
+    link.label === "Contact"
+      ? {
+          href: "https://github.com/insdaguirre",
+          label: "GitHub",
+          external: true,
+          ariaLabel: "Open Diego Aguirre's GitHub profile",
+        }
+      : link
+  );
+
   return (
     <div
       className={`mx-auto flex w-full max-w-6xl flex-col gap-6 px-6 py-8 sm:px-8 lg:flex-row lg:justify-between lg:gap-10 lg:px-12 lg:py-12 ${className}`.trim()}
@@ -30,13 +41,13 @@ export default function FooterContent({
       </div>
       <div className="space-y-3">
         <p className="text-[0.68rem] uppercase tracking-[0.36em] text-white/38">
-          Navigate
+          Explore
         </p>
         <nav
           aria-label="Footer"
           className="flex flex-wrap items-center gap-5 text-sm text-white/65"
         >
-          {siteConfig.footerLinks.map((link) => (
+          {footerNavLinks.map((link) => (
             <Link
               key={link.href}
               href={link.href}

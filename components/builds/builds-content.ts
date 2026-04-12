@@ -64,19 +64,15 @@ export const buildProjects: BuildProject[] = [
       },
     ],
     primaryLink: {
-      href: getBuildProjectPath("narrative"),
-      label: "View Narrative project page",
-      ariaLabel: "Open the Narrative project detail page",
+      href: "https://github.com/insdaguirre/narrative-edu",
+      label: "Open Narrative on GitHub",
+      ariaLabel: "Open the Narrative GitHub repository",
+      external: true,
     },
     secondaryLinks: [
       {
-        href: getBuildProjectPath("narrative"),
-        label: "Project Page",
-        ariaLabel: "Open the Narrative project detail page",
-      },
-      {
         href: "https://www.narrative-edu.com/",
-        label: "Live Site",
+        label: "Live Demo",
         ariaLabel: "Visit the Narrative live site",
         external: true,
       },
@@ -85,6 +81,7 @@ export const buildProjects: BuildProject[] = [
         label: "GitHub",
         ariaLabel: "Open the Narrative GitHub repository",
         external: true,
+        icon: "github",
       },
     ],
     liveLink: {
@@ -103,7 +100,7 @@ export const buildProjects: BuildProject[] = [
   {
     id: "Build 02",
     slug: "craiive",
-    label: "Join Waitlist",
+    label: "Currently in beta",
     name: "CRAIIVE",
     image: CraiiveImage,
     imageAlt: "CRAIIVE mobile interface for food inventory and recipe planning",
@@ -141,20 +138,10 @@ export const buildProjects: BuildProject[] = [
           "CRAIIVE shows the consumer side of the portfolio: personal workflow improvement, tighter mobile UX constraints, and AI features used to simplify a repeated habit instead of adding novelty for its own sake.",
       },
     ],
-    primaryLink: {
-      href: getBuildProjectPath("craiive"),
-      label: "View CRAIIVE project page",
-      ariaLabel: "Open the CRAIIVE project detail page",
-    },
     secondaryLinks: [
       {
-        href: getBuildProjectPath("craiive"),
-        label: "Project Page",
-        ariaLabel: "Open the CRAIIVE project detail page",
-      },
-      {
         href: "https://www.craiive.com/",
-        label: "Live Site",
+        label: "Join Waitlist",
         ariaLabel: "Visit the CRAIIVE beta waitlist site",
         external: true,
       },
@@ -205,18 +192,7 @@ export const buildProjects: BuildProject[] = [
           "NestIQ adds a different operating context to the portfolio: acquisition teams, ranked seller intent, and workflow systems built around prioritization. It broadens the proof surface without pretending the product is further along than it is.",
       },
     ],
-    primaryLink: {
-      href: getBuildProjectPath("nestiq"),
-      label: "View NestIQ project page",
-      ariaLabel: "Open the NestIQ project detail page",
-    },
-    secondaryLinks: [
-      {
-        href: getBuildProjectPath("nestiq"),
-        label: "Project Page",
-        ariaLabel: "Open the NestIQ project detail page",
-      },
-    ],
+    secondaryLinks: [],
   },
 ];
 

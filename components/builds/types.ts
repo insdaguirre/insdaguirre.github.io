@@ -5,6 +5,7 @@ export interface BuildLink {
   label: string;
   external?: boolean;
   ariaLabel?: string;
+  icon?: "github";
 }
 
 export interface ProjectDetailSection {

@@ -76,10 +76,10 @@ const linkedinUrl = readOptionalEnv("LINKEDIN_URL");
 const resumeUrl = readOptionalEnv("RESUME_URL");
 
 const githubProfileLink: SiteLink = {
-  href: "https://github.com/insdaguirre",
+  href: "https://www.linkedin.com/in/diego-aguirre-110729219/",
   label: "Contact",
   external: true,
-  ariaLabel: "Open Diego Aguirre's GitHub profile",
+  ariaLabel: "Open Diego Aguirre's LinkedIn profile",
 };
 
 const instagramProfileLink: SiteLink = {
@@ -246,4 +246,3 @@ export function createPageMetadata({
     },
   };
 }
-
