@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { buildProjects } from "@/components/builds/builds-content";
+import { getBuildProjectPath } from "@/components/builds/builds-content";
 import PillLink from "@/components/shared/PillLink";
 
 const focusAreas = [
@@ -147,19 +148,19 @@ export default function HomeNarrativeSection() {
                     </p>
                     <div className="mt-4 flex flex-wrap gap-3 text-[0.68rem] uppercase tracking-[0.24em] text-white/56">
                       <Link
-                        href="/builds/#projects"
+                        href={getBuildProjectPath(project.slug)}
                         className="transition hover:text-white"
                       >
-                        View on Builds
+                        Project Page
                       </Link>
-                      {project.primaryLink ? (
+                      {project.liveLink ? (
                         <Link
-                          href={project.primaryLink.href}
-                          target={project.primaryLink.external ? "_blank" : undefined}
-                          rel={project.primaryLink.external ? "noreferrer" : undefined}
+                          href={project.liveLink.href}
+                          target={project.liveLink.external ? "_blank" : undefined}
+                          rel={project.liveLink.external ? "noreferrer" : undefined}
                           className="transition hover:text-white"
                         >
-                          {project.primaryLink.label}
+                          {project.liveLink.label}
                         </Link>
                       ) : null}
                     </div>
@@ -169,8 +170,8 @@ export default function HomeNarrativeSection() {
             </div>
           </div>
         </section>
+
       </div>
     </section>
   );
 }
-

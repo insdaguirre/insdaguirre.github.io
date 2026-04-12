@@ -99,6 +99,24 @@ npm run build
 
 That command generates the static site in `out/`.
 
+Run linting with the ESLint CLI:
+
+```bash
+npm run lint
+```
+
+Run the SEO smoke test against built output:
+
+```bash
+npm run seo:smoke
+```
+
+Run the full validation workflow used by CI and deploys:
+
+```bash
+npm run validate
+```
+
 Run type checking:
 
 ```bash
@@ -107,26 +125,60 @@ npm run typecheck
 
 `typecheck` depends on Next-generated types in `.next/types`, so run `npm run dev` or `npm run build` first in a clean checkout.
 
+## Environment Variables
+
+Optional deployment-time environment variables are documented in `.env.example`.
+
+- `CONTACT_EMAIL` publishes a direct email CTA.
+- `LINKEDIN_URL` publishes a LinkedIn CTA and adds it to structured data.
+- `RESUME_URL` publishes a resume CTA. This can be an external URL or a local file path such as `/resume.pdf`.
+- `GOOGLE_SITE_VERIFICATION` adds the Google Search Console verification meta tag through Next metadata.
+- `PLAUSIBLE_DOMAIN` enables Plausible analytics.
+- `PLAUSIBLE_SCRIPT_SRC` optionally overrides the default Plausible script URL for self-hosted setups.
+- `PLAUSIBLE_API_HOST` optionally points event collection to a self-hosted Plausible API host.
+
 ## Deployment
 
 Deployment is wired for **GitHub Pages**.
 
 - The GitHub Actions workflow lives at [deploy-pages.yml](/Users/diego/DeegzDev-Alpha/.github/workflows/deploy-pages.yml).
 - Pushes to the `prod` branch trigger a Pages build.
-- The workflow runs `npm ci`, then `npm run build`, and uploads `./out`.
+- The workflow reads optional site/profile/search/analytics values from GitHub repository variables.
+- The workflow runs `npm ci`, then `npm run validate`, and uploads `./out`.
 - The custom domain is configured through `CNAME` as `diego-aguirre.com`.
 
 This setup fits the project well: no runtime server requirement, low hosting complexity, and predictable static artifacts.
+
+### Search Console Readiness
+
+The repo can publish the verification token, but Search Console submission still requires owner access after deploy.
+
+1. Add `GOOGLE_SITE_VERIFICATION` as a GitHub repository variable.
+2. Deploy from the `prod` branch.
+3. Confirm the verification meta tag is present in page source on `/`.
+4. In Google Search Console, verify the property and submit `https://diego-aguirre.com/sitemap.xml`.
 
 ## Verification Notes
 
 Current branch behavior:
 
-- `npm run build` completes successfully and exports the site.
-- `npm run typecheck` passes after Next has generated `.next/types`.
-- `npm run lint` still points to deprecated `next lint` and currently opens Next's interactive ESLint setup flow rather than acting as a stable CI check.
+- `npm run typecheck` validates the TypeScript surfaces.
+- `npm run lint` runs non-interactive ESLint CLI checks.
+- `npm run build` exports the site without depending on implicit lint execution inside `next build`.
+- `npm run seo:smoke` verifies built metadata, JSON-LD, routes, `robots.txt`, `sitemap.xml`, icon wiring, and the default social image.
+- `npm run validate` is the authoritative local and CI workflow.
 
-In practice, `build` is the authoritative verification path today.
+## Post-Deploy Checks
+
+After deployment, verify these URLs and source tags:
+
+1. Main pages: `/`, `/about/`, `/builds/`
+2. Project pages: `/builds/narrative/`, `/builds/craiive/`, `/builds/nestiq/`
+3. Crawl surfaces: `/robots.txt`, `/sitemap.xml`
+4. Metadata: canonical, title, description, Open Graph, Twitter card, JSON-LD
+5. Social previews: root preview image and project-page cards in a social debugger
+6. Analytics: Plausible script only appears when `PLAUSIBLE_DOMAIN` is configured
+7. Search Console readiness: Google verification meta tag appears when `GOOGLE_SITE_VERIFICATION` is configured
 
 ## Positioning
 

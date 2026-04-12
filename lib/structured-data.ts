@@ -56,6 +56,53 @@ export function createAboutPageSchema(description: string) {
   };
 }
 
+interface CreateProjectPageSchemaOptions {
+  name: string;
+  description: string;
+  path: string;
+  productType: string;
+  tags: string[];
+  status?: string;
+  externalLinks?: string[];
+}
+
+export function createProjectPageSchema({
+  name,
+  description,
+  path,
+  productType,
+  tags,
+  status,
+  externalLinks = [],
+}: CreateProjectPageSchemaOptions) {
+  return {
+    "@context": "https://schema.org",
+    "@type": "WebPage",
+    name,
+    url: absoluteUrl(path),
+    description,
+    isPartOf: {
+      "@type": "CollectionPage",
+      name: "Builds by Diego Aguirre",
+      url: absoluteUrl("/builds/"),
+    },
+    mainEntity: {
+      "@type": "SoftwareApplication",
+      name,
+      description,
+      applicationCategory: productType,
+      creator: {
+        "@type": "Person",
+        name: siteConfig.name,
+        url: siteConfig.url,
+      },
+      keywords: tags.join(", "),
+      ...(status ? { creativeWorkStatus: status } : {}),
+      ...(externalLinks.length ? { sameAs: externalLinks } : {}),
+    },
+  };
+}
+
 interface CollectionItem {
   name: string;
   url: string;

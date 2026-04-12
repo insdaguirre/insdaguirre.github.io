@@ -18,6 +18,14 @@ concurrency:
 jobs:
   build:
     runs-on: ubuntu-latest
+    env:
+      CONTACT_EMAIL: ${{ vars.CONTACT_EMAIL }}
+      LINKEDIN_URL: ${{ vars.LINKEDIN_URL }}
+      RESUME_URL: ${{ vars.RESUME_URL }}
+      GOOGLE_SITE_VERIFICATION: ${{ vars.GOOGLE_SITE_VERIFICATION }}
+      PLAUSIBLE_DOMAIN: ${{ vars.PLAUSIBLE_DOMAIN }}
+      PLAUSIBLE_SCRIPT_SRC: ${{ vars.PLAUSIBLE_SCRIPT_SRC }}
+      PLAUSIBLE_API_HOST: ${{ vars.PLAUSIBLE_API_HOST }}
 
     steps:
       - name: Checkout
@@ -35,8 +43,8 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
-      - name: Build static site
-        run: npm run build
+      - name: Validate and build static site
+        run: npm run validate
 
       - name: Upload Pages artifact
         uses: actions/upload-pages-artifact@v3

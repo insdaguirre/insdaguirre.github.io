@@ -1,5 +1,4 @@
 import ArchiveDomeGallery from "@/components/builds/ArchiveDomeGallery";
-import ProjectArchiveIndex from "@/components/builds/ProjectArchiveIndex";
 import {
   pastProjects,
   pastProjectsSectionCopy,
@@ -48,7 +47,6 @@ export default function PastProjectsPanel() {
                 overlayBlurColor="#080511"
               />
             </div>
-            <ProjectArchiveIndex projects={pastProjects} />
           </div>
         </div>
       </div>

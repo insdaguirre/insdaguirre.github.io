@@ -7,17 +7,34 @@ export interface BuildLink {
   ariaLabel?: string;
 }
 
+export interface ProjectDetailSection {
+  title: string;
+  body: string;
+}
+
 export interface BuildProject {
   id: string;
+  slug: string;
   name: string;
   description: string;
   tags: string[];
+  image: StaticImageData;
+  imageAlt: string;
   status?: string;
   statusTone?: "default" | "live" | "beta" | "validation";
   label?: string;
   summary?: string;
+  role: string;
+  stackSummary: string;
+  statusSummary: string;
+  pageTitle: string;
+  pageDescription: string;
+  productType: string;
+  detailSections: ProjectDetailSection[];
   primaryLink?: BuildLink;
   secondaryLinks?: BuildLink[];
+  liveLink?: BuildLink;
+  repositoryLink?: BuildLink;
 }
 
 export interface PastProject {

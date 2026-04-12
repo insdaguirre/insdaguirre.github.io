@@ -6,8 +6,11 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint",
-    "typecheck": "tsc --noEmit"
+    "lint": "eslint . --ext .js,.jsx,.ts,.tsx --max-warnings=0 --ignore-path .gitignore --ignore-pattern out --ignore-pattern next-env.d.ts",
+    "lint:fix": "npm run lint -- --fix",
+    "typecheck": "tsc --noEmit",
+    "seo:smoke": "node ./scripts/seo-smoke.mjs",
+    "validate": "npm run typecheck && npm run lint && npm run build && npm run seo:smoke"
   },
   "dependencies": {
     "@react-three/drei": "^10.0.0",
@@ -26,6 +29,8 @@
     "@types/react-dom": "^19.0.0",
     "@types/three": "^0.169.0",
     "autoprefixer": "^10.4.21",
+    "eslint": "8.57.0",
+    "eslint-config-next": "15.5.14",
     "postcss": "^8.4.32",
     "tailwindcss": "^3.4.6",
     "typescript": "^5.0.0"
