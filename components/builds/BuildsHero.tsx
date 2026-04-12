@@ -30,9 +30,9 @@ export default function BuildsHero() {
               Product systems built for velocity and signal.
             </h1>
             <p className="max-w-2xl text-pretty text-base leading-8 text-white/66 sm:text-lg">
-              A tighter view into the products, experiments, and operational
-              layers I ship. Clean systems, sharp interfaces, and execution that
-              stays close to the user.
+              A tighter view into the AI products, experiments, and operational
+              layers I ship across higher-ed intelligence, consumer software,
+              and acquisition workflows.
             </p>
           </div>
           <div className="flex flex-wrap gap-4">

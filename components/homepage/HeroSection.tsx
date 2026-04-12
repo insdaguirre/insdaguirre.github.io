@@ -23,7 +23,9 @@ export default function HeroSection({
       style={reducedMotion ? undefined : { opacity, y, scale }}
     >
       <div className="text-center">
-        <h1 className="sr-only">Diego Aguirre</h1>
+        <h1 className="sr-only">
+          Diego Aguirre, product-minded software engineer and founder
+        </h1>
         <div
           aria-hidden="true"
           className="relative mx-auto h-[clamp(16rem,24vw,20rem)] w-[min(100vw,95rem)]"
