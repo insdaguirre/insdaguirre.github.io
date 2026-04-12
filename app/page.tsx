@@ -1,39 +1,26 @@
-"use client";
-
-import dynamic from "next/dynamic";
-import { useRef } from "react";
-import HeroSection from "@/components/homepage/HeroSection";
-import IdentitySection from "@/components/homepage/IdentitySection";
-import MenuButton from "@/components/homepage/MenuButton";
-import AboutHeroBackground from "@/components/shared/AboutHeroBackground";
+import type { Metadata } from "next";
+import HomeExperience from "@/components/homepage/HomeExperience";
+import HomeNarrativeSection from "@/components/homepage/HomeNarrativeSection";
+import JsonLd from "@/components/seo/JsonLd";
 import RevealFooterLayout from "@/components/shared/RevealFooterLayout";
-import { useSectionScrollProgress } from "@/hooks/useSectionScrollProgress";
+import { createPageMetadata } from "@/lib/site";
+import { createHomePageSchema } from "@/lib/structured-data";
 
-const ModelStage = dynamic(() => import("@/components/homepage/ModelStage"), {
-  ssr: false,
+export const metadata: Metadata = createPageMetadata({
+  title: "Diego Aguirre | Product Engineer, Founder, and Builder",
+  description:
+    "Product-minded software engineer and founder building AI products, decision systems, and premium interfaces. Explore Diego Aguirre's builds, background, and current work.",
+  path: "/",
 });
 
 export default function Home() {
-  const scrollRef = useRef<HTMLDivElement>(null);
-  const scrollYProgress = useSectionScrollProgress(scrollRef);
-
   return (
-    <RevealFooterLayout>
-      <MenuButton />
-      <section
-        ref={scrollRef}
-        aria-label="Intro sequence"
-        className="relative h-[320vh]"
-      >
-        <div className="sticky top-0 h-screen overflow-hidden">
-          <div className="absolute inset-0 z-0">
-            <AboutHeroBackground />
-          </div>
-          <HeroSection scrollYProgress={scrollYProgress} />
-          <ModelStage scrollYProgress={scrollYProgress} />
-          <IdentitySection scrollYProgress={scrollYProgress} />
-        </div>
-      </section>
-    </RevealFooterLayout>
+    <>
+      <JsonLd data={createHomePageSchema()} />
+      <RevealFooterLayout>
+        <HomeExperience />
+        <HomeNarrativeSection />
+      </RevealFooterLayout>
+    </>
   );
 }

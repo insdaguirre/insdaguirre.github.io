@@ -34,8 +34,8 @@ export default function FooterContent({
           Diego Aguirre
         </p>
         <p className="max-w-xl text-sm leading-6 text-white/58">
-          Builder, technologist, founder. Shipping with intent and a
-          bias for signal.
+          Product-minded software engineer, builder, and founder. Shipping with
+          intent and a bias for signal.
         </p>
       </div>
       <nav

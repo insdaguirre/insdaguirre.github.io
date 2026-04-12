@@ -27,17 +27,17 @@ export default function AboutHero() {
       <div className="relative z-10 mx-auto flex w-full max-w-6xl flex-col px-6 pb-16 pt-16 sm:px-8 sm:pt-20 lg:px-12">
         <div className="max-w-4xl space-y-8">
           <div className="inline-flex items-center rounded-full border border-white/10 bg-black/35 px-4 py-2 text-[0.65rem] uppercase tracking-[0.34em] text-white/55 backdrop-blur-sm">
-            About Me
+            About Diego
           </div>
           <div className="space-y-6">
             <h1 className="max-w-5xl text-balance text-[clamp(3rem,8vw,6.6rem)] font-light uppercase leading-[0.92] tracking-[0.12em] text-white/94">
               Building with intent, range, and real conviction.
             </h1>
             <p className="max-w-2xl text-pretty text-base leading-8 text-white/66 sm:text-lg">
-              I operate at the intersection of product thinking, systems design,
-              and founder-level execution. The work is deliberate: clear
-              decisions, sharp interfaces, and products that stay close to the
-              user.
+              I operate at the intersection of product thinking, software
+              engineering, systems design, and founder-level execution. The
+              work is deliberate: clear decisions, sharp interfaces, and
+              products that stay close to the user.
             </p>
           </div>
           <div className="flex flex-wrap gap-4">

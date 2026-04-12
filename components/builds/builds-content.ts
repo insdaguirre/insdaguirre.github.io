@@ -77,9 +77,9 @@ export const buildProjects: BuildProject[] = [
 export const buildsShowcaseCopy = {
   eyebrow: "Recent Work",
   heading:
-    "Shipping across higher-ed intelligence, consumer AI, and acquisition workflows.",
+    "Shipping AI products across higher-ed intelligence, consumer software, and acquisition workflows.",
   description:
-    "My wheels are always spinning: one live platform, one beta waitlist-stage app, and one validation-stage acquisition workflow.",
+    "A live higher-ed intelligence platform, a beta consumer AI product, and a validation-stage acquisition workflow system.",
 };
 
 export const recentWorkSignals: RecentWorkSignal[] = [
@@ -88,21 +88,21 @@ export const recentWorkSignals: RecentWorkSignal[] = [
     title: "Narrative",
     detail: "Production higher-ed intelligence and response workflows.",
     image: NarrativeImage,
-    imageAlt: "Narrative GUI screenshot",
+    imageAlt: "Narrative platform interface for higher-ed intelligence workflows",
   },
   {
     stage: "BETA",
     title: "CRAIIVE",
     detail: "Waitlist-stage consumer AI for inventory, planning, and recipes.",
     image: CraiiveImage,
-    imageAlt: "CRAIIVE GUI screenshot",
+    imageAlt: "CRAIIVE mobile interface for food inventory and recipe planning",
   },
   {
     stage: "VALIDATION",
     title: "NestIQ",
     detail: "Acquisition workflow direction being pressure-tested through validation.",
     image: NestIQImage,
-    imageAlt: "NestIQ GUI screenshot",
+    imageAlt: "NestIQ interface concept for real estate acquisition workflows",
   },
 ];
 
@@ -110,7 +110,7 @@ export const pastProjectsSectionCopy = {
   eyebrow: "Archive",
   heading: "Past Projects",
   description:
-    "Selected public repositories from earlier product, automation, and web experiments.",
+    "Earlier public repositories spanning analytics, automation, machine learning, and web product experiments.",
 };
 
 const pastProjectImageMap = {

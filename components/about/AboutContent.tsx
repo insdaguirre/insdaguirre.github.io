@@ -27,7 +27,7 @@ const experience = [
   },
   {
     title: "Hottest Takes",
-    body: "OUATIH is Tarantino's best film andthe top GUIs of this decade will be custom interfaces assembled live by AI. ",
+    body: "Once Upon a Time in Hollywood is Tarantino's best film, and the best GUIs of this decade will be custom interfaces assembled live by AI.",
   },
 ] as const;
 
@@ -55,13 +55,15 @@ export default function AboutContent() {
           <div className="mt-6 space-y-5 text-base leading-8 text-white/66">
             <p>
               I am most energized by products that need both taste and
-              discipline. The kind of work where strong framing, technical
-              judgment, and user empathy all have to meet in the same place.
+              discipline. The kind of work where product framing, software
+              engineering judgment, and user empathy all have to meet in the
+              same place.
             </p>
             <p>
-              I have worked across research, engineering, and product, 
-              and that range has shaped how I build. I care about clarity early, 
-              momentum during execution, and products that stay grounded in real user behavior.
+              I have worked across research, engineering, and product, and that
+              range has shaped how I build. I care about clarity early,
+              momentum during execution, and products that stay grounded in
+              real user behavior.
             </p>
           </div>
         </section>
@@ -165,10 +167,12 @@ export default function AboutContent() {
           </ul>
           <div className="mt-6 rounded-[1.5rem] border border-white/10 bg-[linear-gradient(135deg,rgba(82,39,255,0.15),rgba(0,0,0,0.14)_45%,rgba(255,0,209,0.08)_100%)] p-5">
             <p className="text-[0.64rem] uppercase tracking-[0.28em] text-white/36">
-              Ethical Work!!
+              Ethical Product Judgment
             </p>
             <p className="mt-3 text-sm leading-7 text-white/66">
-              Software is never neutral in practice. I try to be thoughtful about what a product encourages, rewards, and normalizes once it is in someone’s hands.
+              Software is never neutral in practice. I try to be thoughtful
+              about what a product encourages, rewards, and normalizes once it
+              is in someone&apos;s hands.
             </p>
           </div>
         </div>

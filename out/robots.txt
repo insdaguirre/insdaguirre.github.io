@@ -1,0 +1,5 @@
+User-Agent: *
+Allow: /
+
+Host: https://diego-aguirre.com
+Sitemap: https://diego-aguirre.com/sitemap.xml
