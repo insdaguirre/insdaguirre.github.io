@@ -85,7 +85,7 @@ export default function AboutBuildsTeaser() {
   const isActivating = phase === "activating" || phase === "expanding";
 
   return (
-    <section className="relative mt-10 mb-10 sm:mt-14 sm:mb-12 lg:mt-16 lg:mb-16 overflow-hidden">
+    <section className="relative overflow-hidden border-t border-b border-white/15">
       {/* Background matching AboutHero and AboutSignalBand with animated waves */}
       <div aria-hidden="true" className="absolute inset-0">
         <Waves
@@ -119,12 +119,12 @@ export default function AboutBuildsTeaser() {
         />
       ) : null}
 
-      <div className="relative z-10 flex flex-col items-center">
+      <div className="relative z-10 flex flex-col items-center py-8 sm:py-[2.8rem] lg:py-[3.2rem]">
         <p className="text-center text-[0.62rem] uppercase tracking-[0.32em] text-white/38">
-          Click to open /builds.
+          Drag or click to open /builds.
         </p>
         <motion.div
-          className="relative mt-5 h-[20rem] w-full max-w-[52rem] sm:h-[26rem] sm:max-w-[60rem] lg:h-[32rem] lg:max-w-[72rem]"
+          className="relative mt-5 h-[22rem] w-full max-w-[42rem] sm:h-[29rem] sm:max-w-[51rem] lg:h-[37rem] lg:max-w-[64rem]"
           initial={false}
           animate={{
             scale: !reducedMotion && isActivating ? 1.04 : 1,
@@ -145,7 +145,7 @@ export default function AboutBuildsTeaser() {
             hoverScale={1.14}
             idleEuler={ABOUT_IDLE_EULER}
             idleSpinSpeed={0.045}
-            interactionMode="click"
+            interactionMode="drag"
             lightingVariant="default"
             materialVariant="source"
             modelUrl={ABOUT_MODEL_URL}
