@@ -71,7 +71,7 @@ export default function CurvedLoop({
   itemWidth = 156,
 }: CurvedLoopProps) {
   const reducedMotion = useReducedMotion();
-  const iconItems = items ?? [];
+  const iconItems = useMemo(() => items ?? [], [items]);
   const isIconMode = iconItems.length > 0;
   const text = useMemo(() => {
     const trimmedText = marqueeText.replace(/\s+$/, "");
