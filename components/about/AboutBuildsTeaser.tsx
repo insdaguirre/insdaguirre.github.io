@@ -84,7 +84,16 @@ export default function AboutBuildsTeaser() {
   const isActivating = phase === "activating" || phase === "expanding";
 
   return (
-    <section className="mt-10 mb-10 sm:mt-14 sm:mb-12 lg:mt-16 lg:mb-16">
+    <section className="relative mt-10 mb-10 sm:mt-14 sm:mb-12 lg:mt-16 lg:mb-16 overflow-hidden rounded-[2.5rem] border border-white/10">
+      {/* Background matching AboutHero and AboutSignalBand */}
+      <div
+        aria-hidden="true"
+        className="absolute inset-0 bg-[radial-gradient(circle_at_50%_16%,rgba(255,255,255,0.06),transparent_18%),radial-gradient(circle_at_22%_28%,rgba(82,39,255,0.105),transparent_18%),radial-gradient(circle_at_78%_32%,rgba(255,0,209,0.06),transparent_16%),linear-gradient(180deg,rgba(0,0,0,0.105),rgba(0,0,0,0.255)_44%,rgba(0,0,0,0.63)_100%)]"
+      />
+      <div className="absolute inset-0 bg-[linear-gradient(135deg,rgba(255,255,255,0.03),transparent_16%,transparent_84%,rgba(255,255,255,0.015))]" />
+      <div className="absolute left-[10%] top-[18%] h-44 w-44 rounded-full bg-[#5227ff]/12 blur-[100px]" />
+      <div className="absolute right-[14%] top-[24%] h-36 w-36 rounded-full bg-[#ff00d1]/8 blur-[90px]" />
+
       {/* Full-viewport fade-to-black overlay, rendered via portal-like fixed positioning */}
       {fading ? (
         <motion.div
@@ -97,7 +106,7 @@ export default function AboutBuildsTeaser() {
         />
       ) : null}
 
-      <div className="flex flex-col items-center">
+      <div className="relative z-10 flex flex-col items-center">
         <p className="text-center text-[0.62rem] uppercase tracking-[0.32em] text-white/38">
           Click to open /builds.
         </p>
