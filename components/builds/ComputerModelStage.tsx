@@ -28,6 +28,7 @@ const SCREEN_FACING_EULER = new THREE.Euler(0, 0, 0);
 const IDLE_TILT_EULER = new THREE.Euler(-0.2, -0.56, 0.04);
 
 const INTERACTIVE_PHASES = new Set<Phase>(["idle", "hover"]);
+const LOCKED_SCREEN_PHASES = new Set<Phase>(["screenExpanding", "revealing", "open"]);
 const IDLE_SPIN_SPEED = 0.22;
 const HOVER_SPIN_MULTIPLIER = 0.25;
 const BREATHE_FREQUENCY = 1.55;
@@ -51,7 +52,8 @@ export type Phase =
   | "idle"
   | "hover"
   | "activating"
-  | "expanding"
+  | "screenExpanding"
+  | "revealing"
   | "open"
   | "collapsing";
 
@@ -278,7 +280,7 @@ function ComputerModelObject({
       return;
     }
 
-    if (phase === "expanding" || phase === "open") {
+    if (LOCKED_SCREEN_PHASES.has(phase)) {
       group.scale.setScalar(1);
       group.quaternion.copy(screenFacingQuaternion);
       return;
@@ -544,7 +546,7 @@ const ComputerModelStage = forwardRef<HTMLButtonElement, ComputerModelStageProps
   }
 
   const touchActionClass =
-    phase === "activating" || phase === "expanding"
+    phase === "activating" || LOCKED_SCREEN_PHASES.has(phase)
       ? "[touch-action:none]"
       : "[touch-action:pan-y]";
 

@@ -119,6 +119,10 @@ export default function ArchivedBuildsOverlay({
   }, [isVisible]);
 
   useEffect(() => {
+    if (!isVisible) {
+      return;
+    }
+
     focusTimeoutRef.current = window.setTimeout(() => {
       closeButtonRef.current?.focus({ preventScroll: true });
     }, reducedMotion ? 160 : 320);
@@ -128,9 +132,13 @@ export default function ArchivedBuildsOverlay({
         window.clearTimeout(focusTimeoutRef.current);
       }
     };
-  }, [reducedMotion]);
+  }, [isVisible, reducedMotion]);
 
   useEffect(() => {
+    if (!isVisible) {
+      return;
+    }
+
     const handleKeyDown = (event: KeyboardEvent) => {
       const dialog = dialogRef.current;
 
@@ -189,7 +197,7 @@ export default function ArchivedBuildsOverlay({
     return () => {
       document.removeEventListener("keydown", handleKeyDown, true);
     };
-  }, [onClose]);
+  }, [isVisible, onClose]);
 
   if (!portalTarget) {
     return null;
@@ -202,6 +210,7 @@ export default function ArchivedBuildsOverlay({
       aria-modal="true"
       aria-label="Archived Builds"
       tabIndex={-1}
+      aria-hidden={!isVisible}
       initial={{ opacity: 0 }}
       animate={{ opacity: isVisible ? 1 : 0 }}
       transition={{
@@ -218,7 +227,8 @@ export default function ArchivedBuildsOverlay({
         });
         onHidden();
       }}
-      className="fixed inset-0 z-[60] flex h-[100dvh] flex-col bg-[rgba(8,5,17,0.96)]"
+      style={{ pointerEvents: isVisible ? "auto" : "none" }}
+      className="fixed inset-0 z-[58] flex h-[100dvh] flex-col bg-[rgba(8,5,17,0.96)]"
     >
       <div className="flex h-14 items-center justify-between gap-4 border-b border-white/8 px-5 sm:px-6">
         <p className="text-[0.62rem] uppercase tracking-[0.3em] text-white/38">

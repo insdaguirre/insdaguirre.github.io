@@ -48,6 +48,65 @@
     0 0 40px rgba(60, 138, 255, 0.18);
 }
 
+.screenTransitionSurface {
+  isolation: isolate;
+  background:
+    radial-gradient(circle at 50% 14%, rgba(190, 220, 255, 0.14), transparent 26%),
+    radial-gradient(circle at bottom left, rgba(40, 88, 190, 0.18), transparent 32%),
+    linear-gradient(180deg, rgba(10, 12, 18, 0.98), rgba(5, 8, 14, 0.96));
+  box-shadow:
+    0 36px 120px rgba(0, 0, 0, 0.58),
+    0 0 0 1px rgba(255, 255, 255, 0.08);
+}
+
+.screenTransitionStage {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  border-radius: inherit;
+}
+
+.screenTransitionStage::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(circle at 50% 36%, rgba(255, 255, 255, 0.09), transparent 34%),
+    linear-gradient(180deg, transparent, rgba(0, 0, 0, 0.16));
+  pointer-events: none;
+}
+
+/**
+ * Screen dissolve surface — the dark overlay that covers the expanded
+ * monitor "screen" before fading out to reveal the archive.
+ * Uses a subtle noise texture via an SVG filter to give a fizzle/grain
+ * feel on dissolve without requiring a shader.
+ */
+.screenDissolve {
+  background: radial-gradient(
+      ellipse 80% 60% at 50% 52%,
+      rgba(18, 24, 48, 0.82) 0%,
+      rgba(8, 5, 17, 0.97) 70%,
+      rgba(4, 3, 10, 1) 100%
+    );
+  /* Grain noise filter applied to simulate phosphor fizzle */
+  filter: url(#screen-grain);
+}
+
+.screenDissolve::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(
+    ellipse 55% 45% at 50% 48%,
+    rgba(60, 90, 200, 0.14) 0%,
+    transparent 70%
+  );
+  mix-blend-mode: screen;
+}
+
+/* SVG grain filter is embedded inline in the component */
+
 @media (prefers-reduced-motion: reduce) {
   .hintBadge {
     animation: none;
