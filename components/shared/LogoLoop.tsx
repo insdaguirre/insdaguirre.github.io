@@ -364,6 +364,9 @@ const LogoLoop = memo(function LogoLoop({
           {item.node}
         </span>
       ) : (
+        // This renderer accepts arbitrary image sources and sizing, so a raw img
+        // avoids Next Image constraints around fixed dimensions and remote config.
+        // eslint-disable-next-line @next/next/no-img-element
         <img
           src={item.src}
           srcSet={item.srcSet}
