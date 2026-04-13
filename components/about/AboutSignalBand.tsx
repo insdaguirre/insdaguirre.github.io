@@ -1,17 +1,6 @@
-import CurvedLoop, { type CurvedLoopItem } from "@/components/about/CurvedLoop";
+import CurvedLoop from "@/components/about/CurvedLoop";
 import Waves from "@/components/shared/Waves";
-
-const stackSymbols: CurvedLoopItem[] = [
-  { src: "/about-carousel/nextjs-icon-svgrepo-com.svg", alt: "Next.js" },
-  { src: "/about-carousel/react-svgrepo-com.svg", alt: "React" },
-  { src: "/about-carousel/typescript-svgrepo-com.svg", alt: "TypeScript" },
-  { src: "/about-carousel/nodejs-icon-svgrepo-com.svg", alt: "Node.js" },
-  { src: "/about-carousel/python-svgrepo-com.svg", alt: "Python" },
-  { src: "/about-carousel/postgresql-logo-svgrepo-com.svg", alt: "PostgreSQL" },
-  { src: "/about-carousel/aws-svgrepo-com.svg", alt: "AWS" },
-  { src: "/about-carousel/firebase-icon.svg", alt: "Firebase" },
-  { src: "/about-carousel/icon_flutter.svg", alt: "Flutter" },
-];
+import { carouselItems } from "@/lib/carousel-items";
 
 export default function AboutSignalBand() {
   return (
@@ -44,14 +33,16 @@ export default function AboutSignalBand() {
           itemGap={36}
           itemHeight={96}
           itemWidth={152}
-          items={stackSymbols}
+          items={carouselItems}
           speed={0.78}
         />
       </div>
 
       <p className="sr-only">
-        Next.js, React, TypeScript, Node.js, Python, PostgreSQL, AWS,
-        Firebase, and Flutter.
+        AWS, CUDA, Dart, Express.js, Firebase, Flutter, Hugging Face, Java,
+        JavaScript, MATLAB, MongoDB, Next.js, Node.js, PHP, PostgreSQL,
+        Python, PyTorch, R, React, Redis, SQL, Stata, Swift, Tableau,
+        TensorFlow, TypeScript, and vLLM.
       </p>
     </section>
   );
