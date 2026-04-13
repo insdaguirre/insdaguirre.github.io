@@ -28,7 +28,7 @@ export default function AboutSignalBand() {
       <div className="relative z-10">
         <CurvedLoop
           curveAmount={82}
-          direction="right"
+          direction="left"
           interactive
           itemGap={36}
           itemHeight={96}

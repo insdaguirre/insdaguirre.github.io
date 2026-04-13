@@ -73,7 +73,7 @@ export const buildProjects: BuildProject[] = [
     secondaryLinks: [
       {
         href: "https://www.narrative-edu.com/",
-        label: "Live Demo",
+        label: "Get started",
         ariaLabel: "Visit the Narrative live site",
         external: true,
       },

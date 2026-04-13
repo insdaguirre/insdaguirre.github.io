@@ -1,4 +1,5 @@
 import AboutSignalBand from "@/components/about/AboutSignalBand";
+import AboutBuildsTeaser from "@/components/about/AboutBuildsTeaser";
 
 const values = [
   {
@@ -139,6 +140,8 @@ export default function AboutContent() {
             ))}
           </div>
         </section>
+
+        <AboutBuildsTeaser />
 
         <section className="mt-6 grid gap-6 lg:grid-cols-[minmax(0,1fr)_minmax(18rem,0.85fr)]">
           <div className="rounded-[2rem] border border-white/10 bg-[linear-gradient(180deg,rgba(255,255,255,0.05),rgba(255,255,255,0.02))] p-6 backdrop-blur-md sm:p-8">
