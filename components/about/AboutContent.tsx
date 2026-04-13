@@ -140,9 +140,11 @@ export default function AboutContent() {
             ))}
           </div>
         </section>
+      </div>
 
-        <AboutBuildsTeaser />
+      <AboutBuildsTeaser />
 
+      <div className="mx-auto w-full max-w-6xl px-6 sm:px-8 lg:px-12">
         <section className="mt-6 grid gap-6 lg:grid-cols-[minmax(0,1fr)_minmax(18rem,0.85fr)]">
           <div className="rounded-[2rem] border border-white/10 bg-[linear-gradient(180deg,rgba(255,255,255,0.05),rgba(255,255,255,0.02))] p-6 backdrop-blur-md sm:p-8">
             <p className="text-[0.7rem] uppercase tracking-[0.34em] text-white/42">

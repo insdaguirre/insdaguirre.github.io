@@ -6,6 +6,7 @@ import { useGLTF } from "@react-three/drei";
 import ComputerModelStage, {
   type Phase,
 } from "@/components/builds/ComputerModelStage";
+import Waves from "@/components/shared/Waves";
 import { useReducedMotion } from "@/hooks/useReducedMotion";
 
 const ABOUT_MODEL_URL = "/models/about-bridge-model.glb";
@@ -84,7 +85,28 @@ export default function AboutBuildsTeaser() {
   const isActivating = phase === "activating" || phase === "expanding";
 
   return (
-    <section className="mt-10 mb-10 sm:mt-14 sm:mb-12 lg:mt-16 lg:mb-16">
+    <section className="relative overflow-hidden border-t border-b border-white/15">
+      {/* Background matching AboutHero and AboutSignalBand with animated waves */}
+      <div aria-hidden="true" className="absolute inset-0">
+        <Waves
+          lineColor="rgba(198,255,194,0.22)"
+          backgroundColor="#040406"
+          waveSpeedX={0.0125}
+          waveSpeedY={0.01}
+          waveAmpX={40}
+          waveAmpY={20}
+          friction={0.9}
+          tension={0.01}
+          maxCursorMove={120}
+          xGap={12}
+          yGap={36}
+        />
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_16%,rgba(255,255,255,0.06),transparent_18%),radial-gradient(circle_at_22%_28%,rgba(82,39,255,0.105),transparent_18%),radial-gradient(circle_at_78%_32%,rgba(255,0,209,0.06),transparent_16%),linear-gradient(180deg,rgba(0,0,0,0.105),rgba(0,0,0,0.255)_44%,rgba(0,0,0,0.63)_100%)]" />
+        <div className="absolute inset-0 bg-[linear-gradient(135deg,rgba(255,255,255,0.03),transparent_16%,transparent_84%,rgba(255,255,255,0.015))]" />
+        <div className="absolute left-[10%] top-[18%] h-44 w-44 rounded-full bg-[#5227ff]/12 blur-[100px]" />
+        <div className="absolute right-[14%] top-[24%] h-36 w-36 rounded-full bg-[#ff00d1]/8 blur-[90px]" />
+      </div>
+
       {/* Full-viewport fade-to-black overlay, rendered via portal-like fixed positioning */}
       {fading ? (
         <motion.div
@@ -97,12 +119,12 @@ export default function AboutBuildsTeaser() {
         />
       ) : null}
 
-      <div className="flex flex-col items-center">
+      <div className="relative z-10 flex flex-col items-center py-8 sm:py-[2.8rem] lg:py-[3.2rem]">
         <p className="text-center text-[0.62rem] uppercase tracking-[0.32em] text-white/38">
-          Click to open /builds.
+          Drag or click to open /builds.
         </p>
         <motion.div
-          className="relative mt-5 h-[20rem] w-full max-w-[52rem] sm:h-[26rem] sm:max-w-[60rem] lg:h-[32rem] lg:max-w-[72rem]"
+          className="relative mt-5 h-[22rem] w-full max-w-[42rem] sm:h-[29rem] sm:max-w-[51rem] lg:h-[37rem] lg:max-w-[64rem]"
           initial={false}
           animate={{
             scale: !reducedMotion && isActivating ? 1.04 : 1,
@@ -123,7 +145,7 @@ export default function AboutBuildsTeaser() {
             hoverScale={1.14}
             idleEuler={ABOUT_IDLE_EULER}
             idleSpinSpeed={0.045}
-            interactionMode="click"
+            interactionMode="drag"
             lightingVariant="default"
             materialVariant="source"
             modelUrl={ABOUT_MODEL_URL}
