@@ -31,7 +31,6 @@ const DEFAULT_IDLE_EULER = [-0.2, -0.56, 0.04] as const;
 
 const INTERACTIVE_PHASES = new Set<Phase>(["idle", "hover"]);
 const IDLE_SPIN_SPEED = 0.22;
-const HOVER_SPIN_MULTIPLIER = 0.25;
 const BREATHE_FREQUENCY = 1.55;
 const BREATHE_AMPLITUDE = 0.015;
 const DRAG_MOVE_THRESHOLD = 6;
