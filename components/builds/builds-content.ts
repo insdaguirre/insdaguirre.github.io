@@ -4,6 +4,7 @@ import type {
   RecentWorkSignal,
 } from "@/components/builds/types";
 import BigRedWebImage from "@/guis/BigRedWeb.png";
+import BlockBlasterImage from "@/guis/BlockBlasterUI.png";
 import CraiiveImage from "@/guis/Craiive.png";
 import DeegzDevImage from "@/guis/DeegzDev.png";
 import FAlphaImage from "@/guis/fAlpha.png";
@@ -282,6 +283,11 @@ const pastProjectImageMap = {
     width: BigRedWebImage.width,
     height: BigRedWebImage.height,
   },
+  BlockBlaster: {
+    src: BlockBlasterImage.src,
+    width: BlockBlasterImage.width,
+    height: BlockBlasterImage.height,
+  },
   DeegzDev: {
     src: DeegzDevImage.src,
     width: DeegzDevImage.width,
@@ -416,6 +422,20 @@ export const pastProjects: PastProject[] = [
     badgeLabel: "GitHub",
     ctaLabel: "Open Repository",
     ariaLabel: "Open BigRedWeb on GitHub",
+    external: true,
+  },
+  {
+    name: "BlockBlaster",
+    href: "https://diego-aguirre.com/BlockBlaster/",
+    repository: "diego-aguirre.com/BlockBlaster",
+    linkKind: "external",
+    imageSrc: pastProjectImageMap.BlockBlaster.src,
+    imageAlt: "BlockBlaster project preview",
+    imageWidth: pastProjectImageMap.BlockBlaster.width,
+    imageHeight: pastProjectImageMap.BlockBlaster.height,
+    badgeLabel: "Live Site",
+    ctaLabel: "Visit Site",
+    ariaLabel: "Visit the BlockBlaster live site",
     external: true,
   },
   {
