@@ -39,10 +39,11 @@ export default function AboutSignalBand() {
       </div>
 
       <p className="sr-only">
-        AWS, CUDA, Dart, Express.js, Firebase, Flutter, Hugging Face, Java,
-        JavaScript, MATLAB, MongoDB, Next.js, Node.js, PHP, PostgreSQL,
-        Python, PyTorch, R, React, Redis, SQL, Stata, Swift, Tableau,
-        TensorFlow, TypeScript, and vLLM.
+        AWS, CapCut, CUDA, Dart, Engine Prime, Express.js, Firebase, Figma,
+        Flutter, Hugging Face, Java, JavaScript, Logic Pro, MATLAB, MongoDB,
+        Next.js, Node.js, PHP, PostgreSQL, Python, PyTorch, R, React,
+        rekordbox, Redis, Serato DJ Pro, SOLIDWORKS, SoundSwitch, SQL, Stata,
+        Swift, Tableau, TensorFlow, TypeScript, and vLLM.
       </p>
     </section>
   );
