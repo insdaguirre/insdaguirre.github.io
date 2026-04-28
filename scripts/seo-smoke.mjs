@@ -49,7 +49,7 @@ const routeExpectations = [
     route: "/builds/nestiq/",
     title: "NestIQ | Seller Intelligence Platform by Diego Aguirre",
     descriptionIncludes:
-      "NestIQ is a seller intelligence platform concept by Diego Aguirre",
+      "NestIQ is a seller intelligence platform by Diego Aguirre",
     schemaIncludes: ["SoftwareApplication"],
     expectDefaultOgImage: false,
   },
