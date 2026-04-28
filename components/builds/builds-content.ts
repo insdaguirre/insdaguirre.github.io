@@ -158,24 +158,26 @@ export const buildProjects: BuildProject[] = [
   {
     id: "Build 03",
     slug: "nestiq",
-    label: "Validation Stage",
+    label: "Currently in beta",
     name: "NestIQ",
     image: NestIQImage,
     imageAlt: "NestIQ interface concept for real estate acquisition workflows",
-    status: "VALIDATION",
-    statusTone: "validation",
+    status: "BETA",
+    statusTone: "beta",
     description:
       "A seller intelligence platform for real estate acquisition teams that surfaces which homeowners are most likely to sell and turns fragmented market signals into a ranked worklist.",
+    summary:
+      "Now presented through a public beta marketing site while the underlying seller-intelligence workflow continues to be pressure-tested.",
     tags: ["SELLER INTEL", "ACQUISITION", "LEAD SCORING", "WORKFLOWS"],
     role:
-      "Validation-stage product framing, workflow modeling, and market-signal synthesis for acquisition operators.",
+      "Product framing, workflow modeling, and market-signal synthesis for acquisition operators during public beta.",
     stackSummary:
       "Seller-intelligence modeling, acquisition workflows, lead scoring, and ranked worklist design.",
     statusSummary:
-      "Validation stage and currently being pressure-tested before a larger production commitment.",
+      "Public beta marketing site is live while demand, workflow fit, and scoring logic continue to be pressure-tested.",
     pageTitle: "NestIQ | Seller Intelligence Platform by Diego Aguirre",
     pageDescription:
-      "NestIQ is a seller intelligence platform concept by Diego Aguirre, built to help real estate acquisition teams rank homeowners, prioritize outreach, and act on fragmented market signals.",
+      "NestIQ is a seller intelligence platform by Diego Aguirre, built to help real estate acquisition teams rank homeowners, prioritize outreach, and act on fragmented market signals.",
     productType: "Seller intelligence platform",
     detailSections: [
       {
@@ -186,7 +188,7 @@ export const buildProjects: BuildProject[] = [
       {
         title: "How It Is Approached",
         body:
-          "Unlike the live and beta products on the site, NestIQ is presented as a validation-stage build. That matters because the emphasis is on pressure-testing demand, workflow fit, and scoring logic before locking into a heavier implementation path.",
+          "NestIQ is now surfaced through a public beta marketing site, but the product is still being pressure-tested. That matters because the emphasis remains on validating demand, workflow fit, and scoring logic before locking into a heavier implementation path.",
       },
       {
         title: "Why It Matters",
@@ -194,7 +196,26 @@ export const buildProjects: BuildProject[] = [
           "NestIQ adds a different operating context to the portfolio: acquisition teams, ranked seller intent, and workflow systems built around prioritization. It broadens the proof surface without pretending the product is further along than it is.",
       },
     ],
-    secondaryLinks: [],
+    primaryLink: {
+      href: "https://www.get-nestiq.com/",
+      label: "Visit the NestIQ beta site",
+      ariaLabel: "Visit the NestIQ public beta marketing site",
+      external: true,
+    },
+    secondaryLinks: [
+      {
+        href: "https://www.get-nestiq.com/",
+        label: "Visit Beta Site",
+        ariaLabel: "Visit the NestIQ public beta marketing site",
+        external: true,
+      },
+    ],
+    liveLink: {
+      href: "https://www.get-nestiq.com/",
+      label: "Visit NestIQ",
+      ariaLabel: "Visit the NestIQ public beta marketing site",
+      external: true,
+    },
   },
 ];
 
@@ -203,7 +224,7 @@ export const buildsShowcaseCopy = {
   heading:
     "Shipping AI products across higher-ed intelligence, consumer software, and acquisition workflows.",
   description:
-    "A live higher-ed intelligence platform, a beta consumer AI product, and a validation-stage acquisition workflow system.",
+    "A live higher-ed intelligence platform, a beta consumer AI product, and a public beta acquisition workflow system.",
 };
 
 export const recentWorkSignals: RecentWorkSignal[] = [
@@ -222,9 +243,9 @@ export const recentWorkSignals: RecentWorkSignal[] = [
     imageAlt: "CRAIIVE mobile interface for food inventory and recipe planning",
   },
   {
-    stage: "VALIDATION",
+    stage: "BETA",
     title: "NestIQ",
-    detail: "Acquisition workflow direction being pressure-tested through validation.",
+    detail: "Public beta seller-intelligence direction still being pressure-tested.",
     image: NestIQImage,
     imageAlt: "NestIQ interface concept for real estate acquisition workflows",
   },
