@@ -255,7 +255,7 @@ export const pastProjectsSectionCopy = {
   eyebrow: "Archive",
   heading: "Past Work",
   description:
-    "Earlier ventures spanning AI-research, machine learning, quantitative finance, and product design.",
+    "Earlier work & sidequests spanning AI-research, machine learning, quantitative finance, and product design.",
 };
 
 const pastProjectImageMap = {

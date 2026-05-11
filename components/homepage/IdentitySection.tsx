@@ -8,7 +8,7 @@ import { useReducedMotion } from "@/hooks/useReducedMotion";
 
 const identityItems = ["BUILDER", "TECHNOLOGIST", "FOUNDER"] as const;
 const introCopy =
-  "Hi, I’m Diego Aguirre. I’m a product-minded software engineer and founder building AI products, decision systems, and interfaces that stay close to the user.";
+  "Hi, I’m Diego. I’m a product-minded software engineer and founder building AI products, decision systems, and interfaces that stay close to the user.";
 
 interface IdentitySectionProps {
   scrollYProgress: MotionValue<number>;
