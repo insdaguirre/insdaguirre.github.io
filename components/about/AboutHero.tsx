@@ -35,9 +35,9 @@ export default function AboutHero() {
             </h1>
             <p className="max-w-2xl text-pretty text-base leading-8 text-white/66 sm:text-lg">
               I operate at the intersection of product thinking, software
-              engineering, systems design, and founder-level execution. The
-              work is deliberate: clear decisions, sharp interfaces, and
-              products that stay close to the user.
+              engineering, systems design, and founder-level execution. My
+              work is deliberate. Clear decisions. Sharp interfaces. And
+              relentless user focus. 
             </p>
           </div>
           <div className="flex flex-wrap gap-4">

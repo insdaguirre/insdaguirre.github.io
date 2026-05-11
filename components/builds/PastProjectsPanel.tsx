@@ -17,7 +17,7 @@ export default function PastProjectsPanel() {
             <h2 className="text-balance text-[clamp(1.8rem,3vw,2.7rem)] font-light leading-tight tracking-[0.08em] text-white/92">
               {pastProjectsSectionCopy.heading}
             </h2>
-            <p className="max-w-2xl text-pretty leading-7 text-white/62">
+            <p className="max-w-2xl lg:max-w-none lg:whitespace-nowrap text-pretty leading-7 text-white/62">
               {pastProjectsSectionCopy.description}
             </p>
           </div>

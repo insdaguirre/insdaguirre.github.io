@@ -1,5 +1,6 @@
 import AboutSignalBand from "@/components/about/AboutSignalBand";
 import AboutBuildsTeaser from "@/components/about/AboutBuildsTeaser";
+import ASCIIImageCarousel from "@/components/about/ASCIIImageCarousel";
 
 const values = [
   {
@@ -35,10 +36,14 @@ const experience = [
 ] as const;
 
 const focusAreas = [
-  "Products that turn complexity into a clear decision surface",
+  "Products that make a genuine positive impact",
   "Interfaces that feel premium without becoming decorative",
   "Systems that can support both experimentation and scale",
   "Foundational work that compounds over time",
+] as const;
+
+const aboutSignalImages = [
+  "/about-intro/face.jpeg",
 ] as const;
 
 export default function AboutContent() {
@@ -48,7 +53,7 @@ export default function AboutContent() {
       className="relative z-10 py-12 sm:py-14 lg:py-16"
     >
       <div className="mx-auto w-full max-w-6xl px-6 sm:px-8 lg:px-12">
-        <div className="grid gap-6 lg:grid-cols-[minmax(0,1.15fr)_minmax(20rem,0.85fr)]">
+        <div className="grid items-stretch gap-6 lg:grid-cols-[minmax(0,1.15fr)_minmax(20rem,0.85fr)]">
           <section className="rounded-[2rem] border border-white/10 bg-[linear-gradient(180deg,rgba(255,255,255,0.05),rgba(255,255,255,0.02))] p-6 shadow-[0_24px_90px_rgba(0,0,0,0.42)] backdrop-blur-md sm:p-8">
             <p className="text-[0.7rem] uppercase tracking-[0.34em] text-white/42">
               Intro
@@ -72,38 +77,17 @@ export default function AboutContent() {
             </div>
           </section>
 
-          <aside className="rounded-[2rem] border border-white/10 bg-black/30 p-6 backdrop-blur-sm sm:p-8">
-            <p className="text-[0.7rem] uppercase tracking-[0.34em] text-white/42">
-              Snapshot
-            </p>
-            <div className="mt-6 space-y-5">
-              <div className="rounded-[1.4rem] border border-white/8 bg-white/[0.03] p-5">
-                <p className="text-[0.64rem] uppercase tracking-[0.3em] text-white/36">
-                  Role
-                </p>
-                <p className="mt-3 text-lg font-light tracking-[0.08em] text-white/88">
-                  Builder. Technologist. Founder.
-                </p>
-              </div>
-              <div className="rounded-[1.4rem] border border-white/8 bg-white/[0.03] p-5">
-                <p className="text-[0.64rem] uppercase tracking-[0.3em] text-white/36">
-                  Bias
-                </p>
-                <p className="mt-3 text-sm leading-6 text-white/62">
-                  Thoughtful speed, clean systems, and product choices that
-                  stay anchored to users.
-                </p>
-              </div>
-              <div className="rounded-[1.4rem] border border-white/8 bg-white/[0.03] p-5">
-                <p className="text-[0.64rem] uppercase tracking-[0.3em] text-white/36">
-                  Horizon
-                </p>
-                <p className="mt-3 text-sm leading-6 text-white/62">
-                  Products and operating layers that can compound into something
-                  durable.
-                </p>
-              </div>
-            </div>
+          <aside className="relative min-h-[24rem] overflow-hidden rounded-[2rem] lg:h-full lg:min-h-0">
+            <ASCIIImageCarousel
+              images={aboutSignalImages}
+              asciiFontSize={6}
+              planeBaseHeight={24}
+              enableWaves
+              imageFit="cover"
+              cycleIntervalMs={3200}
+              flickerDurationMs={480}
+              className="ascii-image-container relative h-full min-h-[24rem] w-full lg:min-h-0"
+            />
           </aside>
         </div>
       </div>
