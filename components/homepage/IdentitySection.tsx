@@ -3,11 +3,12 @@
 import type { MotionValue } from "framer-motion";
 import { motion, useTransform } from "framer-motion";
 import GradientText from "@/components/homepage/GradientText";
+import PillLink from "@/components/shared/PillLink";
 import { useReducedMotion } from "@/hooks/useReducedMotion";
 
 const identityItems = ["BUILDER", "TECHNOLOGIST", "FOUNDER"] as const;
 const introCopy =
-  "Hi, I’m Diego. I am obsessed with users. I ship fast like an f1 car. I ask the difficult questions. I build with intent.";
+  "Hi, I’m Diego. I’m a product-minded software engineer and founder building AI products, decision systems, and interfaces that stay close to the user.";
 
 interface IdentitySectionProps {
   scrollYProgress: MotionValue<number>;
@@ -80,14 +81,14 @@ export default function IdentitySection({
           <p className="text-balance text-[0.98rem] font-light leading-[1.85] tracking-[0.04em] text-white/72 sm:text-[1.05rem]">
             {introCopy}
           </p>
-          <button
-            type="button"
-            aria-label="builds"
-            aria-disabled="true"
-            className="group inline-flex min-h-11 items-center justify-center rounded-full border border-white/14 bg-black/30 px-6 py-3 text-[0.68rem] uppercase tracking-[0.34em] text-white/88 backdrop-blur-sm transition duration-300 hover:border-white/28 hover:bg-black/40 hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/30"
-          >
-            <span>builds</span>
-          </button>
+          <div className="flex flex-wrap items-center justify-center gap-3">
+            <PillLink href="/builds" className="group">
+              <span>builds</span>
+            </PillLink>
+            <PillLink href="/about" className="group" variant="subtle">
+              <span>about</span>
+            </PillLink>
+          </div>
         </motion.div>
       </div>
     </section>

@@ -1,14 +1,35 @@
 "use client";
 
+import StaggeredMenu from "@/components/navigation/StaggeredMenu";
+import { siteConfig } from "@/lib/site";
+
 export default function MenuButton() {
   return (
-    <button
-      type="button"
-      aria-label="Open menu"
-      className="group fixed right-6 top-6 z-50 flex min-h-11 min-w-11 flex-col items-end justify-center gap-[6px] rounded-full border border-white/12 bg-black/30 px-4 py-3 text-[0.7rem] uppercase tracking-[0.35em] text-white/90 backdrop-blur-sm transition hover:border-white/28 hover:bg-black/45 sm:right-8 sm:top-8"
-    >
-      <span className="h-px w-7 bg-white transition-all duration-300 group-hover:w-8" />
-      <span className="h-px w-4 bg-white/75 transition-all duration-300 group-hover:w-8" />
-    </button>
+    <StaggeredMenu
+      position="right"
+      items={siteConfig.primaryNavigationLinks.map((item) => ({
+        link: item.href,
+        label: item.label,
+        ariaLabel: item.ariaLabel ?? item.label,
+      }))}
+      socialItems={siteConfig.menuSocialLinks.map((item) => ({
+        label: item.label,
+        link: item.href,
+      }))}
+      displaySocials={siteConfig.menuSocialLinks.length > 0}
+      displayItemNumbering
+      panelEyebrow="Diego Aguirre"
+      panelDescription="Builder, Technologist, & Founder"
+      menuButtonColor="rgba(245, 245, 250, 0.92)"
+      openMenuButtonColor="#ffffff"
+      changeMenuColorOnOpen
+      accentColor="#8b5cf6"
+      colors={[
+        "linear-gradient(180deg, rgba(8, 8, 12, 0.96), rgba(10, 10, 16, 0.94))",
+        "linear-gradient(180deg, rgba(17, 13, 29, 0.97), rgba(33, 20, 58, 0.94))",
+        "linear-gradient(180deg, rgba(43, 24, 84, 0.98), rgba(82, 39, 255, 0.9))",
+      ]}
+      isFixed
+    />
   );
 }
