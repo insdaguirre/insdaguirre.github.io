@@ -299,6 +299,20 @@ function loadImage(src: string) {
   });
 }
 
+function normalizePublicImagePath(src: string) {
+  const trimmed = src.trim();
+
+  if (trimmed.startsWith("public/")) {
+    return `/${trimmed.slice("public/".length)}`;
+  }
+
+  if (trimmed.startsWith("./public/")) {
+    return `/${trimmed.slice("./public/".length)}`;
+  }
+
+  return trimmed;
+}
+
 class ASCIIImageRenderer {
   images: readonly string[];
   asciiFontSize: number;
@@ -488,8 +502,8 @@ class ASCIIImageRenderer {
 
     const vHeight = 2 * Math.tan((this.camera.fov * Math.PI) / 360) * 30;
     const vWidth = vHeight * this.camera.aspect;
-    const maxW = vWidth * 0.92;
-    const maxH = vHeight * 0.9;
+    const maxW = vWidth * 0.96;
+    const maxH = vHeight * 0.98;
     const frameAspect = frameSize.width / Math.max(frameSize.height, 1);
     const requestedHeight = Math.min(this.planeBaseHeight, maxH);
     let planeH = Math.min(requestedHeight, maxW / Math.max(frameAspect, 0.01));
@@ -709,7 +723,9 @@ export default function ASCIIImageCarousel({
 
     const reducedMotionQuery = window.matchMedia("(prefers-reduced-motion: reduce)");
     const reducedMotion = reducedMotionQuery.matches;
-    const imageSources = images.filter((src) => src.trim().length > 0);
+    const imageSources = images
+      .map(normalizePublicImagePath)
+      .filter((src) => src.length > 0);
 
     const cleanupRenderer = () => {
       rendererRef.current?.dispose();
