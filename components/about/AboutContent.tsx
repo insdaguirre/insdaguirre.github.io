@@ -1,5 +1,6 @@
 import AboutSignalBand from "@/components/about/AboutSignalBand";
 import AboutBuildsTeaser from "@/components/about/AboutBuildsTeaser";
+import ASCIIImageCarousel from "@/components/about/ASCIIImageCarousel";
 
 const values = [
   {
@@ -41,6 +42,14 @@ const focusAreas = [
   "Foundational work that compounds over time",
 ] as const;
 
+const aboutSignalImages = [
+  "/og/diego-aguirre-preview.png",
+  "/about-carousel/engine-prime.png",
+  "/about-carousel/logic-logo.png",
+  "/about-carousel/soundswitch-logo.png",
+  // TODO: Replace or extend with dedicated /images/about/* frames when those assets are available.
+] as const;
+
 export default function AboutContent() {
   return (
     <section
@@ -72,37 +81,21 @@ export default function AboutContent() {
             </div>
           </section>
 
-          <aside className="rounded-[2rem] border border-white/10 bg-black/30 p-6 backdrop-blur-sm sm:p-8">
+          <aside className="flex min-h-[27rem] flex-col rounded-[2rem] border border-white/10 bg-black/30 p-6 backdrop-blur-sm sm:min-h-[31rem] sm:p-8">
             <p className="text-[0.7rem] uppercase tracking-[0.34em] text-white/42">
-              Snapshot
+              Visual Index
             </p>
-            <div className="mt-6 space-y-5">
-              <div className="rounded-[1.4rem] border border-white/8 bg-white/[0.03] p-5">
-                <p className="text-[0.64rem] uppercase tracking-[0.3em] text-white/36">
-                  Role
-                </p>
-                <p className="mt-3 text-lg font-light tracking-[0.08em] text-white/88">
-                  Builder. Technologist. Founder.
-                </p>
-              </div>
-              <div className="rounded-[1.4rem] border border-white/8 bg-white/[0.03] p-5">
-                <p className="text-[0.64rem] uppercase tracking-[0.3em] text-white/36">
-                  Bias
-                </p>
-                <p className="mt-3 text-sm leading-6 text-white/62">
-                  Thoughtful speed, clean systems, and product choices that
-                  stay anchored to users.
-                </p>
-              </div>
-              <div className="rounded-[1.4rem] border border-white/8 bg-white/[0.03] p-5">
-                <p className="text-[0.64rem] uppercase tracking-[0.3em] text-white/36">
-                  Horizon
-                </p>
-                <p className="mt-3 text-sm leading-6 text-white/62">
-                  Products and operating layers that can compound into something
-                  durable.
-                </p>
-              </div>
+            <div className="relative mt-6 min-h-0 flex-1 overflow-hidden rounded-[1.4rem] border border-white/8 bg-white/[0.03]">
+              <ASCIIImageCarousel
+                images={aboutSignalImages}
+                asciiFontSize={6}
+                planeBaseHeight={17}
+                enableWaves
+                imageFit="cover"
+                cycleIntervalMs={3200}
+                flickerDurationMs={480}
+                className="ascii-image-container relative h-full min-h-[20rem] w-full"
+              />
             </div>
           </aside>
         </div>
