@@ -1,46 +1,17 @@
-@keyframes hintPulse {
-  0%,
-  100% {
-    opacity: 0.44;
-  }
-
-  50% {
-    opacity: 0.88;
-  }
-}
-
-.hintBadge {
-  position: absolute;
-  bottom: 1.5rem;
-  left: 50%;
-  transform: translateX(-50%);
-  pointer-events: none;
-  animation: hintPulse 3s ease-in-out infinite;
-  padding: 0.38rem 1rem;
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  border-radius: 999px;
-  background: rgba(5, 6, 10, 0.62);
-  color: rgba(255, 255, 255, 0.72);
-  font-size: 0.62rem;
-  letter-spacing: 0.3em;
-  text-transform: uppercase;
-  white-space: nowrap;
-  backdrop-filter: blur(8px);
-}
-
 .instructionCopy {
   position: absolute;
-  top: clamp(1.4rem, 4vw, 2.4rem);
-  left: 50%;
+  top: clamp(1.15rem, 3.2vw, 2rem);
+  inset-inline: 0;
   z-index: 12;
-  width: min(92vw, 28rem);
+  width: fit-content;
+  max-width: min(92vw, 34rem);
   margin: 0;
-  transform: translateX(-50%);
+  margin-inline: auto;
   pointer-events: none;
   text-align: center;
-  color: rgba(255, 255, 255, 0.56);
+  color: rgba(255, 255, 255, 0.58);
   font-size: 0.64rem;
-  letter-spacing: 0.28em;
+  letter-spacing: 0.26em;
   text-transform: uppercase;
   text-wrap: balance;
   text-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
@@ -48,10 +19,11 @@
 
 .hoverCue {
   position: absolute;
-  top: clamp(4.7rem, 11vw, 6.8rem);
-  left: 50%;
+  top: clamp(4rem, 9vw, 5.65rem);
+  inset-inline: 0;
   z-index: 12;
-  transform: translateX(-50%);
+  width: fit-content;
+  margin-inline: auto;
   pointer-events: none;
   padding: 0.46rem 0.92rem;
   border: 1px solid rgba(255, 255, 255, 0.16);
@@ -82,7 +54,7 @@
   box-shadow:
     0 0 0 1px rgba(255, 255, 255, 0.1),
     0 0 0 1px rgba(102, 154, 255, 0.18) inset,
-    0 0 34px rgba(82, 130, 255, 0.14);
+    0 0 42px rgba(82, 130, 255, 0.16);
 }
 
 .stageGlow[data-activating="true"] {
@@ -185,11 +157,6 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .hintBadge {
-    animation: none;
-    opacity: 0.66;
-  }
-
   .instructionCopy,
   .hoverCue,
   .stageGlow,

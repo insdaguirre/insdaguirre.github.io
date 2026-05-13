@@ -52,29 +52,6 @@ function scrollToPageY(position: number) {
   html.style.scrollBehavior = previousScrollBehavior;
 }
 
-function HintBadge({ phase }: { phase: Phase }) {
-  const visible = phase === "idle" || phase === "hover";
-
-  if (!visible) {
-    return null;
-  }
-
-  return (
-    <motion.div
-      aria-hidden="true"
-      initial={false}
-      animate={{
-        opacity: phase === "hover" ? 1 : 0.74,
-        y: phase === "hover" ? -4 : 0,
-      }}
-      transition={{ duration: 0.24, ease: [0.22, 1, 0.36, 1] }}
-      className={styles.hintBadge}
-    >
-      Open Archive
-    </motion.div>
-  );
-}
-
 function InstructionCopy({ phase }: { phase: Phase }) {
   const visible = phase === "idle" || phase === "hover";
 
@@ -450,7 +427,8 @@ export default function ArchivedBuildsEntry({
           centerModel={false}
           className="absolute inset-0"
           fitBounds={false}
-          hoverScale={1}
+          hoverEulerOffset={[0.028, 0.12, -0.012]}
+          hoverScale={1.04}
           idleEuler={[-0.05, -0.46, 0.015]}
           idleSpinSpeed={0}
           immersiveCamera
@@ -471,7 +449,6 @@ export default function ArchivedBuildsEntry({
           variant="minimal"
         />
         <HoverCue phase={phase} />
-        <HintBadge phase={phase} />
       </div>
     </div>
   );
