@@ -16,6 +16,7 @@ import {
   useImperativeHandle,
   useMemo,
   useRef,
+  useState,
 } from "react";
 import { Bounds, Center, Html, Preload, useGLTF } from "@react-three/drei";
 import { Canvas, useFrame } from "@react-three/fiber";
@@ -42,6 +43,12 @@ const RETURN_DAMPING = 11;
 const ACTIVATION_DAMPING = 7.8;
 const COLLAPSE_DAMPING = 6.2;
 const ACTIVATION_SETTLE_THRESHOLD = 0.01;
+const IMMERSIVE_CAMERA_POSITION = [0, 0.19, 0.38] as const;
+const IMMERSIVE_CAMERA_LOOK_AT = [0, 0.19, -0.04] as const;
+const IMMERSIVE_CAMERA_FOV = 24;
+const DEFAULT_CAMERA_LOOK_AT = [0, 0.08, 0] as const;
+const SCREEN_HTML_POSITION = [0, 0.191, -0.008] as const;
+const SCREEN_HTML_SCALE = 0.000252;
 
 export type Phase =
   | "idle"
@@ -53,7 +60,9 @@ export type Phase =
 
 interface ComputerModelStageProps {
   ariaLabel?: string;
+  cameraLookAt?: readonly [number, number, number];
   boundsMargin?: number;
+  centerModel?: boolean;
   cameraFov?: number;
   cameraPosition?: readonly [number, number, number];
   fitBounds?: boolean;
@@ -62,6 +71,10 @@ interface ComputerModelStageProps {
   idleEuler?: readonly [number, number, number];
   idleSpinSpeed?: number;
   interactionMode?: "drag" | "click";
+  immersiveCamera?: boolean;
+  immersiveCameraFov?: number;
+  immersiveCameraLookAt?: readonly [number, number, number];
+  immersiveCameraPosition?: readonly [number, number, number];
   lightingVariant?: "default" | "contrast";
   materialVariant?: "source" | "clay";
   modelUrl?: string;
@@ -70,6 +83,9 @@ interface ComputerModelStageProps {
   rotationProgress?: MotionValue<number>;
   sceneEuler?: readonly [number, number, number];
   sceneScale?: number;
+  screenContent?: ReactNode;
+  screenContentInteractive?: boolean;
+  screenContentVisible?: boolean;
   phase: Phase;
   onActivate: () => void;
   onActivationComplete: () => void;
@@ -84,6 +100,7 @@ interface ModelObjectProps {
   dragRotationRef: MutableRefObject<THREE.Vector3>;
   dragTargetRotationRef: MutableRefObject<THREE.Vector3>;
   dragVelocityRef: MutableRefObject<THREE.Vector3>;
+  centerModel: boolean;
   fitBounds: boolean;
   hoverEulerOffset: readonly [number, number, number];
   hoverScale: number;
@@ -96,6 +113,9 @@ interface ModelObjectProps {
   rotationProgress?: MotionValue<number>;
   sceneEuler?: readonly [number, number, number];
   sceneScale?: number;
+  screenContent?: ReactNode;
+  screenContentInteractive: boolean;
+  screenContentVisible: boolean;
   phase: Phase;
   pointerStateRef: MutableRefObject<{
     active: boolean;
@@ -196,6 +216,85 @@ function dampQuaternion(
   current.slerp(target, alpha);
 }
 
+function CameraRig({
+  baseFov,
+  baseLookAt,
+  basePosition,
+  immersiveCamera,
+  immersiveFov,
+  immersiveLookAt,
+  immersivePosition,
+  phase,
+}: {
+  baseFov: number;
+  baseLookAt: readonly [number, number, number];
+  basePosition: readonly [number, number, number];
+  immersiveCamera: boolean;
+  immersiveFov: number;
+  immersiveLookAt: readonly [number, number, number];
+  immersivePosition: readonly [number, number, number];
+  phase: Phase;
+}) {
+  const reducedMotion = useReducedMotion();
+  const basePositionVector = useMemo(
+    () => new THREE.Vector3(basePosition[0], basePosition[1], basePosition[2]),
+    [basePosition],
+  );
+  const baseLookAtVector = useMemo(
+    () => new THREE.Vector3(baseLookAt[0], baseLookAt[1], baseLookAt[2]),
+    [baseLookAt],
+  );
+  const immersivePositionVector = useMemo(
+    () =>
+      new THREE.Vector3(
+        immersivePosition[0],
+        immersivePosition[1],
+        immersivePosition[2],
+      ),
+    [immersivePosition],
+  );
+  const lookAtVector = useMemo(
+    () => new THREE.Vector3(immersiveLookAt[0], immersiveLookAt[1], immersiveLookAt[2]),
+    [immersiveLookAt],
+  );
+  const currentLookAtRef = useRef(
+    new THREE.Vector3(baseLookAt[0], baseLookAt[1], baseLookAt[2]),
+  );
+
+  useFrame(({ camera }, delta) => {
+    if (!(camera instanceof THREE.PerspectiveCamera)) {
+      return;
+    }
+
+    if (!immersiveCamera) {
+      return;
+    }
+
+    const zoomedIn = phase === "expanding" || phase === "open";
+    const targetPosition = zoomedIn
+      ? immersivePositionVector
+      : basePositionVector;
+    const targetLookAt = zoomedIn ? lookAtVector : baseLookAtVector;
+    const targetFov = zoomedIn ? immersiveFov : baseFov;
+
+    if (reducedMotion) {
+      camera.position.copy(targetPosition);
+      camera.fov = targetFov;
+      currentLookAtRef.current.copy(targetLookAt);
+    } else {
+      const alpha = 1 - Math.exp(-(zoomedIn ? 5.8 : 3.4) * delta);
+      camera.position.lerp(targetPosition, alpha);
+      camera.fov = THREE.MathUtils.lerp(camera.fov, targetFov, alpha);
+      currentLookAtRef.current.lerp(targetLookAt, alpha);
+    }
+
+    camera.lookAt(currentLookAtRef.current);
+    camera.updateProjectionMatrix();
+  });
+
+  return null;
+}
+
 class ModelErrorBoundary extends Component<
   ModelErrorBoundaryProps,
   ModelErrorBoundaryState
@@ -225,6 +324,7 @@ class ModelErrorBoundary extends Component<
 
 function ComputerModelObject({
   boundsMargin,
+  centerModel,
   dragRotationRef,
   dragTargetRotationRef,
   dragVelocityRef,
@@ -240,6 +340,9 @@ function ComputerModelObject({
   rotationProgress,
   sceneEuler,
   sceneScale = 1,
+  screenContent,
+  screenContentInteractive,
+  screenContentVisible,
   phase,
   pointerStateRef,
   onActivationComplete,
@@ -335,6 +438,7 @@ function ComputerModelObject({
 
     if (phase === "activating") {
       activationNotifiedRef.current = false;
+      groupRef.current?.quaternion.copy(idleQuaternion);
       dragRotationRef.current?.set(0, 0, 0);
       dragTargetRotationRef.current?.set(0, 0, 0);
       dragVelocityRef.current?.set(0, 0, 0);
@@ -352,7 +456,13 @@ function ComputerModelObject({
     }
 
     previousPhaseRef.current = phase;
-  }, [phase, dragRotationRef, dragTargetRotationRef, dragVelocityRef]);
+  }, [
+    phase,
+    dragRotationRef,
+    dragTargetRotationRef,
+    dragVelocityRef,
+    idleQuaternion,
+  ]);
 
   useFrame((_, delta) => {
     const group = groupRef.current;
@@ -367,6 +477,17 @@ function ComputerModelObject({
 
     if (phase === "activating") {
       group.scale.setScalar(1);
+
+      if (reducedMotion) {
+        if (!activationNotifiedRef.current) {
+          activationNotifiedRef.current = true;
+          group.quaternion.copy(screenFacingQuaternion);
+          onActivationComplete();
+        }
+
+        return;
+      }
+
       dampQuaternion(group.quaternion, screenFacingQuaternion, ACTIVATION_DAMPING, delta);
 
       if (
@@ -455,12 +576,42 @@ function ComputerModelObject({
     group.scale.setScalar(breathingScale * hoverScaleValue);
   });
 
+  const screenLayer = screenContent ? (
+    <Html
+      transform
+      occlude={false}
+      pointerEvents={screenContentInteractive ? "auto" : "none"}
+      position={SCREEN_HTML_POSITION}
+      scale={SCREEN_HTML_SCALE}
+      zIndexRange={[120, 0]}
+    >
+      <div
+        style={{
+          width: 1024,
+          height: 720,
+          opacity: screenContentVisible ? 1 : 0,
+          pointerEvents: screenContentInteractive ? "auto" : "none",
+          transition: reducedMotion ? "none" : "opacity 260ms ease",
+        }}
+      >
+        {screenContent}
+      </div>
+    </Html>
+  ) : null;
+
+  const modelPrimitive = centerModel ? (
+    <Center>
+      <primitive object={model} />
+    </Center>
+  ) : (
+    <primitive object={model} />
+  );
+
   const modelGroup = (
     <group ref={groupRef}>
       <group scale={sceneScale}>
-        <Center>
-          <primitive object={model} />
-        </Center>
+        {modelPrimitive}
+        {!centerModel ? screenLayer : null}
       </group>
     </group>
   );
@@ -487,6 +638,8 @@ const ComputerModelStage = forwardRef<HTMLButtonElement, ComputerModelStageProps
     {
       ariaLabel = "Archived Builds interactive 3D model. Activate to open the archive.",
       boundsMargin = 1.08,
+      cameraLookAt = DEFAULT_CAMERA_LOOK_AT,
+      centerModel = true,
       cameraFov = 34,
       cameraPosition = [0, 0.68, 5.2],
       fitBounds = true,
@@ -495,6 +648,10 @@ const ComputerModelStage = forwardRef<HTMLButtonElement, ComputerModelStageProps
       idleEuler = DEFAULT_IDLE_EULER,
       idleSpinSpeed = IDLE_SPIN_SPEED,
       interactionMode = "drag",
+      immersiveCamera = false,
+      immersiveCameraFov = IMMERSIVE_CAMERA_FOV,
+      immersiveCameraLookAt = IMMERSIVE_CAMERA_LOOK_AT,
+      immersiveCameraPosition = IMMERSIVE_CAMERA_POSITION,
       lightingVariant = "default",
       materialVariant = "source",
       modelUrl = COMPUTER_MODEL_URL,
@@ -503,6 +660,9 @@ const ComputerModelStage = forwardRef<HTMLButtonElement, ComputerModelStageProps
       rotationProgress,
       sceneEuler,
       sceneScale = 1,
+      screenContent,
+      screenContentInteractive = false,
+      screenContentVisible = false,
       phase,
       onActivate,
       onActivationComplete,
@@ -514,6 +674,7 @@ const ComputerModelStage = forwardRef<HTMLButtonElement, ComputerModelStageProps
     forwardedRef,
   ) {
   const buttonRef = useRef<HTMLButtonElement>(null);
+  const stageRootRef = useRef<HTMLDivElement>(null);
   const dragRotationRef = useRef(new THREE.Vector3());
   const dragTargetRotationRef = useRef(new THREE.Vector3());
   const dragVelocityRef = useRef(new THREE.Vector3());
@@ -528,6 +689,7 @@ const ComputerModelStage = forwardRef<HTMLButtonElement, ComputerModelStageProps
   const lastDragEndAtRef = useRef(0);
   const hasHoverRef = useRef(false);
   const reducedMotion = useReducedMotion();
+  const [screenLayerActive, setScreenLayerActive] = useState(false);
 
   useImperativeHandle(forwardedRef, () => buttonRef.current as HTMLButtonElement, []);
 
@@ -708,6 +870,19 @@ const ComputerModelStage = forwardRef<HTMLButtonElement, ComputerModelStageProps
     onHoverChange?.(false);
   }
 
+  useEffect(() => {
+    if (screenContentVisible) {
+      setScreenLayerActive(true);
+      return;
+    }
+
+    const timeout = window.setTimeout(() => {
+      setScreenLayerActive(false);
+    }, reducedMotion ? 0 : 280);
+
+    return () => window.clearTimeout(timeout);
+  }, [reducedMotion, screenContentVisible]);
+
   const touchActionClass =
     interactionMode === "drag"
       ? phase === "activating" || phase === "expanding"
@@ -726,21 +901,10 @@ const ComputerModelStage = forwardRef<HTMLButtonElement, ComputerModelStageProps
     : "relative h-full w-full appearance-none overflow-hidden rounded-[inherit] border border-white/10 bg-[radial-gradient(circle_at_top,rgba(190,220,255,0.14),transparent_28%),radial-gradient(circle_at_bottom_left,rgba(40,88,190,0.18),transparent_34%),linear-gradient(180deg,rgba(10,12,18,0.96),rgba(5,8,14,0.9))] p-0 text-left text-white outline-none [contain:layout_paint] transition focus-visible:ring-2 focus-visible:ring-white/70 focus-visible:ring-offset-2 focus-visible:ring-offset-black";
 
   return (
-    <button
-      ref={buttonRef}
-      type="button"
-      aria-label={ariaLabel}
-      className={`${stageClassName} ${touchActionClass} ${cursorClass} ${className}`.trim()}
-      onClick={handleClick}
-      onPointerDown={handlePointerDown}
-      onPointerMove={handlePointerMove}
-      onPointerUp={handlePointerUp}
-      onPointerCancel={handlePointerCancel}
-      onLostPointerCapture={handlePointerCancel}
-      onPointerEnter={handlePointerEnter}
-      onPointerLeave={handlePointerLeave}
+    <div
+      ref={stageRootRef}
+      className={`${stageClassName} ${className}`.trim()}
     >
-      <span className="sr-only">Open Archived Builds</span>
       {!isMinimal ? (
         <div
           aria-hidden="true"
@@ -752,8 +916,18 @@ const ComputerModelStage = forwardRef<HTMLButtonElement, ComputerModelStageProps
         dpr={[1, 1.75]}
         camera={{ position: [...cameraPosition], fov: cameraFov }}
         gl={{ alpha: true, antialias: true, powerPreference: "high-performance" }}
-        eventSource={buttonRef as RefObject<HTMLElement>}
+        eventSource={stageRootRef as RefObject<HTMLElement>}
       >
+        <CameraRig
+          baseFov={cameraFov}
+          baseLookAt={cameraLookAt}
+          basePosition={cameraPosition}
+          immersiveCamera={immersiveCamera}
+          immersiveFov={immersiveCameraFov}
+          immersiveLookAt={immersiveCameraLookAt}
+          immersivePosition={immersiveCameraPosition}
+          phase={phase}
+        />
         <ambientLight intensity={useContrastLighting ? 0.46 : 0.92} />
         <hemisphereLight
           intensity={useContrastLighting ? 0.38 : 0.82}
@@ -780,6 +954,7 @@ const ComputerModelStage = forwardRef<HTMLButtonElement, ComputerModelStageProps
         <Suspense fallback={<LoadingState />}>
           <SafeComputerModelObject
             boundsMargin={boundsMargin}
+            centerModel={centerModel}
             fitBounds={fitBounds}
             dragRotationRef={dragRotationRef}
             dragTargetRotationRef={dragTargetRotationRef}
@@ -795,6 +970,9 @@ const ComputerModelStage = forwardRef<HTMLButtonElement, ComputerModelStageProps
             rotationProgress={rotationProgress}
             sceneEuler={sceneEuler}
             sceneScale={sceneScale}
+            screenContent={screenLayerActive ? screenContent : undefined}
+            screenContentInteractive={screenContentInteractive}
+            screenContentVisible={screenContentVisible}
             phase={phase}
             pointerStateRef={pointerStateRef}
             onActivationComplete={onActivationComplete}
@@ -815,7 +993,27 @@ const ComputerModelStage = forwardRef<HTMLButtonElement, ComputerModelStageProps
           className="pointer-events-none absolute inset-[10%] rounded-[2rem] border border-white/[0.045]"
         />
       ) : null}
-    </button>
+      <button
+        ref={buttonRef}
+        type="button"
+        aria-label={ariaLabel}
+        className={`${touchActionClass} ${cursorClass} absolute inset-0 z-10 h-full w-full appearance-none border-0 bg-transparent p-0 text-left outline-none focus-visible:ring-2 focus-visible:ring-white/70 focus-visible:ring-offset-2 focus-visible:ring-offset-black`.trim()}
+        style={{
+          pointerEvents: INTERACTIVE_PHASES.has(phase) ? "auto" : "none",
+        }}
+        tabIndex={INTERACTIVE_PHASES.has(phase) ? 0 : -1}
+        onClick={handleClick}
+        onPointerDown={handlePointerDown}
+        onPointerMove={handlePointerMove}
+        onPointerUp={handlePointerUp}
+        onPointerCancel={handlePointerCancel}
+        onLostPointerCapture={handlePointerCancel}
+        onPointerEnter={handlePointerEnter}
+        onPointerLeave={handlePointerLeave}
+      >
+        <span className="sr-only">Open Archived Builds</span>
+      </button>
+    </div>
   );
   },
 );

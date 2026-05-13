@@ -1,20 +1,50 @@
 "use client";
 
+import type {
+  ComponentProps,
+  KeyboardEvent as ReactKeyboardEvent,
+} from "react";
 import type { PastProject } from "@/components/builds/types";
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { motion } from "framer-motion";
+import ArchiveDomeGallery from "@/components/builds/ArchiveDomeGallery";
 import styles from "@/components/builds/ArchivedBuildsEntry.module.css";
-import ArchivedBuildsOverlay, {
-  type ArchivedBuildsOverlayGalleryProps,
-} from "@/components/builds/ArchivedBuildsOverlay";
 import ComputerModelStage, {
   type Phase,
 } from "@/components/builds/ComputerModelStage";
 import { useReducedMotion } from "@/hooks/useReducedMotion";
 
-interface ArchivedBuildsEntryProps
-  extends Omit<ArchivedBuildsOverlayGalleryProps, "projects"> {
+type ArchiveGalleryProps = ComponentProps<typeof ArchiveDomeGallery>;
+
+interface ArchivedBuildsEntryProps extends Omit<ArchiveGalleryProps, "projects"> {
   projects: PastProject[];
+}
+
+const FOCUSABLE_SELECTOR = [
+  "a[href]",
+  "button:not([disabled])",
+  "input:not([disabled])",
+  "select:not([disabled])",
+  "textarea:not([disabled])",
+  "[tabindex]:not([tabindex='-1'])",
+].join(",");
+
+function getFocusableElements(root: HTMLElement) {
+  return Array.from(root.querySelectorAll<HTMLElement>(FOCUSABLE_SELECTOR)).filter(
+    (element) =>
+      !element.hasAttribute("disabled") &&
+      element.tabIndex !== -1 &&
+      element.getAttribute("aria-hidden") !== "true",
+  );
+}
+
+function restoreScrollPosition(position: number) {
+  const html = document.documentElement;
+  const previousScrollBehavior = html.style.scrollBehavior;
+
+  html.style.scrollBehavior = "auto";
+  window.scrollTo(0, position);
+  html.style.scrollBehavior = previousScrollBehavior;
 }
 
 function HintBadge({ phase }: { phase: Phase }) {
@@ -31,7 +61,7 @@ function HintBadge({ phase }: { phase: Phase }) {
       transition={{ duration: 0.24, ease: [0.22, 1, 0.36, 1] }}
       className={styles.hintBadge}
     >
-      ↗ Open Archive
+      Open Archive
     </motion.div>
   );
 }
@@ -52,14 +82,23 @@ export default function ArchivedBuildsEntry({
 }: ArchivedBuildsEntryProps) {
   const reducedMotion = useReducedMotion();
   const [phase, setPhase] = useState<Phase>("idle");
-  const [overlayVisible, setOverlayVisible] = useState(false);
-  const [shouldRenderOverlay, setShouldRenderOverlay] = useState(false);
+  const phaseRef = useRef<Phase>("idle");
   const stageTriggerRef = useRef<HTMLButtonElement>(null);
+  const screenRef = useRef<HTMLDivElement>(null);
+  const closeButtonRef = useRef<HTMLButtonElement>(null);
+  const scrollReturnRef = useRef(0);
   const activationTimerRef = useRef<number | null>(null);
   const openTimerRef = useRef<number | null>(null);
-  const idleTimerRef = useRef<number | null>(null);
-  const activationDuration = reducedMotion ? 180 : 650;
-  const transitionDuration = reducedMotion ? 200 : 500;
+  const closeTimerRef = useRef<number | null>(null);
+
+  const activationFallbackDelay = reducedMotion ? 120 : 720;
+  const screenRevealDelay = reducedMotion ? 80 : 760;
+  const collapseDelay = reducedMotion ? 120 : 540;
+  const isImmersivePhase = phase !== "idle" && phase !== "hover";
+
+  useEffect(() => {
+    phaseRef.current = phase;
+  }, [phase]);
 
   const clearTimers = useCallback(() => {
     if (activationTimerRef.current) {
@@ -72,13 +111,44 @@ export default function ArchivedBuildsEntry({
       openTimerRef.current = null;
     }
 
-    if (idleTimerRef.current) {
-      window.clearTimeout(idleTimerRef.current);
-      idleTimerRef.current = null;
+    if (closeTimerRef.current) {
+      window.clearTimeout(closeTimerRef.current);
+      closeTimerRef.current = null;
     }
   }, []);
 
   useEffect(() => clearTimers, [clearTimers]);
+
+  useEffect(() => {
+    if (!isImmersivePhase) {
+      return;
+    }
+
+    const html = document.documentElement;
+    const body = document.body;
+    const previousHtmlOverflow = html.style.overflow;
+    const previousBodyOverflow = body.style.overflow;
+
+    html.style.overflow = "hidden";
+    body.style.overflow = "hidden";
+
+    return () => {
+      html.style.overflow = previousHtmlOverflow;
+      body.style.overflow = previousBodyOverflow;
+    };
+  }, [isImmersivePhase]);
+
+  useEffect(() => {
+    if (phase !== "open") {
+      return;
+    }
+
+    const focusTimer = window.setTimeout(() => {
+      closeButtonRef.current?.focus({ preventScroll: true });
+    }, reducedMotion ? 60 : 160);
+
+    return () => window.clearTimeout(focusTimer);
+  }, [phase, reducedMotion]);
 
   const handleHoverChange = useCallback((hovered: boolean) => {
     setPhase((currentPhase) => {
@@ -86,115 +156,230 @@ export default function ArchivedBuildsEntry({
         return currentPhase;
       }
 
-      return hovered ? "hover" : "idle";
+      const nextPhase = hovered ? "hover" : "idle";
+      phaseRef.current = nextPhase;
+      return nextPhase;
     });
   }, []);
 
   const handleActivationComplete = useCallback(() => {
-    if (phase !== "activating") {
+    if (phaseRef.current !== "activating") {
       return;
     }
 
-    clearTimers();
+    if (activationTimerRef.current) {
+      window.clearTimeout(activationTimerRef.current);
+      activationTimerRef.current = null;
+    }
+
+    phaseRef.current = "expanding";
     setPhase("expanding");
-    setShouldRenderOverlay(true);
-    setOverlayVisible(true);
+
     openTimerRef.current = window.setTimeout(() => {
+      phaseRef.current = "open";
       setPhase("open");
       openTimerRef.current = null;
-    }, transitionDuration);
-  }, [clearTimers, phase, transitionDuration]);
+    }, screenRevealDelay);
+  }, [screenRevealDelay]);
 
   const handleActivate = useCallback(() => {
-    if (phase !== "idle" && phase !== "hover") {
+    if (phaseRef.current !== "idle" && phaseRef.current !== "hover") {
       return;
     }
 
     clearTimers();
+    scrollReturnRef.current = window.scrollY;
+    phaseRef.current = "activating";
     setPhase("activating");
-    setOverlayVisible(false);
+
     activationTimerRef.current = window.setTimeout(() => {
-      handleActivationComplete();
       activationTimerRef.current = null;
-    }, activationDuration);
-  }, [activationDuration, clearTimers, handleActivationComplete, phase]);
+      handleActivationComplete();
+    }, activationFallbackDelay);
+  }, [activationFallbackDelay, clearTimers, handleActivationComplete]);
 
   const handleClose = useCallback(() => {
-    if (!overlayVisible) {
+    if (phaseRef.current !== "open" && phaseRef.current !== "expanding") {
       return;
     }
 
     clearTimers();
-    setOverlayVisible(false);
+    phaseRef.current = "collapsing";
     setPhase("collapsing");
-    idleTimerRef.current = window.setTimeout(() => {
+
+    closeTimerRef.current = window.setTimeout(() => {
+      phaseRef.current = "idle";
       setPhase("idle");
-      idleTimerRef.current = null;
-    }, transitionDuration);
-  }, [clearTimers, overlayVisible, transitionDuration]);
+      closeTimerRef.current = null;
 
-  const handleOverlayHidden = useCallback(() => {
-    setShouldRenderOverlay(false);
-  }, []);
+      requestAnimationFrame(() => {
+        restoreScrollPosition(scrollReturnRef.current);
+        stageTriggerRef.current?.focus({ preventScroll: true });
+      });
+    }, collapseDelay);
+  }, [clearTimers, collapseDelay]);
 
-  const galleryProps = {
-    projects,
-    fit,
-    fitBasis,
-    minRadius,
-    maxRadius,
-    padFactor,
-    overlayBlurColor,
-    maxVerticalRotationDeg,
-    dragSensitivity,
-    segments,
-    dragDampening,
-    grayscale,
-  } satisfies ArchivedBuildsOverlayGalleryProps;
+  const handleScreenKeyDown = useCallback(
+    (event: ReactKeyboardEvent<HTMLDivElement>) => {
+      const screen = screenRef.current;
+
+      if (!screen || phaseRef.current !== "open") {
+        return;
+      }
+
+      if (event.key === "Escape") {
+        const nestedDialog = screen.querySelector(
+          "[role='dialog'][aria-modal='true'][aria-labelledby^='archive-focus-title-']",
+        );
+
+        if (nestedDialog) {
+          return;
+        }
+
+        event.preventDefault();
+        event.stopPropagation();
+        handleClose();
+        return;
+      }
+
+      if (event.key !== "Tab") {
+        return;
+      }
+
+      const focusableElements = getFocusableElements(screen);
+
+      if (focusableElements.length === 0) {
+        event.preventDefault();
+        screen.focus({ preventScroll: true });
+        return;
+      }
+
+      const first = focusableElements[0];
+      const last = focusableElements[focusableElements.length - 1];
+      const activeElement =
+        document.activeElement instanceof HTMLElement
+          ? document.activeElement
+          : null;
+      const isInside = activeElement ? screen.contains(activeElement) : false;
+
+      if (event.shiftKey) {
+        if (!isInside || activeElement === first) {
+          event.preventDefault();
+          last.focus({ preventScroll: true });
+        }
+
+        return;
+      }
+
+      if (!isInside || activeElement === last) {
+        event.preventDefault();
+        first.focus({ preventScroll: true });
+      }
+    },
+    [handleClose],
+  );
+
+  const galleryProps = useMemo(
+    () =>
+      ({
+        projects,
+        fit,
+        fitBasis,
+        minRadius,
+        maxRadius,
+        padFactor,
+        overlayBlurColor: overlayBlurColor ?? "#030604",
+        maxVerticalRotationDeg,
+        dragSensitivity,
+        segments,
+        dragDampening,
+        grayscale,
+      }) satisfies ArchiveGalleryProps,
+    [
+      dragDampening,
+      dragSensitivity,
+      fit,
+      fitBasis,
+      grayscale,
+      maxRadius,
+      maxVerticalRotationDeg,
+      minRadius,
+      overlayBlurColor,
+      padFactor,
+      projects,
+      segments,
+    ],
+  );
+
+  const screenContent = (
+    <div
+      ref={screenRef}
+      role="dialog"
+      aria-hidden={phase === "open" ? undefined : true}
+      aria-modal={phase === "open" ? "true" : undefined}
+      aria-label="Archived builds"
+      tabIndex={-1}
+      className={styles.screenArchiveSurface}
+      onKeyDown={handleScreenKeyDown}
+    >
+      <button
+        ref={closeButtonRef}
+        type="button"
+        onClick={handleClose}
+        aria-label="Close archive"
+        className={styles.screenArchiveCloseButton}
+      >
+        X
+      </button>
+      <div className={styles.screenArchiveGallery}>
+        <ArchiveDomeGallery {...galleryProps} />
+      </div>
+    </div>
+  );
 
   return (
-    <div className="relative h-[32rem] [contain:layout_paint] sm:h-[40rem] lg:h-[46rem]">
-      <motion.div
-        className="absolute inset-0"
-        initial={false}
-        animate={{
-          opacity: overlayVisible ? 0 : 1,
-          scale:
-            reducedMotion || (phase !== "activating" && phase !== "expanding")
-              ? 1
-              : 1.04,
-        }}
-        transition={{
-          duration: reducedMotion ? 0.2 : 0.4,
-          ease: [0.22, 1, 0.36, 1],
-        }}
-        style={{ pointerEvents: overlayVisible ? "none" : "auto" }}
+    <div
+      className={`relative h-[100svh] min-h-[40rem] [contain:layout_paint] ${
+        isImmersivePhase ? "z-[80]" : "z-0"
+      }`.trim()}
+    >
+      <div
+        className={`${styles.stageGlow} absolute inset-0`}
+        data-hovered={phase === "hover"}
+        data-activating={phase === "activating" || phase === "expanding"}
+        data-screen={phase === "open"}
       >
-        <div
-          className={`${styles.stageGlow} absolute inset-0 rounded-[inherit]`}
-          data-hovered={phase === "hover"}
-          data-activating={phase === "activating" || phase === "expanding"}
-        >
-          <ComputerModelStage
-            ref={stageTriggerRef}
-            phase={phase}
-            onActivate={handleActivate}
-            onActivationComplete={handleActivationComplete}
-            onHoverChange={handleHoverChange}
-          />
-          <HintBadge phase={phase} />
-        </div>
-      </motion.div>
-
-      {shouldRenderOverlay ? (
-        <ArchivedBuildsOverlay
-          {...galleryProps}
-          isVisible={overlayVisible}
-          onClose={handleClose}
-          onHidden={handleOverlayHidden}
-          returnFocusRef={stageTriggerRef}
+        <ComputerModelStage
+          ref={stageTriggerRef}
+          ariaLabel="Open the archived builds on the Commodore 64 screen."
+          cameraFov={26}
+          cameraLookAt={[0, 0.13, -0.04]}
+          cameraPosition={[0, 0.18, 1.86]}
+          centerModel={false}
+          className="absolute inset-0"
+          fitBounds={false}
+          hoverScale={1}
+          idleEuler={[-0.05, -0.46, 0.015]}
+          idleSpinSpeed={0}
+          immersiveCamera
+          immersiveCameraFov={24}
+          immersiveCameraLookAt={[0, 0.191, -0.03]}
+          immersiveCameraPosition={[0, 0.191, 0.405]}
+          interactionMode="click"
+          lightingVariant="contrast"
+          materialVariant="source"
+          onActivate={handleActivate}
+          onActivationComplete={handleActivationComplete}
+          onHoverChange={handleHoverChange}
+          phase={phase}
+          screenContent={screenContent}
+          screenContentInteractive={phase === "open"}
+          screenContentVisible={phase === "open"}
+          screenFacingEuler={[0, 0, 0]}
+          variant="minimal"
         />
-      ) : null}
+        <HintBadge phase={phase} />
+      </div>
     </div>
   );
 }
