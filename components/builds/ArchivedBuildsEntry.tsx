@@ -408,7 +408,7 @@ export default function ArchivedBuildsEntry({
           immersiveCamera
           immersiveCameraFov={24}
           immersiveCameraLookAt={[0, 0.191, -0.03]}
-          immersiveCameraPosition={[0, 0.191, 0.405]}
+          immersiveCameraPosition={[0, 0.187, 0.62]}
           interactionMode="click"
           lightingVariant="contrast"
           materialVariant="source"
