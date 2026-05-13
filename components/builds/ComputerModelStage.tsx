@@ -48,7 +48,10 @@ const IMMERSIVE_CAMERA_LOOK_AT = [0, 0.19, -0.04] as const;
 const IMMERSIVE_CAMERA_FOV = 24;
 const DEFAULT_CAMERA_LOOK_AT = [0, 0.08, 0] as const;
 const SCREEN_HTML_POSITION = [0, 0.191, -0.008] as const;
-const SCREEN_HTML_SCALE = 0.000252;
+// Drei's transformed Html divides world scale by its default 40x distance
+// factor. This keeps a 1024px DOM surface aligned to the inspected CRT screen
+// mesh width of roughly 0.258 world units.
+const SCREEN_HTML_SCALE = 0.01008;
 
 export type Phase =
   | "idle"

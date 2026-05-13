@@ -2,8 +2,35 @@
 
 import StaggeredMenu from "@/components/navigation/StaggeredMenu";
 import { siteConfig } from "@/lib/site";
+import { useEffect, useState } from "react";
+import { ARCHIVE_IMMERSIVE_VISIBILITY_EVENT } from "@/lib/archive-ui";
 
 export default function MenuButton() {
+  const [isArchiveImmersiveVisible, setIsArchiveImmersiveVisible] = useState(false);
+
+  useEffect(() => {
+    const handleArchiveVisibilityChange = (event: Event) => {
+      const { detail } = event as CustomEvent<{ visible?: boolean }>;
+      setIsArchiveImmersiveVisible(Boolean(detail?.visible));
+    };
+
+    window.addEventListener(
+      ARCHIVE_IMMERSIVE_VISIBILITY_EVENT,
+      handleArchiveVisibilityChange,
+    );
+
+    return () => {
+      window.removeEventListener(
+        ARCHIVE_IMMERSIVE_VISIBILITY_EVENT,
+        handleArchiveVisibilityChange,
+      );
+    };
+  }, []);
+
+  if (isArchiveImmersiveVisible) {
+    return null;
+  }
+
   return (
     <StaggeredMenu
       position="right"

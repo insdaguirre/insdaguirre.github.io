@@ -13,6 +13,7 @@ import ComputerModelStage, {
   type Phase,
 } from "@/components/builds/ComputerModelStage";
 import { useReducedMotion } from "@/hooks/useReducedMotion";
+import { ARCHIVE_IMMERSIVE_VISIBILITY_EVENT } from "@/lib/archive-ui";
 
 type ArchiveGalleryProps = ComponentProps<typeof ArchiveDomeGallery>;
 
@@ -39,6 +40,10 @@ function getFocusableElements(root: HTMLElement) {
 }
 
 function restoreScrollPosition(position: number) {
+  scrollToPageY(position);
+}
+
+function scrollToPageY(position: number) {
   const html = document.documentElement;
   const previousScrollBehavior = html.style.scrollBehavior;
 
@@ -50,12 +55,16 @@ function restoreScrollPosition(position: number) {
 function HintBadge({ phase }: { phase: Phase }) {
   const visible = phase === "idle" || phase === "hover";
 
+  if (!visible) {
+    return null;
+  }
+
   return (
     <motion.div
       aria-hidden="true"
       initial={false}
       animate={{
-        opacity: visible ? (phase === "hover" ? 1 : 0.74) : 0,
+        opacity: phase === "hover" ? 1 : 0.74,
         y: phase === "hover" ? -4 : 0,
       }}
       transition={{ duration: 0.24, ease: [0.22, 1, 0.36, 1] }}
@@ -83,6 +92,7 @@ export default function ArchivedBuildsEntry({
   const reducedMotion = useReducedMotion();
   const [phase, setPhase] = useState<Phase>("idle");
   const phaseRef = useRef<Phase>("idle");
+  const entryRef = useRef<HTMLDivElement>(null);
   const stageTriggerRef = useRef<HTMLButtonElement>(null);
   const screenRef = useRef<HTMLDivElement>(null);
   const closeButtonRef = useRef<HTMLButtonElement>(null);
@@ -139,6 +149,22 @@ export default function ArchivedBuildsEntry({
   }, [isImmersivePhase]);
 
   useEffect(() => {
+    window.dispatchEvent(
+      new CustomEvent(ARCHIVE_IMMERSIVE_VISIBILITY_EVENT, {
+        detail: { visible: isImmersivePhase },
+      }),
+    );
+
+    return () => {
+      window.dispatchEvent(
+        new CustomEvent(ARCHIVE_IMMERSIVE_VISIBILITY_EVENT, {
+          detail: { visible: false },
+        }),
+      );
+    };
+  }, [isImmersivePhase]);
+
+  useEffect(() => {
     if (phase !== "open") {
       return;
     }
@@ -182,6 +208,17 @@ export default function ArchivedBuildsEntry({
     }, screenRevealDelay);
   }, [screenRevealDelay]);
 
+  const alignEntryToViewport = useCallback(() => {
+    const entry = entryRef.current;
+
+    if (!entry) {
+      return;
+    }
+
+    const targetScrollY = window.scrollY + entry.getBoundingClientRect().top;
+    scrollToPageY(Math.max(0, Math.round(targetScrollY)));
+  }, []);
+
   const handleActivate = useCallback(() => {
     if (phaseRef.current !== "idle" && phaseRef.current !== "hover") {
       return;
@@ -189,6 +226,7 @@ export default function ArchivedBuildsEntry({
 
     clearTimers();
     scrollReturnRef.current = window.scrollY;
+    alignEntryToViewport();
     phaseRef.current = "activating";
     setPhase("activating");
 
@@ -196,7 +234,12 @@ export default function ArchivedBuildsEntry({
       activationTimerRef.current = null;
       handleActivationComplete();
     }, activationFallbackDelay);
-  }, [activationFallbackDelay, clearTimers, handleActivationComplete]);
+  }, [
+    activationFallbackDelay,
+    alignEntryToViewport,
+    clearTimers,
+    handleActivationComplete,
+  ]);
 
   const handleClose = useCallback(() => {
     if (phaseRef.current !== "open" && phaseRef.current !== "expanding") {
@@ -339,6 +382,7 @@ export default function ArchivedBuildsEntry({
 
   return (
     <div
+      ref={entryRef}
       className={`relative h-[100svh] min-h-[40rem] [contain:layout_paint] ${
         isImmersivePhase ? "z-[80]" : "z-0"
       }`.trim()}
