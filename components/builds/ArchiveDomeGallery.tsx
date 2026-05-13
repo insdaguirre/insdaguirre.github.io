@@ -59,6 +59,12 @@ type OpenedTileState = {
   closing: boolean;
 };
 
+type Vector3 = {
+  x: number;
+  y: number;
+  z: number;
+};
+
 const DEFAULTS = {
   maxVerticalRotationDeg: 10,
   dragSensitivity: 20,
@@ -113,6 +119,46 @@ const wrapAngleSigned = (degrees: number) => {
   const normalized = (((degrees + 180) % 360) + 360) % 360;
   return normalized - 180;
 };
+
+function degreesToRadians(degrees: number) {
+  return (degrees * Math.PI) / 180;
+}
+
+function rotateVectorY(vector: Vector3, degrees: number): Vector3 {
+  const radians = degreesToRadians(degrees);
+  const cosine = Math.cos(radians);
+  const sine = Math.sin(radians);
+
+  return {
+    x: vector.x * cosine + vector.z * sine,
+    y: vector.y,
+    z: -vector.x * sine + vector.z * cosine,
+  };
+}
+
+function rotateVectorX(vector: Vector3, degrees: number): Vector3 {
+  const radians = degreesToRadians(degrees);
+  const cosine = Math.cos(radians);
+  const sine = Math.sin(radians);
+
+  return {
+    x: vector.x,
+    y: vector.y * cosine - vector.z * sine,
+    z: vector.y * sine + vector.z * cosine,
+  };
+}
+
+function getItemNormal(
+  item: ItemDef,
+  horizontalSegments: number,
+  verticalSegments: number,
+): Vector3 {
+  const rotateYDegrees = (180 / horizontalSegments) * item.x;
+  const rotateXDegrees = (180 / verticalSegments) * item.y;
+  const rotatedOnX = rotateVectorX({ x: 0, y: 0, z: 1 }, rotateXDegrees);
+
+  return rotateVectorY(rotatedOnX, rotateYDegrees);
+}
 
 function buildItems(pool: PastProject[], segments: number): ItemDef[] {
   if (pool.length === 0) {
@@ -351,6 +397,7 @@ export default function ArchiveDomeGallery({
 }: DomeGalleryProps) {
   const rootRef = useRef<HTMLDivElement>(null);
   const sphereRef = useRef<HTMLDivElement>(null);
+  const itemRefs = useRef<Array<HTMLDivElement | null>>([]);
   const closeButtonRef = useRef<HTMLButtonElement>(null);
   const lastFocusedTileRef = useRef<HTMLButtonElement | null>(null);
   const openStartedAtRef = useRef(0);
@@ -371,14 +418,51 @@ export default function ArchiveDomeGallery({
 
   const items = useMemo(() => buildItems(projects, segments), [projects, segments]);
   const verticalSegments = Math.max(28, Math.round(segments * 1.35));
+  const itemNormals = useMemo(
+    () => items.map((item) => getItemNormal(item, segments, verticalSegments)),
+    [items, segments, verticalSegments],
+  );
 
-  const applyTransform = useCallback((xDegrees: number, yDegrees: number) => {
-    if (!sphereRef.current) {
-      return;
-    }
+  const updateTileVisibility = useCallback(
+    (xDegrees: number, yDegrees: number) => {
+      const visibilityThreshold = 0.025;
 
-    sphereRef.current.style.transform = `translateZ(calc(var(--radius) * -1)) rotateX(${xDegrees}deg) rotateY(${yDegrees}deg)`;
-  }, []);
+      itemNormals.forEach((normal, index) => {
+        const itemElement = itemRefs.current[index];
+
+        if (!itemElement) {
+          return;
+        }
+
+        const rotatedNormal = rotateVectorX(
+          rotateVectorY(normal, yDegrees),
+          xDegrees,
+        );
+        const isFrontFacing = rotatedNormal.z > visibilityThreshold;
+        const tileButton = itemElement.querySelector("button");
+
+        itemElement.dataset.visible = isFrontFacing ? "true" : "false";
+        itemElement.style.zIndex = String(Math.round((rotatedNormal.z + 1) * 1000));
+
+        if (tileButton instanceof HTMLButtonElement) {
+          tileButton.tabIndex = isFrontFacing ? 0 : -1;
+        }
+      });
+    },
+    [itemNormals],
+  );
+
+  const applyTransform = useCallback(
+    (xDegrees: number, yDegrees: number) => {
+      if (!sphereRef.current) {
+        return;
+      }
+
+      sphereRef.current.style.transform = `translateZ(calc(var(--radius) * -1)) rotateX(${xDegrees}deg) rotateY(${yDegrees}deg)`;
+      updateTileVisibility(xDegrees, yDegrees);
+    },
+    [updateTileVisibility],
+  );
 
   const stopInertia = useCallback(() => {
     if (inertiaFrameRef.current) {
@@ -508,6 +592,11 @@ export default function ArchiveDomeGallery({
   useEffect(() => {
     applyTransform(rotationRef.current.x, rotationRef.current.y);
   }, [applyTransform]);
+
+  useEffect(() => {
+    itemRefs.current.length = items.length;
+    updateTileVisibility(rotationRef.current.x, rotationRef.current.y);
+  }, [items.length, updateTileVisibility]);
 
   useEffect(() => {
     return () => stopInertia();
@@ -847,6 +936,9 @@ export default function ArchiveDomeGallery({
             {items.map((item, tileInstanceIndex) => (
               <div
                 key={`${item.project.href}-${tileInstanceIndex}`}
+                ref={(node) => {
+                  itemRefs.current[tileInstanceIndex] = node;
+                }}
                 className={styles.item}
                 style={
                   {

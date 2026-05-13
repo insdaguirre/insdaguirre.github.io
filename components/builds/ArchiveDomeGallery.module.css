@@ -90,10 +90,17 @@
   transform-origin: 50% 50%;
   backface-visibility: hidden;
   pointer-events: none;
+  opacity: 1;
   transform:
     rotateY(calc(var(--rot-y) * var(--offset-x)))
     rotateX(calc(var(--rot-x) * var(--offset-y)))
     translateZ(var(--radius));
+  transition: opacity 120ms linear;
+}
+
+.item[data-visible="false"] {
+  opacity: 0;
+  visibility: hidden;
 }
 
 .tileButton {
@@ -156,9 +163,13 @@
 }
 
 .tileVisual,
-.focusMedia {
+.focusMedia,
+.tileImage,
+.tileFallback {
   position: absolute;
   inset: 0;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
 }
 
 .tileVisual {
@@ -203,6 +214,8 @@
   display: flex;
   justify-content: flex-start;
   pointer-events: none;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
   opacity: 0;
   transform: translateY(8px);
   transition:
