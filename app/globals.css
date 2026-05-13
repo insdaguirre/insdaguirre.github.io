@@ -23,6 +23,33 @@ body {
   color: #fff;
 }
 
+.ascii-scroll-cue {
+  position: fixed;
+  inset-inline: 0;
+  bottom: max(clamp(1rem, 4dvh, 2rem), env(safe-area-inset-bottom));
+  z-index: 30;
+  width: clamp(4.75rem, 15vw, 8.5rem);
+  max-width: calc(100vw - 2rem);
+  aspect-ratio: 1;
+  margin-inline: auto;
+  pointer-events: none;
+  user-select: none;
+  opacity: 0;
+  transform: translateZ(0);
+  transition: opacity 1500ms ease-out;
+  text-shadow: 0 0 14px rgba(253, 249, 243, 0.42);
+}
+
+.ascii-scroll-cue[data-visible="true"] {
+  opacity: 1;
+}
+
+.ascii-scroll-cue__stage {
+  position: relative;
+  width: 100%;
+  height: 100%;
+}
+
 @media (prefers-reduced-motion: reduce) {
   *,
   *::before,
@@ -31,5 +58,9 @@ body {
     animation-iteration-count: 1 !important;
     scroll-behavior: auto !important;
     transition-duration: 0.01ms !important;
+  }
+
+  .ascii-scroll-cue {
+    transition: none;
   }
 }

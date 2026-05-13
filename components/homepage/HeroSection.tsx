@@ -2,6 +2,7 @@
 
 import type { MotionValue } from "framer-motion";
 import { motion, useTransform } from "framer-motion";
+import ASCIIScrollCue from "@/components/homepage/ASCIIScrollCue";
 import ASCIIText from "@/components/homepage/ASCIIText";
 import { useReducedMotion } from "@/hooks/useReducedMotion";
 
@@ -37,6 +38,7 @@ export default function HeroSection({
           />
         </div>
       </div>
+      <ASCIIScrollCue />
     </motion.section>
   );
 }
