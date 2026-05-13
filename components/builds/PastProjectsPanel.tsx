@@ -23,6 +23,10 @@ export default function PastProjectsPanel() {
         segments={21}
         overlayBlurColor="#080511"
       />
+      <div
+        aria-hidden="true"
+        className="pointer-events-none absolute inset-x-0 bottom-0 z-20 h-px bg-white/18"
+      />
     </section>
   );
 }

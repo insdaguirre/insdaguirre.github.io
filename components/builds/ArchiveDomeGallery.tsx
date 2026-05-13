@@ -329,6 +329,10 @@ function getProjectBadgeLabel(project: PastProject) {
   );
 }
 
+function getProjectMetaLabel(project: PastProject) {
+  return getProjectLinkKind(project) === "external" ? "Website" : "Repository";
+}
+
 function getViewerPadding(root: HTMLDivElement) {
   const value = Number.parseFloat(
     getComputedStyle(root).getPropertyValue("--viewer-pad"),
@@ -342,36 +346,83 @@ function getFocusTargetRect(
   viewerPadding: number,
   aspectRatio: number,
 ): RectDef {
-  const shellPadding = 16;
-  const headerHeight = 54;
-  const footerHeight = 92;
-  const internalGap = 14;
-  const chromeHeight =
-    shellPadding * 2 + headerHeight + footerHeight + internalGap * 2;
+  const isCompact = rootRect.width < 760;
+  const shellPadding = isCompact ? 16 : 18;
+  const headerHeight = isCompact ? 84 : 108;
+  const bodyGap = isCompact ? 12 : 18;
   const maxWidth = Math.min(
     rootRect.width - viewerPadding * 2,
-    rootRect.width * 0.84,
+    rootRect.width * (isCompact ? 0.94 : 0.9),
   );
   const maxHeight = Math.min(
     rootRect.height - viewerPadding * 2,
-    rootRect.height * 0.88,
+    rootRect.height * (isCompact ? 0.92 : 0.9),
   );
-  const availableImageWidth = Math.max(140, maxWidth - shellPadding * 2);
-  const availableImageHeight = Math.max(180, maxHeight - chromeHeight);
 
-  let imageWidth = Math.min(
-    availableImageWidth,
-    availableImageHeight * aspectRatio,
-  );
-  let imageHeight = imageWidth / aspectRatio;
+  let width = maxWidth;
+  let height = maxHeight;
 
-  if (imageHeight > availableImageHeight) {
-    imageHeight = availableImageHeight;
-    imageWidth = imageHeight * aspectRatio;
+  if (isCompact) {
+    const availableImageWidth = Math.max(220, maxWidth - shellPadding * 2);
+    const availableImageHeight = Math.max(
+      180,
+      maxHeight - shellPadding * 2 - headerHeight - bodyGap - 118,
+    );
+
+    let imageWidth = Math.min(
+      availableImageWidth,
+      availableImageHeight * aspectRatio,
+    );
+    let imageHeight = imageWidth / aspectRatio;
+
+    if (imageHeight > availableImageHeight) {
+      imageHeight = availableImageHeight;
+      imageWidth = imageHeight * aspectRatio;
+    }
+
+    width = Math.max(
+      Math.min(maxWidth, imageWidth + shellPadding * 2),
+      Math.min(maxWidth, 320),
+    );
+    height = Math.min(
+      maxHeight,
+      shellPadding * 2 + headerHeight + bodyGap + imageHeight + 118,
+    );
+  } else {
+    const sidebarWidth = clamp(maxWidth * 0.26, 220, 300);
+    const availableImageWidth = Math.max(
+      260,
+      maxWidth - shellPadding * 2 - sidebarWidth - bodyGap,
+    );
+    const availableImageHeight = Math.max(
+      220,
+      maxHeight - shellPadding * 2 - headerHeight - bodyGap,
+    );
+
+    let imageWidth = Math.min(
+      availableImageWidth,
+      availableImageHeight * aspectRatio,
+    );
+    let imageHeight = imageWidth / aspectRatio;
+
+    if (imageHeight > availableImageHeight) {
+      imageHeight = availableImageHeight;
+      imageWidth = imageHeight * aspectRatio;
+    }
+
+    const bodyHeight = Math.max(imageHeight, 250);
+    width = Math.min(
+      maxWidth,
+      Math.max(
+        imageWidth + sidebarWidth + shellPadding * 2 + bodyGap,
+        Math.min(maxWidth, 560),
+      ),
+    );
+    height = Math.min(
+      maxHeight,
+      shellPadding * 2 + headerHeight + bodyGap + bodyHeight,
+    );
   }
-
-  const width = imageWidth + shellPadding * 2;
-  const height = imageHeight + chromeHeight;
 
   return {
     left: (rootRect.width - width) / 2,
@@ -1019,6 +1070,14 @@ export default function ArchiveDomeGallery({
           >
             <div className={styles.focusHeader}>
               <div className={styles.focusHeading}>
+                <div className={styles.focusEyebrowRow}>
+                  <span className={styles.focusIndex}>
+                    {String(openedTile.projectOrder + 1).padStart(2, "0")}
+                  </span>
+                  <span className={styles.focusBadge}>
+                    {getProjectBadgeLabel(openedTile.project)}
+                  </span>
+                </div>
                 <h3
                   id={`archive-focus-title-${openedTile.tileInstanceIndex}`}
                   className={styles.focusTitle}
@@ -1037,75 +1096,93 @@ export default function ArchiveDomeGallery({
               </button>
             </div>
 
-            <div className={styles.focusImageFrame}>
-              <div className={styles.focusMedia}>
-                {openedTile.project.imageSrc ? (
-                  <img
-                    src={openedTile.project.imageSrc}
-                    alt={openedTile.project.imageAlt ?? openedTile.project.name}
-                    className={styles.focusImage}
-                  />
-                ) : (
-                  <div className={styles.focusFallback} aria-hidden="true">
-                    <span>{getProjectMonogram(openedTile.project.name)}</span>
-                  </div>
-                )}
-              </div>
-            </div>
-
-            <div className={styles.focusDetails}>
-              <div className={styles.focusMeta}>
-                <div className={styles.focusEyebrowRow}>
-                  <span className={styles.focusIndex}>
-                    {String(openedTile.projectOrder + 1).padStart(2, "0")}
-                  </span>
-                  <span className={styles.focusBadge}>
-                    {getProjectBadgeLabel(openedTile.project)}
-                  </span>
-                </div>
-                <p className={styles.focusRepository}>
-                  {openedTile.project.repository}
-                </p>
-              </div>
-
-              <div className={styles.focusActions}>
-                {openedTile.project.demoUrl ? (
-                  <Link
-                    href={openedTile.project.demoUrl}
-                    target="_blank"
-                    rel="noreferrer"
-                    className={`${styles.focusActionLink} ${styles.focusActionLinkSecondary}`}
-                  >
-                    {openedTile.project.demoLabel ?? "View Demo"}
-                  </Link>
-                ) : null}
-
-                <Link
-                  href={openedTile.project.href}
-                  target={
-                    openedTile.project.external ??
-                    isExternalHref(openedTile.project.href)
-                      ? "_blank"
-                      : undefined
-                  }
-                  rel={
-                    openedTile.project.external ??
-                    isExternalHref(openedTile.project.href)
-                      ? "noreferrer"
-                      : undefined
-                  }
-                  aria-label={
-                    getProjectActionAriaLabel(openedTile.project)
-                  }
-                  title={getProjectActionTitle(openedTile.project)}
-                  className={styles.focusIconLink}
-                >
-                  {getProjectLinkKind(openedTile.project) === "external" ? (
-                    <ExternalSiteIcon className={styles.focusIcon} />
+            <div className={styles.focusBody}>
+              <div className={styles.focusImageFrame}>
+                <div className={styles.focusMedia}>
+                  {openedTile.project.imageSrc ? (
+                    <img
+                      src={openedTile.project.imageSrc}
+                      alt={openedTile.project.imageAlt ?? openedTile.project.name}
+                      className={styles.focusImage}
+                    />
                   ) : (
-                    <GitHubMarkIcon className={styles.focusIcon} />
+                    <div className={styles.focusFallback} aria-hidden="true">
+                      <span>{getProjectMonogram(openedTile.project.name)}</span>
+                    </div>
                   )}
-                </Link>
+                </div>
+              </div>
+
+              <div className={styles.focusDetails}>
+                <div className={styles.focusMeta}>
+                  <p className={styles.focusMetaLabel}>
+                    {getProjectMetaLabel(openedTile.project)}
+                  </p>
+                  <p className={styles.focusRepository}>
+                    {openedTile.project.repository}
+                  </p>
+                </div>
+
+                <div className={styles.focusActions}>
+                  <div className={styles.focusActionStack}>
+                    {openedTile.project.demoUrl ? (
+                      <Link
+                        href={openedTile.project.demoUrl}
+                        target="_blank"
+                        rel="noreferrer"
+                        className={`${styles.focusActionLink} ${styles.focusActionLinkSecondary}`}
+                      >
+                        {openedTile.project.demoLabel ?? "View Demo"}
+                      </Link>
+                    ) : null}
+
+                    <Link
+                      href={openedTile.project.href}
+                      target={
+                        openedTile.project.external ??
+                        isExternalHref(openedTile.project.href)
+                          ? "_blank"
+                          : undefined
+                      }
+                      rel={
+                        openedTile.project.external ??
+                        isExternalHref(openedTile.project.href)
+                          ? "noreferrer"
+                          : undefined
+                      }
+                      aria-label={getProjectActionAriaLabel(openedTile.project)}
+                      title={getProjectActionTitle(openedTile.project)}
+                      className={styles.focusActionLink}
+                    >
+                      {getProjectActionLabel(openedTile.project)}
+                    </Link>
+                  </div>
+
+                  <Link
+                    href={openedTile.project.href}
+                    target={
+                      openedTile.project.external ??
+                      isExternalHref(openedTile.project.href)
+                        ? "_blank"
+                        : undefined
+                    }
+                    rel={
+                      openedTile.project.external ??
+                      isExternalHref(openedTile.project.href)
+                        ? "noreferrer"
+                        : undefined
+                    }
+                    aria-label={getProjectActionAriaLabel(openedTile.project)}
+                    title={getProjectActionTitle(openedTile.project)}
+                    className={styles.focusIconLink}
+                  >
+                    {getProjectLinkKind(openedTile.project) === "external" ? (
+                      <ExternalSiteIcon className={styles.focusIcon} />
+                    ) : (
+                      <GitHubMarkIcon className={styles.focusIcon} />
+                    )}
+                  </Link>
+                </div>
               </div>
             </div>
           </div>

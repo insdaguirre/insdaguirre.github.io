@@ -75,6 +75,53 @@ function HintBadge({ phase }: { phase: Phase }) {
   );
 }
 
+function InstructionCopy({ phase }: { phase: Phase }) {
+  const visible = phase === "idle" || phase === "hover";
+
+  if (!visible) {
+    return null;
+  }
+
+  return (
+    <motion.p
+      aria-hidden="true"
+      initial={false}
+      animate={{
+        opacity: phase === "hover" ? 0.92 : 0.72,
+        y: phase === "hover" ? -2 : 0,
+      }}
+      transition={{ duration: 0.24, ease: [0.22, 1, 0.36, 1] }}
+      className={styles.instructionCopy}
+    >
+      Click the Commodore 64 to view past builds.
+    </motion.p>
+  );
+}
+
+function HoverCue({ phase }: { phase: Phase }) {
+  const visible = phase === "idle" || phase === "hover";
+
+  if (!visible) {
+    return null;
+  }
+
+  return (
+    <motion.div
+      aria-hidden="true"
+      initial={false}
+      animate={{
+        opacity: phase === "hover" ? 1 : 0,
+        scale: phase === "hover" ? 1 : 0.96,
+        y: phase === "hover" ? 0 : 8,
+      }}
+      transition={{ duration: 0.22, ease: [0.22, 1, 0.36, 1] }}
+      className={styles.hoverCue}
+    >
+      Click to open
+    </motion.div>
+  );
+}
+
 export default function ArchivedBuildsEntry({
   projects,
   fit,
@@ -393,6 +440,7 @@ export default function ArchivedBuildsEntry({
         data-activating={phase === "activating" || phase === "expanding"}
         data-screen={phase === "open"}
       >
+        <InstructionCopy phase={phase} />
         <ComputerModelStage
           ref={stageTriggerRef}
           ariaLabel="Open the archived builds on the Commodore 64 screen."
@@ -422,6 +470,7 @@ export default function ArchivedBuildsEntry({
           screenFacingEuler={[0, 0, 0]}
           variant="minimal"
         />
+        <HoverCue phase={phase} />
         <HintBadge phase={phase} />
       </div>
     </div>
