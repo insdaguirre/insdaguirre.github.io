@@ -165,6 +165,21 @@
   color: #fff7c9;
 }
 
+.mobileArchiveViewport {
+  position: absolute;
+  inset: 0;
+  z-index: 30;
+  display: grid;
+  padding:
+    max(0.72rem, env(safe-area-inset-top))
+    max(0.72rem, env(safe-area-inset-right))
+    max(0.72rem, env(safe-area-inset-bottom))
+    max(0.72rem, env(safe-area-inset-left));
+  background:
+    radial-gradient(circle at 50% 46%, rgba(31, 72, 36, 0.2), transparent 58%),
+    rgba(0, 0, 0, 0.82);
+}
+
 @media (prefers-reduced-motion: reduce) {
   .pageFadeMask,
   .instructionCopy,
@@ -172,5 +187,49 @@
   .stageGlow,
   .screenArchiveCloseButton {
     transition: none;
+  }
+}
+
+@media (max-width: 767px) {
+  .hoverCue {
+    display: none;
+  }
+
+  .instructionCopy {
+    top: max(4.85rem, calc(env(safe-area-inset-top) + 4.35rem));
+    max-width: min(78vw, 21rem);
+    font-size: 0.58rem;
+    letter-spacing: 0.2em;
+    line-height: 1.7;
+  }
+
+  .stageGlow {
+    overflow: hidden;
+  }
+
+  .screenArchiveSurface {
+    min-width: 0;
+    min-height: 0;
+    border-radius: clamp(1.1rem, 5vw, 1.45rem);
+    overflow: hidden;
+    box-shadow:
+      inset 0 0 0 1px rgba(190, 255, 186, 0.08),
+      inset 0 0 30px rgba(0, 0, 0, 0.62);
+  }
+
+  .screenArchiveSurface::after {
+    background:
+      radial-gradient(circle at 50% 48%, transparent 56%, rgba(0, 0, 0, 0.24) 88%, rgba(0, 0, 0, 0.46) 100%),
+      linear-gradient(90deg, rgba(0, 0, 0, 0.16), transparent 10%, transparent 90%, rgba(0, 0, 0, 0.16));
+  }
+
+  .screenArchiveCloseButton {
+    top: max(0.8rem, env(safe-area-inset-top));
+    right: max(0.8rem, env(safe-area-inset-right));
+    width: 48px;
+    height: 48px;
+    border-width: 1px;
+    background: rgba(7, 8, 5, 0.78);
+    font-size: 19px;
   }
 }

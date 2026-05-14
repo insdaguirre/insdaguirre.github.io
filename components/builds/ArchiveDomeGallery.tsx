@@ -363,66 +363,55 @@ function getFocusTargetRect(
   let height = maxHeight;
 
   if (isCompact) {
-    const availableImageWidth = Math.max(220, maxWidth - shellPadding * 2);
-    const availableImageHeight = Math.max(
-      180,
-      maxHeight - shellPadding * 2 - headerHeight - bodyGap - 118,
-    );
+    // Mobile archive focus cards need to read as a primary sheet, while leaving
+    // the archive-level close control clear at the top of the viewport.
+    const compactTopInset = clamp(rootRect.height * 0.09, 64, 84);
+    const compactSideInset = Math.max(10, Math.min(viewerPadding, 14));
 
-    let imageWidth = Math.min(
-      availableImageWidth,
-      availableImageHeight * aspectRatio,
-    );
-    let imageHeight = imageWidth / aspectRatio;
-
-    if (imageHeight > availableImageHeight) {
-      imageHeight = availableImageHeight;
-      imageWidth = imageHeight * aspectRatio;
-    }
-
-    width = Math.max(
-      Math.min(maxWidth, imageWidth + shellPadding * 2),
-      Math.min(maxWidth, 320),
-    );
-    height = Math.min(
-      maxHeight,
-      shellPadding * 2 + headerHeight + bodyGap + imageHeight + 118,
-    );
-  } else {
-    const sidebarWidth = clamp(maxWidth * 0.26, 220, 300);
-    const availableImageWidth = Math.max(
-      260,
-      maxWidth - shellPadding * 2 - sidebarWidth - bodyGap,
-    );
-    const availableImageHeight = Math.max(
-      220,
-      maxHeight - shellPadding * 2 - headerHeight - bodyGap,
-    );
-
-    let imageWidth = Math.min(
-      availableImageWidth,
-      availableImageHeight * aspectRatio,
-    );
-    let imageHeight = imageWidth / aspectRatio;
-
-    if (imageHeight > availableImageHeight) {
-      imageHeight = availableImageHeight;
-      imageWidth = imageHeight * aspectRatio;
-    }
-
-    const bodyHeight = Math.max(imageHeight, 250);
-    width = Math.min(
-      maxWidth,
-      Math.max(
-        imageWidth + sidebarWidth + shellPadding * 2 + bodyGap,
-        Math.min(maxWidth, 560),
+    return {
+      left: compactSideInset,
+      top: compactTopInset,
+      width: Math.max(280, rootRect.width - compactSideInset * 2),
+      height: Math.max(
+        520,
+        rootRect.height - compactTopInset - Math.max(10, viewerPadding),
       ),
-    );
-    height = Math.min(
-      maxHeight,
-      shellPadding * 2 + headerHeight + bodyGap + bodyHeight,
-    );
+    };
   }
+
+  const sidebarWidth = clamp(maxWidth * 0.26, 220, 300);
+  const availableImageWidth = Math.max(
+    260,
+    maxWidth - shellPadding * 2 - sidebarWidth - bodyGap,
+  );
+  const availableImageHeight = Math.max(
+    220,
+    maxHeight - shellPadding * 2 - headerHeight - bodyGap,
+  );
+
+  let imageWidth = Math.min(
+    availableImageWidth,
+    availableImageHeight * aspectRatio,
+  );
+  let imageHeight = imageWidth / aspectRatio;
+
+  if (imageHeight > availableImageHeight) {
+    imageHeight = availableImageHeight;
+    imageWidth = imageHeight * aspectRatio;
+  }
+
+  const bodyHeight = Math.max(imageHeight, 250);
+  width = Math.min(
+    maxWidth,
+    Math.max(
+      imageWidth + sidebarWidth + shellPadding * 2 + bodyGap,
+      Math.min(maxWidth, 560),
+    ),
+  );
+  height = Math.min(
+    maxHeight,
+    shellPadding * 2 + headerHeight + bodyGap + bodyHeight,
+  );
 
   return {
     left: (rootRect.width - width) / 2,

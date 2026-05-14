@@ -30,6 +30,8 @@ const FOCUSABLE_SELECTOR = [
   "[tabindex]:not([tabindex='-1'])",
 ].join(",");
 
+const COMPACT_ARCHIVE_QUERY = "(max-width: 767px)";
+
 function getFocusableElements(root: HTMLElement) {
   return Array.from(root.querySelectorAll<HTMLElement>(FOCUSABLE_SELECTOR)).filter(
     (element) =>
@@ -99,6 +101,24 @@ function HoverCue({ phase }: { phase: Phase }) {
   );
 }
 
+function useCompactArchiveViewport() {
+  const [isCompact, setIsCompact] = useState(false);
+
+  useEffect(() => {
+    const mediaQuery = window.matchMedia(COMPACT_ARCHIVE_QUERY);
+    const updateCompactState = () => setIsCompact(mediaQuery.matches);
+
+    updateCompactState();
+    mediaQuery.addEventListener("change", updateCompactState);
+
+    return () => {
+      mediaQuery.removeEventListener("change", updateCompactState);
+    };
+  }, []);
+
+  return isCompact;
+}
+
 export default function ArchivedBuildsEntry({
   projects,
   fit,
@@ -114,6 +134,7 @@ export default function ArchivedBuildsEntry({
   grayscale,
 }: ArchivedBuildsEntryProps) {
   const reducedMotion = useReducedMotion();
+  const isCompactArchiveViewport = useCompactArchiveViewport();
   const [phase, setPhase] = useState<Phase>("idle");
   const [pageFadeState, setPageFadeState] = useState<
     "hidden" | "covering" | "revealing"
@@ -135,6 +156,8 @@ export default function ArchivedBuildsEntry({
   const pageFadeDuration = reducedMotion ? 120 : 360;
   const isImmersivePhase = phase !== "idle" && phase !== "hover";
   const isPageFadeActive = pageFadeState !== "hidden";
+  const useMobileArchiveSurface =
+    isCompactArchiveViewport && (phase === "expanding" || phase === "open");
 
   useEffect(() => {
     phaseRef.current = phase;
@@ -454,9 +477,13 @@ export default function ArchivedBuildsEntry({
         <ComputerModelStage
           ref={stageTriggerRef}
           ariaLabel="Open the archived builds on the Commodore 64 screen."
-          cameraFov={26}
-          cameraLookAt={[0, 0.13, -0.04]}
-          cameraPosition={[0, 0.18, 1.86]}
+          cameraFov={isCompactArchiveViewport ? 36 : 26}
+          cameraLookAt={
+            isCompactArchiveViewport ? [0, 0.11, -0.02] : [0, 0.13, -0.04]
+          }
+          cameraPosition={
+            isCompactArchiveViewport ? [0.02, 0.2, 3.15] : [0, 0.18, 1.86]
+          }
           centerModel={false}
           className="absolute inset-0"
           fitBounds={false}
@@ -465,9 +492,13 @@ export default function ArchivedBuildsEntry({
           idleEuler={[-0.05, -0.46, 0.015]}
           idleSpinSpeed={0}
           immersiveCamera
-          immersiveCameraFov={24}
-          immersiveCameraLookAt={[0, 0.191, -0.03]}
-          immersiveCameraPosition={[0, 0.187, 0.62]}
+          immersiveCameraFov={isCompactArchiveViewport ? 38 : 24}
+          immersiveCameraLookAt={
+            isCompactArchiveViewport ? [0, 0.17, -0.03] : [0, 0.191, -0.03]
+          }
+          immersiveCameraPosition={
+            isCompactArchiveViewport ? [0, 0.19, 1.08] : [0, 0.187, 0.62]
+          }
           interactionMode="click"
           lightingVariant="contrast"
           materialVariant="source"
@@ -475,14 +506,32 @@ export default function ArchivedBuildsEntry({
           onActivationComplete={handleActivationComplete}
           onHoverChange={handleHoverChange}
           phase={phase}
-          screenContent={screenContent}
-          screenContentInteractive={phase === "open"}
-          screenContentVisible={phase === "open"}
+          screenContent={useMobileArchiveSurface ? undefined : screenContent}
+          screenContentInteractive={!useMobileArchiveSurface && phase === "open"}
+          screenContentVisible={!useMobileArchiveSurface && phase === "open"}
           screenFacingEuler={[0, 0, 0]}
           variant="minimal"
         />
         <HoverCue phase={phase} />
       </div>
+      {useMobileArchiveSurface ? (
+        <motion.div
+          initial={false}
+          animate={{
+            opacity: phase === "open" ? 1 : 0,
+          }}
+          transition={{
+            duration: reducedMotion ? 0 : 0.22,
+            ease: [0.22, 1, 0.36, 1],
+          }}
+          className={styles.mobileArchiveViewport}
+          style={{
+            pointerEvents: phase === "open" ? "auto" : "none",
+          }}
+        >
+          {screenContent}
+        </motion.div>
+      ) : null}
     </div>
   );
 }
