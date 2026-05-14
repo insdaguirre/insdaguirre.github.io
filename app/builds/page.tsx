@@ -47,13 +47,15 @@ export default function BuildsPage() {
         })}
       />
       <RevealFooterLayout surfaceClassName="overflow-hidden">
-        <MenuButton />
-        <BuildsHero />
-        <div className="relative">
-          <AmbientGridBackground />
-          <div className="relative z-10 bg-[linear-gradient(180deg,rgba(255,255,255,0.02),transparent_16%)]">
-            <BuildsShowcase />
-            <PastProjectsPanel />
+        <div className="relative border-b border-white/10">
+          <MenuButton />
+          <BuildsHero />
+          <div className="relative">
+            <AmbientGridBackground />
+            <div className="relative z-10 bg-[linear-gradient(180deg,rgba(255,255,255,0.02),transparent_16%)]">
+              <BuildsShowcase />
+              <PastProjectsPanel />
+            </div>
           </div>
         </div>
       </RevealFooterLayout>

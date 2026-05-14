@@ -115,6 +115,9 @@ export default function ArchivedBuildsEntry({
 }: ArchivedBuildsEntryProps) {
   const reducedMotion = useReducedMotion();
   const [phase, setPhase] = useState<Phase>("idle");
+  const [pageFadeState, setPageFadeState] = useState<
+    "hidden" | "covering" | "revealing"
+  >("hidden");
   const phaseRef = useRef<Phase>("idle");
   const entryRef = useRef<HTMLDivElement>(null);
   const stageTriggerRef = useRef<HTMLButtonElement>(null);
@@ -124,11 +127,14 @@ export default function ArchivedBuildsEntry({
   const activationTimerRef = useRef<number | null>(null);
   const openTimerRef = useRef<number | null>(null);
   const closeTimerRef = useRef<number | null>(null);
+  const pageFadeTimerRef = useRef<number | null>(null);
 
   const activationFallbackDelay = reducedMotion ? 120 : 720;
   const screenRevealDelay = reducedMotion ? 80 : 760;
   const collapseDelay = reducedMotion ? 120 : 540;
+  const pageFadeDuration = reducedMotion ? 120 : 360;
   const isImmersivePhase = phase !== "idle" && phase !== "hover";
+  const isPageFadeActive = pageFadeState !== "hidden";
 
   useEffect(() => {
     phaseRef.current = phase;
@@ -148,6 +154,11 @@ export default function ArchivedBuildsEntry({
     if (closeTimerRef.current) {
       window.clearTimeout(closeTimerRef.current);
       closeTimerRef.current = null;
+    }
+
+    if (pageFadeTimerRef.current) {
+      window.clearTimeout(pageFadeTimerRef.current);
+      pageFadeTimerRef.current = null;
     }
   }, []);
 
@@ -251,6 +262,7 @@ export default function ArchivedBuildsEntry({
     clearTimers();
     scrollReturnRef.current = window.scrollY;
     alignEntryToViewport();
+    setPageFadeState("covering");
     phaseRef.current = "activating";
     setPhase("activating");
 
@@ -278,13 +290,19 @@ export default function ArchivedBuildsEntry({
       phaseRef.current = "idle";
       setPhase("idle");
       closeTimerRef.current = null;
+      setPageFadeState("revealing");
+
+      pageFadeTimerRef.current = window.setTimeout(() => {
+        setPageFadeState("hidden");
+        pageFadeTimerRef.current = null;
+      }, pageFadeDuration);
 
       requestAnimationFrame(() => {
         restoreScrollPosition(scrollReturnRef.current);
         stageTriggerRef.current?.focus({ preventScroll: true });
       });
     }, collapseDelay);
-  }, [clearTimers, collapseDelay]);
+  }, [clearTimers, collapseDelay, pageFadeDuration]);
 
   const handleScreenKeyDown = useCallback(
     (event: ReactKeyboardEvent<HTMLDivElement>) => {
@@ -408,11 +426,26 @@ export default function ArchivedBuildsEntry({
     <div
       ref={entryRef}
       className={`relative h-[100svh] min-h-[40rem] [contain:layout_paint] ${
-        isImmersivePhase ? "z-[80]" : "z-0"
+        isImmersivePhase || isPageFadeActive ? "z-[80]" : "z-0"
       }`.trim()}
     >
+      <motion.div
+        aria-hidden="true"
+        initial={false}
+        animate={{
+          opacity: pageFadeState === "covering" ? 1 : 0,
+        }}
+        transition={{
+          duration: pageFadeDuration / 1000,
+          ease: [0.22, 1, 0.36, 1],
+        }}
+        className={styles.pageFadeMask}
+        style={{
+          pointerEvents: pageFadeState === "covering" ? "auto" : "none",
+        }}
+      />
       <div
-        className={`${styles.stageGlow} absolute inset-0`}
+        className={`${styles.stageGlow} absolute inset-0 z-10`}
         data-hovered={phase === "hover"}
         data-activating={phase === "activating" || phase === "expanding"}
         data-screen={phase === "open"}

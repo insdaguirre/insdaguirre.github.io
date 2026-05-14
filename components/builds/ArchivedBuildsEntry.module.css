@@ -17,6 +17,15 @@
   text-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
 }
 
+.pageFadeMask {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  background:
+    radial-gradient(circle at 50% 38%, rgba(10, 12, 18, 0.16), rgba(0, 0, 0, 0) 28%),
+    rgba(0, 0, 0, 0.96);
+}
+
 .hoverCue {
   position: absolute;
   top: clamp(4rem, 9vw, 5.65rem);
@@ -157,6 +166,7 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
+  .pageFadeMask,
   .instructionCopy,
   .hoverCue,
   .stageGlow,
