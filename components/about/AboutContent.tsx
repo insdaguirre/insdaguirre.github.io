@@ -85,10 +85,10 @@ export default function AboutContent() {
 
           <section className="flex h-full min-h-[24rem] flex-col rounded-[2rem] border border-white/10 bg-[linear-gradient(180deg,rgba(255,255,255,0.05),rgba(255,255,255,0.02))] p-6 shadow-[0_24px_90px_rgba(0,0,0,0.42)] backdrop-blur-md sm:p-8 lg:min-h-[42rem] lg:justify-between">
             <p className="text-[0.7rem] uppercase tracking-[0.34em] text-white/42">
-              Intro
+              BETWEEN WORLDS
             </p>
             <h2 className="mt-4 max-w-2xl text-balance text-[clamp(2rem,4vw,3.6rem)] font-light leading-tight tracking-[0.08em] text-white/92">
-              How I think, build, and operate.
+              I build the bridge between technical systems and human needs.
             </h2>
             <div className="mt-6 space-y-5 text-base leading-8 text-white/66">
               <p>
