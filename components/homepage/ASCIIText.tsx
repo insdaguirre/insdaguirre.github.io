@@ -287,6 +287,7 @@ interface CanvAsciiOptions {
   textColor: string;
   planeBaseHeight: number;
   enableWaves: boolean;
+  waveStrength?: number;
 }
 
 class CanvAscii {
@@ -300,6 +301,7 @@ class CanvAscii {
   width: number;
   height: number;
   enableWaves: boolean;
+  waveStrength?: number;
   camera: THREE.PerspectiveCamera;
   scene: THREE.Scene;
   mouse: { x: number; y: number };
@@ -315,7 +317,7 @@ class CanvAscii {
   maxRotation = 0.2;
 
   constructor(
-    { text, asciiFontSize, textFontSize, textColor, planeBaseHeight, enableWaves }: CanvAsciiOptions,
+    { text, asciiFontSize, textFontSize, textColor, planeBaseHeight, enableWaves, waveStrength }: CanvAsciiOptions,
     containerElem: HTMLElement,
     width: number,
     height: number
@@ -330,6 +332,7 @@ class CanvAscii {
     this.width = width;
     this.height = height;
     this.enableWaves = enableWaves;
+    this.waveStrength = waveStrength;
 
     this.camera = new THREE.PerspectiveCamera(45, this.width / this.height, 1, 1000);
     this.camera.position.z = 30;
@@ -484,7 +487,7 @@ class CanvAscii {
 
       // Keep deformation and tilt proportional to available width at narrow viewports.
       const waveStrength = this.enableWaves
-        ? THREE.MathUtils.clamp(0.15 + 0.85 * widthRatio, 0.15, 1)
+        ? this.waveStrength ?? THREE.MathUtils.clamp(0.15 + 0.85 * widthRatio, 0.15, 1)
         : 0;
       this.maxRotation = THREE.MathUtils.clamp(0.06 + 0.14 * widthRatio, 0.06, 0.2);
       (this.mesh.material as THREE.ShaderMaterial).uniforms.uWaveStrength.value = waveStrength;
@@ -586,12 +589,14 @@ interface ASCIITextProps {
   textColor?: string;
   planeBaseHeight?: number;
   enableWaves?: boolean;
+  waveStrength?: number;
 }
 
 export default function ASCIIText({
   text = 'David!',
   textColor = '#fdf9f3',
-  enableWaves = true
+  enableWaves = true,
+  waveStrength
 }: ASCIITextProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const asciiRef = useRef<CanvAscii | null>(null);
@@ -628,7 +633,7 @@ export default function ASCIIText({
     const createAndInit = async (container: HTMLDivElement, w: number, h: number) => {
       const { textFontSize, asciiFontSize, planeBaseHeight } = computeResponsiveFontSizes(w);
       const instance = new CanvAscii(
-        { text, asciiFontSize, textFontSize, textColor, planeBaseHeight, enableWaves },
+        { text, asciiFontSize, textFontSize, textColor, planeBaseHeight, enableWaves, waveStrength },
         container,
         w,
         h
@@ -724,7 +729,7 @@ export default function ASCIIText({
         asciiRef.current = null;
       }
     };
-  }, [text, textColor, enableWaves]);
+  }, [text, textColor, enableWaves, waveStrength]);
 
   return (
     <div

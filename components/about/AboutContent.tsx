@@ -27,7 +27,7 @@ const experience = [
   },
   {
     title: "Sidequests",
-    body: "Skiing down sand-dunes, opening for Gunna & Flo-Rida, surfing the great-lakes, and running ultra-marathons.",
+    body: "Skiing down sand-dunes, opening for Gunna & Flo-Rida, surfin' n sailin' the great-lakes, and running ultra-marathons.",
   },
   {
     title: "Hottest Takes",
@@ -35,15 +35,31 @@ const experience = [
   },
 ] as const;
 
-const focusAreas = [
-  "Products that make a genuine positive impact",
-  "Interfaces that feel premium without becoming decorative",
-  "Systems that can support both experimentation and scale",
-  "Foundational work that compounds over time",
-] as const;
-
 const aboutSignalImages = [
   "/about-intro/face.jpeg",
+] as const;
+
+const screenshotMeridiemSeparator = "\u202f";
+
+const aboutSidequestImages = [
+  `/about-sidequests-images/Screenshot 2026-05-12 at 12.55.55${screenshotMeridiemSeparator}PM.png`,
+  `/about-sidequests-images/Screenshot 2026-05-12 at 12.57.46${screenshotMeridiemSeparator}PM.png`,
+  `/about-sidequests-images/Screenshot 2026-05-12 at 12.58.07${screenshotMeridiemSeparator}PM.png`,
+  `/about-sidequests-images/Screenshot 2026-05-12 at 12.59.07${screenshotMeridiemSeparator}PM.png`,
+  `/about-sidequests-images/Screenshot 2026-05-12 at 12.59.32${screenshotMeridiemSeparator}PM.png`,
+  `/about-sidequests-images/Screenshot 2026-05-12 at 1.01.00${screenshotMeridiemSeparator}PM.png`,
+  `/about-sidequests-images/Screenshot 2026-05-12 at 1.01.28${screenshotMeridiemSeparator}PM.png`,
+  `/about-sidequests-images/Screenshot 2026-05-12 at 1.01.35${screenshotMeridiemSeparator}PM.png`,
+  `/about-sidequests-images/Screenshot 2026-05-12 at 1.01.52${screenshotMeridiemSeparator}PM.png`,
+  `/about-sidequests-images/Screenshot 2026-05-12 at 1.05.43${screenshotMeridiemSeparator}PM.png`,
+  `/about-sidequests-images/Screenshot 2026-05-12 at 1.06.45${screenshotMeridiemSeparator}PM.png`,
+  `/about-sidequests-images/Screenshot 2026-05-12 at 1.07.25${screenshotMeridiemSeparator}PM.png`,
+  `/about-sidequests-images/Screenshot 2026-05-12 at 1.09.42${screenshotMeridiemSeparator}PM.png`,
+  `/about-sidequests-images/Screenshot 2026-05-12 at 1.14.17${screenshotMeridiemSeparator}PM.png`,
+  `/about-sidequests-images/Screenshot 2026-05-12 at 1.28.32${screenshotMeridiemSeparator}PM.png`,
+  `/about-sidequests-images/Screenshot 2026-05-12 at 1.36.55${screenshotMeridiemSeparator}PM.png`,
+  `/about-sidequests-images/Screenshot 2026-05-12 at 1.38.11${screenshotMeridiemSeparator}PM.png`,
+  `/about-sidequests-images/Screenshot 2026-05-12 at 1.40.39${screenshotMeridiemSeparator}PM.png`,
 ] as const;
 
 export default function AboutContent() {
@@ -53,13 +69,26 @@ export default function AboutContent() {
       className="relative z-10 py-12 sm:py-14 lg:py-16"
     >
       <div className="mx-auto w-full max-w-6xl px-6 sm:px-8 lg:px-12">
-        <div className="grid items-stretch gap-6 lg:grid-cols-[minmax(0,1.15fr)_minmax(20rem,0.85fr)]">
-          <section className="rounded-[2rem] border border-white/10 bg-[linear-gradient(180deg,rgba(255,255,255,0.05),rgba(255,255,255,0.02))] p-6 shadow-[0_24px_90px_rgba(0,0,0,0.42)] backdrop-blur-md sm:p-8">
+        <div className="grid items-stretch gap-6 lg:min-h-[42rem] lg:grid-cols-[minmax(22rem,0.82fr)_minmax(0,1.18fr)]">
+          <aside className="relative min-h-[24rem] overflow-hidden rounded-[2rem] lg:h-full lg:min-h-[42rem]">
+            <ASCIIImageCarousel
+              images={aboutSignalImages}
+              asciiFontSize={6}
+              planeBaseHeight={24}
+              enableWaves
+              imageFit="cover"
+              cycleIntervalMs={3200}
+              flickerDurationMs={480}
+              className="ascii-image-container relative h-full min-h-[24rem] w-full lg:min-h-[42rem]"
+            />
+          </aside>
+
+          <section className="flex h-full min-h-[24rem] flex-col rounded-[2rem] border border-white/10 bg-[linear-gradient(180deg,rgba(255,255,255,0.05),rgba(255,255,255,0.02))] p-6 shadow-[0_24px_90px_rgba(0,0,0,0.42)] backdrop-blur-md sm:p-8 lg:min-h-[42rem] lg:justify-between">
             <p className="text-[0.7rem] uppercase tracking-[0.34em] text-white/42">
-              Intro
+              BETWEEN WORLDS
             </p>
             <h2 className="mt-4 max-w-2xl text-balance text-[clamp(2rem,4vw,3.6rem)] font-light leading-tight tracking-[0.08em] text-white/92">
-              A concise snapshot of how I think, build, and operate.
+              I build the bridge between technical systems and human needs.
             </h2>
             <div className="mt-6 space-y-5 text-base leading-8 text-white/66">
               <p>
@@ -69,26 +98,13 @@ export default function AboutContent() {
                 same place.
               </p>
               <p>
-                I have worked across research, engineering, and product, and
+                I have worked across AI Research, Software Engineering, & Product Design, and
                 that range has shaped how I build. I care about clarity early,
                 momentum during execution, and products that stay grounded in
                 real user behavior.
               </p>
             </div>
           </section>
-
-          <aside className="relative min-h-[24rem] overflow-hidden rounded-[2rem] lg:h-full lg:min-h-0">
-            <ASCIIImageCarousel
-              images={aboutSignalImages}
-              asciiFontSize={6}
-              planeBaseHeight={24}
-              enableWaves
-              imageFit="cover"
-              cycleIntervalMs={3200}
-              flickerDurationMs={480}
-              className="ascii-image-container relative h-full min-h-[24rem] w-full lg:min-h-0"
-            />
-          </aside>
         </div>
       </div>
 
@@ -129,8 +145,8 @@ export default function AboutContent() {
       <AboutBuildsTeaser />
 
       <div className="mx-auto w-full max-w-6xl px-6 sm:px-8 lg:px-12">
-        <section className="mt-6 grid gap-6 lg:grid-cols-[minmax(0,1fr)_minmax(18rem,0.85fr)]">
-          <div className="rounded-[2rem] border border-white/10 bg-[linear-gradient(180deg,rgba(255,255,255,0.05),rgba(255,255,255,0.02))] p-6 backdrop-blur-md sm:p-8">
+        <section className="mt-6 grid items-stretch gap-6 lg:grid-cols-[minmax(0,1fr)_minmax(18rem,0.85fr)]">
+          <div className="flex h-full flex-col rounded-[2rem] border border-white/10 bg-[linear-gradient(180deg,rgba(255,255,255,0.05),rgba(255,255,255,0.02))] p-6 backdrop-blur-md sm:p-8">
             <p className="text-[0.7rem] uppercase tracking-[0.34em] text-white/42">
               Personal
             </p>
@@ -151,31 +167,18 @@ export default function AboutContent() {
             </div>
           </div>
 
-          <div className="rounded-[2rem] border border-white/10 bg-black/30 p-6 backdrop-blur-sm sm:p-8">
-            <p className="text-[0.7rem] uppercase tracking-[0.34em] text-white/42">
-              What I Care About Building
-            </p>
-            <ul className="mt-6 space-y-4">
-              {focusAreas.map((item) => (
-                <li
-                  key={item}
-                  className="rounded-[1.4rem] border border-white/8 bg-white/[0.03] px-4 py-4 text-sm leading-6 text-white/62"
-                >
-                  {item}
-                </li>
-              ))}
-            </ul>
-            <div className="mt-6 rounded-[1.5rem] border border-white/10 bg-[linear-gradient(135deg,rgba(82,39,255,0.15),rgba(0,0,0,0.14)_45%,rgba(255,0,209,0.08)_100%)] p-5">
-              <p className="text-[0.64rem] uppercase tracking-[0.28em] text-white/36">
-                Ethical Product Judgment
-              </p>
-              <p className="mt-3 text-sm leading-7 text-white/66">
-                Software is never neutral in practice. I try to be thoughtful
-                about what a product encourages, rewards, and normalizes once
-                it is in someone&apos;s hands.
-              </p>
-            </div>
-          </div>
+          <aside className="relative min-h-[24rem] overflow-hidden rounded-[2rem] lg:h-full">
+            <ASCIIImageCarousel
+              images={aboutSidequestImages}
+              asciiFontSize={6}
+              planeBaseHeight={20}
+              enableWaves
+              imageFit="cover"
+              cycleIntervalMs={3000}
+              flickerDurationMs={460}
+              className="ascii-image-container relative h-full min-h-[24rem] w-full"
+            />
+          </aside>
         </section>
       </div>
     </section>

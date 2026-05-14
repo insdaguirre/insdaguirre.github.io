@@ -59,6 +59,12 @@ type OpenedTileState = {
   closing: boolean;
 };
 
+type Vector3 = {
+  x: number;
+  y: number;
+  z: number;
+};
+
 const DEFAULTS = {
   maxVerticalRotationDeg: 10,
   dragSensitivity: 20,
@@ -113,6 +119,46 @@ const wrapAngleSigned = (degrees: number) => {
   const normalized = (((degrees + 180) % 360) + 360) % 360;
   return normalized - 180;
 };
+
+function degreesToRadians(degrees: number) {
+  return (degrees * Math.PI) / 180;
+}
+
+function rotateVectorY(vector: Vector3, degrees: number): Vector3 {
+  const radians = degreesToRadians(degrees);
+  const cosine = Math.cos(radians);
+  const sine = Math.sin(radians);
+
+  return {
+    x: vector.x * cosine + vector.z * sine,
+    y: vector.y,
+    z: -vector.x * sine + vector.z * cosine,
+  };
+}
+
+function rotateVectorX(vector: Vector3, degrees: number): Vector3 {
+  const radians = degreesToRadians(degrees);
+  const cosine = Math.cos(radians);
+  const sine = Math.sin(radians);
+
+  return {
+    x: vector.x,
+    y: vector.y * cosine - vector.z * sine,
+    z: vector.y * sine + vector.z * cosine,
+  };
+}
+
+function getItemNormal(
+  item: ItemDef,
+  horizontalSegments: number,
+  verticalSegments: number,
+): Vector3 {
+  const rotateYDegrees = (180 / horizontalSegments) * item.x;
+  const rotateXDegrees = (180 / verticalSegments) * item.y;
+  const rotatedOnX = rotateVectorX({ x: 0, y: 0, z: 1 }, rotateXDegrees);
+
+  return rotateVectorY(rotatedOnX, rotateYDegrees);
+}
 
 function buildItems(pool: PastProject[], segments: number): ItemDef[] {
   if (pool.length === 0) {
@@ -283,6 +329,10 @@ function getProjectBadgeLabel(project: PastProject) {
   );
 }
 
+function getProjectMetaLabel(project: PastProject) {
+  return getProjectLinkKind(project) === "external" ? "Website" : "Repository";
+}
+
 function getViewerPadding(root: HTMLDivElement) {
   const value = Number.parseFloat(
     getComputedStyle(root).getPropertyValue("--viewer-pad"),
@@ -296,22 +346,48 @@ function getFocusTargetRect(
   viewerPadding: number,
   aspectRatio: number,
 ): RectDef {
-  const shellPadding = 16;
-  const headerHeight = 54;
-  const footerHeight = 92;
-  const internalGap = 14;
-  const chromeHeight =
-    shellPadding * 2 + headerHeight + footerHeight + internalGap * 2;
+  const isCompact = rootRect.width < 760;
+  const shellPadding = isCompact ? 16 : 18;
+  const headerHeight = isCompact ? 84 : 108;
+  const bodyGap = isCompact ? 12 : 18;
   const maxWidth = Math.min(
     rootRect.width - viewerPadding * 2,
-    rootRect.width * 0.84,
+    rootRect.width * (isCompact ? 0.94 : 0.9),
   );
   const maxHeight = Math.min(
     rootRect.height - viewerPadding * 2,
-    rootRect.height * 0.88,
+    rootRect.height * (isCompact ? 0.92 : 0.9),
   );
-  const availableImageWidth = Math.max(140, maxWidth - shellPadding * 2);
-  const availableImageHeight = Math.max(180, maxHeight - chromeHeight);
+
+  let width = maxWidth;
+  let height = maxHeight;
+
+  if (isCompact) {
+    // Mobile archive focus cards need to read as a primary sheet, while leaving
+    // the archive-level close control clear at the top of the viewport.
+    const compactTopInset = clamp(rootRect.height * 0.09, 64, 84);
+    const compactSideInset = Math.max(10, Math.min(viewerPadding, 14));
+
+    return {
+      left: compactSideInset,
+      top: compactTopInset,
+      width: Math.max(280, rootRect.width - compactSideInset * 2),
+      height: Math.max(
+        520,
+        rootRect.height - compactTopInset - Math.max(10, viewerPadding),
+      ),
+    };
+  }
+
+  const sidebarWidth = clamp(maxWidth * 0.26, 220, 300);
+  const availableImageWidth = Math.max(
+    260,
+    maxWidth - shellPadding * 2 - sidebarWidth - bodyGap,
+  );
+  const availableImageHeight = Math.max(
+    220,
+    maxHeight - shellPadding * 2 - headerHeight - bodyGap,
+  );
 
   let imageWidth = Math.min(
     availableImageWidth,
@@ -324,8 +400,18 @@ function getFocusTargetRect(
     imageWidth = imageHeight * aspectRatio;
   }
 
-  const width = imageWidth + shellPadding * 2;
-  const height = imageHeight + chromeHeight;
+  const bodyHeight = Math.max(imageHeight, 250);
+  width = Math.min(
+    maxWidth,
+    Math.max(
+      imageWidth + sidebarWidth + shellPadding * 2 + bodyGap,
+      Math.min(maxWidth, 560),
+    ),
+  );
+  height = Math.min(
+    maxHeight,
+    shellPadding * 2 + headerHeight + bodyGap + bodyHeight,
+  );
 
   return {
     left: (rootRect.width - width) / 2,
@@ -351,6 +437,7 @@ export default function ArchiveDomeGallery({
 }: DomeGalleryProps) {
   const rootRef = useRef<HTMLDivElement>(null);
   const sphereRef = useRef<HTMLDivElement>(null);
+  const itemRefs = useRef<Array<HTMLDivElement | null>>([]);
   const closeButtonRef = useRef<HTMLButtonElement>(null);
   const lastFocusedTileRef = useRef<HTMLButtonElement | null>(null);
   const openStartedAtRef = useRef(0);
@@ -371,14 +458,51 @@ export default function ArchiveDomeGallery({
 
   const items = useMemo(() => buildItems(projects, segments), [projects, segments]);
   const verticalSegments = Math.max(28, Math.round(segments * 1.35));
+  const itemNormals = useMemo(
+    () => items.map((item) => getItemNormal(item, segments, verticalSegments)),
+    [items, segments, verticalSegments],
+  );
 
-  const applyTransform = useCallback((xDegrees: number, yDegrees: number) => {
-    if (!sphereRef.current) {
-      return;
-    }
+  const updateTileVisibility = useCallback(
+    (xDegrees: number, yDegrees: number) => {
+      const visibilityThreshold = 0.025;
 
-    sphereRef.current.style.transform = `translateZ(calc(var(--radius) * -1)) rotateX(${xDegrees}deg) rotateY(${yDegrees}deg)`;
-  }, []);
+      itemNormals.forEach((normal, index) => {
+        const itemElement = itemRefs.current[index];
+
+        if (!itemElement) {
+          return;
+        }
+
+        const rotatedNormal = rotateVectorX(
+          rotateVectorY(normal, yDegrees),
+          xDegrees,
+        );
+        const isFrontFacing = rotatedNormal.z > visibilityThreshold;
+        const tileButton = itemElement.querySelector("button");
+
+        itemElement.dataset.visible = isFrontFacing ? "true" : "false";
+        itemElement.style.zIndex = String(Math.round((rotatedNormal.z + 1) * 1000));
+
+        if (tileButton instanceof HTMLButtonElement) {
+          tileButton.tabIndex = isFrontFacing ? 0 : -1;
+        }
+      });
+    },
+    [itemNormals],
+  );
+
+  const applyTransform = useCallback(
+    (xDegrees: number, yDegrees: number) => {
+      if (!sphereRef.current) {
+        return;
+      }
+
+      sphereRef.current.style.transform = `translateZ(calc(var(--radius) * -1)) rotateX(${xDegrees}deg) rotateY(${yDegrees}deg)`;
+      updateTileVisibility(xDegrees, yDegrees);
+    },
+    [updateTileVisibility],
+  );
 
   const stopInertia = useCallback(() => {
     if (inertiaFrameRef.current) {
@@ -508,6 +632,11 @@ export default function ArchiveDomeGallery({
   useEffect(() => {
     applyTransform(rotationRef.current.x, rotationRef.current.y);
   }, [applyTransform]);
+
+  useEffect(() => {
+    itemRefs.current.length = items.length;
+    updateTileVisibility(rotationRef.current.x, rotationRef.current.y);
+  }, [items.length, updateTileVisibility]);
 
   useEffect(() => {
     return () => stopInertia();
@@ -847,6 +976,9 @@ export default function ArchiveDomeGallery({
             {items.map((item, tileInstanceIndex) => (
               <div
                 key={`${item.project.href}-${tileInstanceIndex}`}
+                ref={(node) => {
+                  itemRefs.current[tileInstanceIndex] = node;
+                }}
                 className={styles.item}
                 style={
                   {
@@ -927,6 +1059,14 @@ export default function ArchiveDomeGallery({
           >
             <div className={styles.focusHeader}>
               <div className={styles.focusHeading}>
+                <div className={styles.focusEyebrowRow}>
+                  <span className={styles.focusIndex}>
+                    {String(openedTile.projectOrder + 1).padStart(2, "0")}
+                  </span>
+                  <span className={styles.focusBadge}>
+                    {getProjectBadgeLabel(openedTile.project)}
+                  </span>
+                </div>
                 <h3
                   id={`archive-focus-title-${openedTile.tileInstanceIndex}`}
                   className={styles.focusTitle}
@@ -945,75 +1085,93 @@ export default function ArchiveDomeGallery({
               </button>
             </div>
 
-            <div className={styles.focusImageFrame}>
-              <div className={styles.focusMedia}>
-                {openedTile.project.imageSrc ? (
-                  <img
-                    src={openedTile.project.imageSrc}
-                    alt={openedTile.project.imageAlt ?? openedTile.project.name}
-                    className={styles.focusImage}
-                  />
-                ) : (
-                  <div className={styles.focusFallback} aria-hidden="true">
-                    <span>{getProjectMonogram(openedTile.project.name)}</span>
-                  </div>
-                )}
-              </div>
-            </div>
-
-            <div className={styles.focusDetails}>
-              <div className={styles.focusMeta}>
-                <div className={styles.focusEyebrowRow}>
-                  <span className={styles.focusIndex}>
-                    {String(openedTile.projectOrder + 1).padStart(2, "0")}
-                  </span>
-                  <span className={styles.focusBadge}>
-                    {getProjectBadgeLabel(openedTile.project)}
-                  </span>
-                </div>
-                <p className={styles.focusRepository}>
-                  {openedTile.project.repository}
-                </p>
-              </div>
-
-              <div className={styles.focusActions}>
-                {openedTile.project.demoUrl ? (
-                  <Link
-                    href={openedTile.project.demoUrl}
-                    target="_blank"
-                    rel="noreferrer"
-                    className={`${styles.focusActionLink} ${styles.focusActionLinkSecondary}`}
-                  >
-                    {openedTile.project.demoLabel ?? "View Demo"}
-                  </Link>
-                ) : null}
-
-                <Link
-                  href={openedTile.project.href}
-                  target={
-                    openedTile.project.external ??
-                    isExternalHref(openedTile.project.href)
-                      ? "_blank"
-                      : undefined
-                  }
-                  rel={
-                    openedTile.project.external ??
-                    isExternalHref(openedTile.project.href)
-                      ? "noreferrer"
-                      : undefined
-                  }
-                  aria-label={
-                    getProjectActionAriaLabel(openedTile.project)
-                  }
-                  title={getProjectActionTitle(openedTile.project)}
-                  className={styles.focusIconLink}
-                >
-                  {getProjectLinkKind(openedTile.project) === "external" ? (
-                    <ExternalSiteIcon className={styles.focusIcon} />
+            <div className={styles.focusBody}>
+              <div className={styles.focusImageFrame}>
+                <div className={styles.focusMedia}>
+                  {openedTile.project.imageSrc ? (
+                    <img
+                      src={openedTile.project.imageSrc}
+                      alt={openedTile.project.imageAlt ?? openedTile.project.name}
+                      className={styles.focusImage}
+                    />
                   ) : (
-                    <GitHubMarkIcon className={styles.focusIcon} />
+                    <div className={styles.focusFallback} aria-hidden="true">
+                      <span>{getProjectMonogram(openedTile.project.name)}</span>
+                    </div>
                   )}
-                </Link>
+                </div>
+              </div>
+
+              <div className={styles.focusDetails}>
+                <div className={styles.focusMeta}>
+                  <p className={styles.focusMetaLabel}>
+                    {getProjectMetaLabel(openedTile.project)}
+                  </p>
+                  <p className={styles.focusRepository}>
+                    {openedTile.project.repository}
+                  </p>
+                </div>
+
+                <div className={styles.focusActions}>
+                  <div className={styles.focusActionStack}>
+                    {openedTile.project.demoUrl ? (
+                      <Link
+                        href={openedTile.project.demoUrl}
+                        target="_blank"
+                        rel="noreferrer"
+                        className={`${styles.focusActionLink} ${styles.focusActionLinkSecondary}`}
+                      >
+                        {openedTile.project.demoLabel ?? "View Demo"}
+                      </Link>
+                    ) : null}
+
+                    <Link
+                      href={openedTile.project.href}
+                      target={
+                        openedTile.project.external ??
+                        isExternalHref(openedTile.project.href)
+                          ? "_blank"
+                          : undefined
+                      }
+                      rel={
+                        openedTile.project.external ??
+                        isExternalHref(openedTile.project.href)
+                          ? "noreferrer"
+                          : undefined
+                      }
+                      aria-label={getProjectActionAriaLabel(openedTile.project)}
+                      title={getProjectActionTitle(openedTile.project)}
+                      className={styles.focusActionLink}
+                    >
+                      {getProjectActionLabel(openedTile.project)}
+                    </Link>
+                  </div>
+
+                  <Link
+                    href={openedTile.project.href}
+                    target={
+                      openedTile.project.external ??
+                      isExternalHref(openedTile.project.href)
+                        ? "_blank"
+                        : undefined
+                    }
+                    rel={
+                      openedTile.project.external ??
+                      isExternalHref(openedTile.project.href)
+                        ? "noreferrer"
+                        : undefined
+                    }
+                    aria-label={getProjectActionAriaLabel(openedTile.project)}
+                    title={getProjectActionTitle(openedTile.project)}
+                    className={styles.focusIconLink}
+                  >
+                    {getProjectLinkKind(openedTile.project) === "external" ? (
+                      <ExternalSiteIcon className={styles.focusIcon} />
+                    ) : (
+                      <GitHubMarkIcon className={styles.focusIcon} />
+                    )}
+                  </Link>
+                </div>
               </div>
             </div>
           </div>
