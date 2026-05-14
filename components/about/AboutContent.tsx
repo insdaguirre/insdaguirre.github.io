@@ -1,24 +1,7 @@
 import AboutSignalBand from "@/components/about/AboutSignalBand";
 import AboutBuildsTeaser from "@/components/about/AboutBuildsTeaser";
 import ASCIIImageCarousel from "@/components/about/ASCIIImageCarousel";
-
-const values = [
-  {
-    label: "01",
-    title: "Clarity over noise",
-    body: "I prefer sharp product framing, direct communication, and interfaces that reduce ambiguity instead of adding ceremony.",
-  },
-  {
-    label: "02",
-    title: "Speed with standards",
-    body: "Fast execution matters, but only when the system underneath can support iteration, quality, and the next set of decisions.",
-  },
-  {
-    label: "03",
-    title: "Founder-level ownership",
-    body: "I care about the whole surface area: product, narrative, technical choices, user trust, and what actually moves the business.",
-  },
-] as const;
+import Waves from "@/components/shared/Waves";
 
 const experience = [
   {
@@ -66,7 +49,7 @@ export default function AboutContent() {
   return (
     <section
       id="about-body"
-      className="relative z-10 py-12 sm:py-14 lg:py-16"
+      className="relative z-10 pb-0 pt-12 sm:pt-14 lg:pt-16"
     >
       <div className="mx-auto w-full max-w-6xl px-6 sm:px-8 lg:px-12">
         <div className="grid items-stretch gap-6 lg:min-h-[42rem] lg:grid-cols-[minmax(22rem,0.82fr)_minmax(0,1.18fr)]">
@@ -108,41 +91,29 @@ export default function AboutContent() {
         </div>
       </div>
 
-      <AboutSignalBand />
+      <section className="relative my-12 overflow-hidden border-y border-white/8 sm:my-16 lg:my-20">
+        <div aria-hidden="true" className="absolute inset-0">
+          <Waves
+            lineColor="rgba(198,255,194,0.22)"
+            backgroundColor="#040406"
+            waveSpeedX={0.0125}
+            waveSpeedY={0.01}
+            waveAmpX={40}
+            waveAmpY={20}
+            friction={0.9}
+            tension={0.01}
+            maxCursorMove={120}
+            xGap={12}
+            yGap={36}
+          />
+          <div className="absolute inset-0 bg-[radial-gradient(circle_at_18%_18%,rgba(255,255,255,0.07),transparent_18%),radial-gradient(circle_at_52%_38%,rgba(82,39,255,0.14),transparent_20%),radial-gradient(circle_at_84%_68%,rgba(255,0,209,0.09),transparent_18%),linear-gradient(180deg,rgba(255,255,255,0.045),transparent_20%,transparent_78%,rgba(255,255,255,0.035))]" />
+          <div className="absolute inset-0 bg-[linear-gradient(135deg,rgba(255,255,255,0.03),transparent_16%,transparent_84%,rgba(255,255,255,0.015))]" />
+          <div className="absolute inset-x-0 top-0 h-px bg-white/10" />
+          <div className="absolute inset-x-0 bottom-0 h-px bg-white/8" />
+        </div>
 
-      <div className="mx-auto w-full max-w-6xl px-6 sm:px-8 lg:px-12">
-        <section className="rounded-[2rem] border border-white/10 bg-black/26 p-6 backdrop-blur-sm sm:p-8">
-          <div className="max-w-2xl">
-            <p className="text-[0.7rem] uppercase tracking-[0.34em] text-white/42">
-              Values / Approach
-            </p>
-            <h2 className="mt-4 text-balance text-[clamp(1.9rem,3vw,3rem)] font-light leading-tight tracking-[0.08em] text-white/92">
-              The product work I respect most is precise, useful, and difficult
-              to fake.
-            </h2>
-          </div>
-          <div className="mt-8 grid gap-5 lg:grid-cols-3">
-            {values.map((value) => (
-              <article
-                key={value.title}
-                className="rounded-[1.7rem] border border-white/10 bg-white/[0.03] p-5"
-              >
-                <p className="text-[0.66rem] uppercase tracking-[0.28em] text-white/34">
-                  {value.label}
-                </p>
-                <h3 className="mt-4 text-xl font-light tracking-[0.06em] text-white/90">
-                  {value.title}
-                </h3>
-                <p className="mt-4 text-sm leading-7 text-white/60">
-                  {value.body}
-                </p>
-              </article>
-            ))}
-          </div>
-        </section>
-      </div>
-
-      <AboutBuildsTeaser />
+        <AboutBuildsTeaser />
+      </section>
 
       <div className="mx-auto w-full max-w-6xl px-6 sm:px-8 lg:px-12">
         <section className="mt-6 grid items-stretch gap-6 lg:grid-cols-[minmax(0,1fr)_minmax(18rem,0.85fr)]">
@@ -181,6 +152,8 @@ export default function AboutContent() {
           </aside>
         </section>
       </div>
+
+      <AboutSignalBand />
     </section>
   );
 }

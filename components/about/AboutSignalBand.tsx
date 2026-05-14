@@ -4,7 +4,7 @@ import { carouselItems } from "@/lib/carousel-items";
 
 export default function AboutSignalBand() {
   return (
-    <section className="relative my-12 overflow-hidden border-y border-white/8 bg-[linear-gradient(180deg,rgba(255,255,255,0.04),rgba(255,255,255,0.01))] py-[clamp(4.75rem,10vw,8.5rem)] sm:my-16 lg:my-20">
+    <section className="relative mb-0 mt-12 overflow-hidden border-y border-white/8 bg-[linear-gradient(180deg,rgba(255,255,255,0.04),rgba(255,255,255,0.01))] py-[clamp(4.75rem,10vw,8.5rem)] sm:mt-16 lg:mt-20">
       <div aria-hidden="true" className="absolute inset-0">
         <Waves
           lineColor="rgba(198,255,194,0.22)"
